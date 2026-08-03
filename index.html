@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📚 Mis Cuestionarios - Guías SPC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        .container {
+            background: white;
+            max-width: 820px;
+            width: 100%;
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+        h1 {
+            font-size: 2rem;
+            color: #1e2b3c;
+            margin-bottom: 0.5rem;
+        }
+        .subtitulo {
+            color: #5a6f88;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e9edf4;
+            padding-bottom: 1rem;
+        }
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            text-align: left;
+            margin: 1.5rem 0;
+        }
+        .menu-item {
+            background: #f9fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 0.9rem 1.5rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.15s;
+            text-decoration: none;
+            color: #1e2b3c;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .menu-item:hover {
+            background: #edf2f9;
+            border-color: #2a7de1;
+            transform: scale(1.01);
+        }
+        .menu-item .icono {
+            font-size: 1.4rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        .menu-item .nombre {
+            flex: 1;
+            line-height: 1.4;
+        }
+        .menu-item .badge {
+            background: #1e2b3c;
+            color: white;
+            padding: 0.15rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 0.8rem;
+            flex-shrink: 0;
+        }
+        .menu-item .flecha {
+            color: #8a9bb0;
+            margin-left: 0.6rem;
+            flex-shrink: 0;
+        }
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #7a8fa5;
+            border-top: 2px solid #e9edf4;
+            padding-top: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Mis Cuestionarios</h1>
+        <div class="subtitulo">Guías, resúmenes y exámenes de SPC</div>
+
+        <div class="menu">
+
+            <!-- 1. La generación de información estadística básica en el INEGI -->
+            <a href="Estadistica_basica/" class="menu-item">
+                <span class="icono">📘</span>
+                <span class="nombre">1</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 2. Rincón Solís, Luis Antonio. Estadística descriptiva, Las Prensas de Ciencias - Facultad de Ciencias UNAM, 1a edición 2017 -->
+            <a href="Estadistica_descriptiva/" class="menu-item">
+                <span class="icono">📋</span>
+                <span class="nombre">2</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 3. Instituto Nacional de Estadística y Geografía, Diseño conceptual para la generación de estadísticas. INEGI, México, 2010 -->
+            <a href="Diseno_conceptual/" class="menu-item">
+                <span class="icono">📊</span>
+                <span class="nombre">3</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 4. Welti, Carlos. Demografía I. Programa Latinoamericano de Actividades en Población, PROLAP, Instituto de Investigaciones Sociales, UNAM. Mexico 1997 -->
+            <a href="Welti_demografia/" class="menu-item">
+                <span class="icono">👥</span>
+                <span class="nombre">4</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 5. Comisión Económica para América Latina y el Caribe. (2014). Los datos demográficos. Alcances, limitaciones y métodos de evaluación -->
+            <a href="Datos_demograficos/" class="menu-item">
+                <span class="icono">📚</span>
+                <span class="nombre">5</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 6. Organización de las Naciones Unidas [ONU] (2005). Manual sobre la recolección de datos de fecundidad y fecundidad -->
+            <a href="Fecundidad_mortalidad/" class="menu-item">
+                <span class="icono">📖</span>
+                <span class="nombre">6</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 7. Haupt, Arthur y Kane, Thomas. Guía rápida de población, Population Reference Bureau -->
+            <a href="Fecundidad_mortalidad_migracion/" class="menu-item">
+                <span class="icono">🌍</span>
+                <span class="nombre">7</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 8. Centro Centroamericano de Población, UCR Curso Análisis Demográfico -->
+            <a href="Demografia_datos/" class="menu-item">
+                <span class="icono">📊</span>
+                <span class="nombre">8</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 9. Padua, Jorge (2018). Técnicas de investigación aplicadas a las ciencias sociales. Editorial Fondo de Cultura Económica -->
+            <a href="Padua_tecnicas/" class="menu-item">
+                <span class="icono">🔬</span>
+                <span class="nombre">9</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 10. INEGI (2012). Planeación y control administrativo en proyectos estadísticos -->
+            <a href="INEGI_planeacion/" class="menu-item">
+                <span class="icono">📋</span>
+                <span class="nombre">10.</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 11. INEGI(2017).Presentación de datos estadísticos en cuadros y gráficas -->
+            <a href="INEGI_presentacion/" class="menu-item">
+                <span class="icono">📈</span>
+                <span class="nombre">11.</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 12. INEGI (2010).Proceso Estándar para Encuestas por Muestreo -->
+            <a href="INEGI_proceso_encuestas/" class="menu-item">
+                <span class="icono">📊</span>
+                <span class="nombre">12</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 13. Scheaffer, Mendenhall y Ott, Elementos de Muestreo, Grupo Editorial Iberoamérica, México, México, 1987 -->
+            <a href="Scheaffer_muestreo/" class="menu-item">
+                <span class="icono">🎯</span>
+                <span class="nombre">13</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 14. William G. Cochran, Técnicas de Muestreo, Cia. Editorial Continental, S. A. de C. V. , México, 1980 -->
+            <a href="Cochran_muestreo/" class="menu-item">
+                <span class="icono">🎯</span>
+                <span class="nombre">14</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 15. LSNIEG (2023), Vigente fecha de publicación: 01/12/2023 -->
+            <a href="LSNIEG/" class="menu-item">
+                <span class="icono">⚖️</span>
+                <span class="nombre">15</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+            <!-- 16. Reglamento Interior del Instituto Nacional de Estadística y Geografía, Vigente fecha de publicación: 31/07/2025 -->
+            <a href="Reglamento_interior/" class="menu-item">
+                <span class="icono">📜</span>
+                <span class="nombre">16</span>
+                <span class="badge">Examen</span>
+                <span class="flecha">→</span>
+            </a>
+
+        </div>
+
+        <div class="footer">
+            📍 Repositorio: <strong>Gu-as_SPC</strong> · Actualizado automáticamente
+        </div>
+    </div>
+</body>
+</html>
