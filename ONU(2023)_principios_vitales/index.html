@@ -100,6 +100,13 @@
             font-size: 0.98rem;
             line-height: 1.8;
         }
+        .relation-list div {
+            padding: 4px 0;
+            border-bottom: 1px dashed #eef2f8;
+        }
+        .relation-list div:last-child {
+            border-bottom: none;
+        }
         .relation-list code {
             background: #eef4fd;
             padding: 2px 8px;
@@ -193,18 +200,23 @@
         }
         .actions {
             display: flex;
-            justify-content: flex-end;
-            gap: 14px;
-            margin-top: 12px;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
             flex-wrap: wrap;
+        }
+        .actions .nav-group {
+            display: flex;
+            gap: 8px;
         }
         .btn {
             background: transparent;
             border: 1px solid #cbd5e1;
-            padding: 10px 24px;
+            padding: 8px 18px;
             border-radius: 40px;
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: #1f3a5f;
             cursor: pointer;
             transition: all 0.15s ease;
@@ -226,6 +238,18 @@
         }
         .btn-outline:hover {
             background: #eef4fd;
+        }
+        .btn-success {
+            background: #1e9b5e;
+            border-color: #1e9b5e;
+            color: white;
+        }
+        .btn-success:hover:not(:disabled) {
+            background: #167d4b;
+        }
+        .btn-success:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
         }
         .results {
             margin-top: 28px;
@@ -264,6 +288,11 @@
         .restart-btn:hover {
             background: #1a5db5;
         }
+        .question-number {
+            font-size: 0.9rem;
+            color: #4a5b6e;
+            margin-bottom: 8px;
+        }
         @media (max-width: 600px) {
             .container {
                 padding: 20px 16px;
@@ -273,6 +302,13 @@
             }
             .option {
                 padding: 10px 14px;
+            }
+            .actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .actions .nav-group {
+                justify-content: center;
             }
         }
     </style>
@@ -870,8 +906,10 @@
         progressFill.style.width = ((num / total) * 100) + '%';
 
         var html = '<div class="question-card">';
+        html += '<div class="question-number">Pregunta ' + num + ' / ' + total + '</div>';
         html += '<div class="question-text">' + pregunta.pregunta + '</div>';
 
+        // Mostrar lista de relación si existe
         if (pregunta.tipo === 'relacion' && pregunta.lista) {
             var items = pregunta.lista.split('\n').filter(function(line) { return line.trim() !== ''; });
             html += '<div class="relation-list">';
@@ -910,6 +948,7 @@
 
         html += '</div>';
 
+        // Feedback
         var feedbackClass = '';
         var feedbackTitle = '';
         var feedbackDetail = '';
@@ -945,22 +984,33 @@
             html += '<div class="feedback" id="feedbackPanel" style="display:none;"></div>';
         }
 
+        // Botones de navegación
         var hayRespuesta = respuestaSeleccionada !== null;
+        var puedeVerificar = !yaRespondida && hayRespuesta;
+
         html += '<div class="actions">';
-        if (!yaRespondida && hayRespuesta) {
-            html += '<button class="btn btn-primary" id="btnVerificar" onclick="verificarRespuesta()">Verificar respuesta</button>';
+        html += '<div class="nav-group">';
+        if (indiceActual > 0) {
+            html += '<button class="btn btn-outline" onclick="irAPregunta(' + (indiceActual - 1) + ')">◀ Anterior</button>';
         }
-        if (yaRespondida && indiceActual < total - 1) {
-            html += '<button class="btn btn-primary" onclick="siguientePregunta()">Siguiente →</button>';
+        if (indiceActual < total - 1) {
+            html += '<button class="btn btn-outline" onclick="irAPregunta(' + (indiceActual + 1) + ')">Siguiente ▶</button>';
+        }
+        html += '</div>';
+        html += '<div class="nav-group">';
+        if (puedeVerificar) {
+            html += '<button class="btn btn-success" id="btnVerificar" onclick="verificarRespuesta()">Verificar respuesta</button>';
         }
         if (yaRespondida && indiceActual === total - 1) {
             html += '<button class="btn btn-primary" onclick="finalizar()">Ver resultados</button>';
         }
         html += '</div>';
+        html += '</div>';
 
         html += '</div>';
         questionArea.innerHTML = html;
 
+        // Event listeners para los radio buttons
         document.querySelectorAll('input[name="pregunta"]').forEach(function(input) {
             input.addEventListener('change', function(e) {
                 if (respondidas[indiceActual]) return;
@@ -969,6 +1019,13 @@
                 renderPregunta();
             });
         });
+    }
+
+    function irAPregunta(nuevoIndice) {
+        if (nuevoIndice >= 0 && nuevoIndice < preguntas.length) {
+            indiceActual = nuevoIndice;
+            renderPregunta();
+        }
     }
 
     function verificarRespuesta() {
@@ -982,13 +1039,6 @@
         if (esCorrecta) score++;
         respondidas[indiceActual] = true;
         renderPregunta();
-    }
-
-    function siguientePregunta() {
-        if (indiceActual < preguntas.length - 1) {
-            indiceActual++;
-            renderPregunta();
-        }
     }
 
     function finalizar() {
