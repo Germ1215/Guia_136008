@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoevaluación: Migraciones Internacionales (ONU)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f2f5f9;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 880px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06), 0 6px 12px rgba(0,0,0,0.04);
+            padding: 32px 28px;
+            transition: all 0.2s ease;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #0b1e33;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+        .subhead {
+            color: #4a5b6e;
+            font-size: 0.95rem;
+            border-left: 4px solid #2a7de1;
+            padding-left: 14px;
+            margin-bottom: 24px;
+            background: #f0f4fe;
+            border-radius: 0 12px 12px 0;
+            line-height: 1.4;
+        }
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .progress-text {
+            font-weight: 500;
+            color: #1f3a5f;
+            background: #e9edf4;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+        }
+        .progress-track {
+            flex: 1;
+            min-width: 120px;
+            height: 6px;
+            background: #dfe4ec;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #2a7de1;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        .question-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px 20px 16px;
+            margin-bottom: 20px;
+            border: 1px solid #eef2f8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: #0b1e33;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .relation-list {
+            background: #f8faff;
+            padding: 16px 20px;
+            border-radius: 14px;
+            border: 1px solid #e2e9f2;
+            margin-bottom: 20px;
+            font-size: 0.98rem;
+            line-height: 1.8;
+        }
+        .relation-list div {
+            padding: 4px 0;
+            border-bottom: 1px dashed #eef2f8;
+        }
+        .relation-list div:last-child {
+            border-bottom: none;
+        }
+        .relation-list code {
+            background: #eef4fd;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        .definitions-box {
+            background: #f0f7ff;
+            padding: 16px 20px;
+            border-radius: 14px;
+            border: 1px solid #d0e2f5;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+        .definitions-box div {
+            padding: 2px 0;
+        }
+        .definitions-box .def-label {
+            font-weight: 600;
+            color: #1f3a5f;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8faff;
+            padding: 12px 18px;
+            border-radius: 14px;
+            border: 1px solid #e2e9f2;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .option:hover:not(.disabled) {
+            background: #eef4fd;
+            border-color: #b6cae0;
+        }
+        .option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #2a7de1;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .option input[type="radio"]:disabled {
+            cursor: not-allowed;
+        }
+        .option label {
+            font-size: 1rem;
+            color: #1a2d44;
+            cursor: pointer;
+            flex: 1;
+        }
+        .option.disabled {
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .option.correct-option {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        .option.incorrect-option {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        .feedback {
+            background: #f2f6fc;
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-top: 6px;
+            border-left: 5px solid #2a7de1;
+            display: none;
+        }
+        .feedback.correct {
+            border-left-color: #1e9b5e;
+            background: #e8f5ee;
+        }
+        .feedback.incorrect {
+            border-left-color: #d14c4c;
+            background: #fdeeec;
+        }
+        .feedback-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+        .feedback-detail {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #1f3a5f;
+        }
+        .feedback-detail strong {
+            color: #0b1e33;
+        }
+        .feedback-detail ul {
+            margin-top: 6px;
+            padding-left: 20px;
+        }
+        .feedback-detail ul li {
+            margin-bottom: 4px;
+        }
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .actions .nav-group {
+            display: flex;
+            gap: 8px;
+        }
+        .btn {
+            background: transparent;
+            border: 1px solid #cbd5e1;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #1f3a5f;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .btn-primary {
+            background: #1f3a5f;
+            border-color: #1f3a5f;
+            color: white;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #142b47;
+        }
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .btn-outline {
+            background: white;
+        }
+        .btn-outline:hover {
+            background: #eef4fd;
+        }
+        .btn-success {
+            background: #1e9b5e;
+            border-color: #1e9b5e;
+            color: white;
+        }
+        .btn-success:hover:not(:disabled) {
+            background: #167d4b;
+        }
+        .btn-success:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .results {
+            margin-top: 28px;
+            padding: 24px 20px;
+            background: #eef4fe;
+            border-radius: 24px;
+            text-align: center;
+            display: none;
+        }
+        .results h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #0b1e33;
+        }
+        .results .score {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: #1f3a5f;
+            margin: 8px 0;
+        }
+        .results .message {
+            font-size: 1rem;
+            color: #2d4a6b;
+        }
+        .restart-btn {
+            margin-top: 14px;
+            background: #2a7de1;
+            border: none;
+            color: white;
+            padding: 10px 32px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .restart-btn:hover {
+            background: #1a5db5;
+        }
+        .question-number {
+            font-size: 0.9rem;
+            color: #4a5b6e;
+            margin-bottom: 8px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 16px;
+            }
+            .question-text {
+                font-size: 1rem;
+            }
+            .option {
+                padding: 10px 14px;
+            }
+            .actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .actions .nav-group {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+    <h1>📊 Autoevaluación</h1>
+    <div class="subhead">Migraciones Internacionales · ONU (1999) · 30 preguntas · Párs. 138-146</div>
+
+    <div class="progress-bar">
+        <span class="progress-text" id="progressLabel">Pregunta 1 / 30</span>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <div id="questionArea">
+        <!-- Se llena dinámicamente -->
+    </div>
+
+    <div class="results" id="resultsPanel">
+        <h2>📊 Resultado final</h2>
+        <div class="score" id="finalScore">0%</div>
+        <div class="message" id="finalMessage"></div>
+        <button class="restart-btn" onclick="reiniciar()">🔄 Reiniciar cuestionario</button>
+    </div>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // BANCO DE PREGUNTAS (basado en párrafos 138-146)
+    // --------------------------------------------------------------
+    var preguntasData = [
+        {
+            tipo: 'multiple',
+            pregunta: 'Según el párrafo 138, ¿cómo debe determinarse el sexo de los migrantes?',
+            opciones: [
+                'Deduciéndolo del nombre de la persona',
+                'Consignándolo expresamente, sin deducirlo del nombre',
+                'Preguntando solo a los hombres',
+                'No es necesario registrar el sexo'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 138 establece: "Siempre se debe consignar expresamente el sexo de los migrantes. Esta información no debe deducirse del nombre de la persona ni de otros elementos indirectos."',
+            distractores: [
+                'El texto dice que no debe deducirse del nombre.',
+                'El texto no dice eso; se debe consignar para todos.',
+                'El texto dice que sí es necesario registrar el sexo.'
+            ]
+        },
+        {
+            tipo: 'multiple',
+            pregunta: 'Según el párrafo 138, ¿qué se debe hacer con las tabulaciones sobre corrientes de migrantes internacionales?',
+            opciones: [
+                'Presentarlas sin distinción de sexo',
+                'Presentarlas desglosadas por sexo',
+                'Presentarlas solo para mujeres',
+                'Presentarlas solo para hombres'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 138 dice: "se deben presentar desglosadas por sexo todas las tabulaciones sobre corrientes de migrantes internacionales."',
+            distractores: [
+                'El texto dice que se deben desglosar por sexo.',
+                'No solo para mujeres.',
+                'No solo para hombres.'
+            ]
+        },
+        {
+            tipo: 'completar',
+            pregunta: 'Según el párrafo 139, se recomienda establecer la edad registrando la ________, por lo menos el mes y el año.',
+            opciones: [
+                'fecha de nacimiento',
+                'edad declarada',
+                'año de llegada',
+                'año de partida'
+            ],
+            correcta: 0,
+            explicacion: 'El párrafo 139 dice: "Se recomienda establecer la edad registrando la fecha de nacimiento, por lo menos el mes y el año."',
+            distractores: [
+                'No es edad declarada; es fecha de nacimiento.',
+                'No es año de llegada.',
+                'No es año de partida.'
+            ]
+        },
+        {
+            tipo: 'relacion',
+            pregunta: 'Relacione el concepto con su definición según los párrafos 138-146:',
+            lista: '1. Sexo\n2. Fecha de nacimiento\n3. Fecha de llegada\n4. Fecha de partida',
+            opciones: [
+                '1-B, 2-A, 3-D, 4-C',
+                '1-A, 2-B, 3-C, 4-D',
+                '1-B, 2-C, 3-A, 4-D',
+                '1-A, 2-D, 3-B, 4-C'
+            ],
+            correcta: 0,
+            explicacion: 'Según los párrafos: Sexo = característica básica a consignar expresamente (B). Fecha de nacimiento = se recomienda para establecer la edad (A). Fecha de llegada = imprescindible para corrientes de entrada (D). Fecha de partida = debe consignarse para corrientes de salida (C).',
+            distractores: [
+                'Asignación incorrecta de fecha de nacimiento y sexo.',
+                'Asignación incorrecta de fecha de llegada y partida.',
+                'Asignación incorrecta de todos.'
+            ]
+        },
+        {
+            tipo: 'multiple',
+            pregunta: '¿Qué información se necesita para determinar a los migrantes por largo plazo según el párrafo 142?',
+            opciones: [
+                'Fecha de nacimiento',
+                'Duración prevista de la estancia',
+                'País de nacimiento',
+                'Fecha de llegada'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 142 dice: "Se necesita información sobre la duración prevista de la estancia para determinar a los migrantes por largo plazo según la definición que figura en el recuadro 1."',
+            distractores: [
+                'No es fecha de nacimiento; es duración prevista.',
+                'No es país de nacimiento.',
+                'No es fecha de llegada; es duración prevista.'
+            ]
+        },
+        {
+            tipo: 'completar',
+            pregunta: 'Según el párrafo 143, la duración prevista de la estancia en el extranjero se necesita para determinar si una persona que parte es o no ________.',
+            opciones: [
+                'emigrante por largo plazo',
+                'inmigrante por largo plazo',
+                'turista',
+                'trabajador fronterizo'
+            ],
+            correcta: 0,
+            explicacion: 'El párrafo 143 dice: "Se necesita información sobre la duración prevista de la estancia en el extranjero para determinar si una persona que parte es o no emigrante por largo plazo."',
+            distractores: [
+                'No es inmigrante; es emigrante por largo plazo.',
+                'No es turista.',
+                'No es trabajador fronterizo.'
+            ]
+        },
+        {
+            tipo: 'multiple',
+            pregunta: 'Según el párrafo 144, ¿cómo se define el país de residencia habitual anterior?',
+            opciones: [
+                'El país en que el migrante nació',
+                'El país en que el migrante ha vivido durante el año anterior a su llegada al país receptor',
+                'El país de ciudadanía del migrante',
+                'El país al que el migrante se dirige'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 144 dice: "País de residencia habitual anterior. Es el país en que el migrante ha vivido durante el año anterior a su llegada al país receptor."',
+            distractores: [
+                'No es país de nacimiento; es residencia anterior.',
+                'No es país de ciudadanía.',
+                'No es país de destino.'
+            ]
+        },
+        {
+            tipo: 'relacion',
+            pregunta: 'Relacione el tipo de información con el párrafo correspondiente (138-146):',
+            lista: '1. Sexo\n2. Duración prevista de la estancia en el extranjero\n3. País de residencia habitual futura\n4. País de nacimiento',
+            opciones: [
+                '1-A, 2-B, 3-C, 4-D',
+                '1-B, 2-C, 3-D, 4-A',
+                '1-A, 2-C, 3-D, 4-B',
+                '1-B, 2-A, 3-C, 4-D'
+            ],
+            correcta: 0,
+            explicacion: 'Según los párrafos: Sexo (138, A), Duración prevista en el extranjero (143, B), País de residencia habitual futura (145, C), País de nacimiento (146, D).',
+            distractores: [
+                'Asignación incorrecta.',
+                'Asignación incorrecta.',
+                'Asignación incorrecta.'
+            ]
+        },
+        {
+            tipo: 'completar',
+            pregunta: 'Según el párrafo 145, el país de residencia habitual futura es el país en que los migrantes proyectan vivir durante el año ________ a la partida.',
+            opciones: [
+                'anterior',
+                'siguiente',
+                'posterior',
+                'previo'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 145 dice: "El país de residencia habitual futura. El país en que los migrantes proyectan vivir durante el año siguiente a la partida."',
+            distractores: [
+                'No es anterior; es siguiente.',
+                'No es posterior (aunque es sinónimo, el texto dice "siguiente").',
+                'No es previo.'
+            ]
+        },
+        {
+            tipo: 'multiple',
+            pregunta: '¿Para qué es útil la información sobre el país de nacimiento según el párrafo 146?',
+            opciones: [
+                'Para determinar la ciudadanía actual',
+                'Para individualizar a la población de migrantes vitalicios',
+                'Para calcular la duración de la estancia',
+                'Para conocer el país de residencia habitual'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 146 dice: "La información sobre el país de nacimiento es útil porque no cambia durante la vida de la persona... Por esta razón, la información sobre el país de nacimiento resulta útil para individualizar a la población de migrantes vitalicios."',
+            distractores: [
+                'No es para ciudadanía actual.',
+                'No es para duración de estancia.',
+                'No es para país de residencia habitual.'
+            ]
+        },
+        {
+            tipo: 'multiple',
+            pregunta: 'Según el párrafo 138, ¿qué se debe hacer con los cuadros del marco en relación con el sexo?',
+            opciones: [
+                'Llenarlos sin distinción de sexo',
+                'Llenarlos por separado para migrantes de sexo masculino y femenino',
+                'Llenarlos solo para mujeres',
+                'Llenarlos solo para hombres'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 138 dice: "En particular, los cuadros del marco se deben llenar por separado para migrantes de sexo masculino y de sexo femenino."',
+            distractores: [
+                'El texto dice que se deben llenar por separado.',
+                'No solo para mujeres.',
+                'No solo para hombres.'
+            ]
+        },
+        {
+            tipo: 'completar',
+            pregunta: 'El párrafo 139 indica que a efectos de tabulación, los datos sobre la fecha de nacimiento se deben clasificar por ________ y no por edad.',
+            opciones: [
+                'año de nacimiento',
+                'mes de nacimiento',
+                'día de nacimiento',
+                'año de llegada'
+            ],
+            correcta: 0,
+            explicacion: 'El párrafo 139 dice: "a efectos de tabulación se recomienda que los datos se clasifiquen por año de nacimiento y no por edad".',
+            distractores: [
+                'No es mes; es año.',
+                'No es día; es año.',
+                'No es año de llegada.'
+            ]
+        },
+        {
+            tipo: 'relacion',
+            pregunta: 'Relacione la variable con su descripción según los párrafos 138-146:',
+            lista: '1. Fecha de llegada\n2. Fecha de partida\n3. Duración prevista de la estancia\n4. Duración prevista de la estancia en el extranjero',
+            opciones: [
+                '1-C, 2-D, 3-A, 4-B',
+                '1-D, 2-C, 3-B, 4-A',
+                '1-C, 2-D, 3-B, 4-A',
+                '1-D, 2-C, 3-A, 4-B'
+            ],
+            correcta: 0,
+            explicacion: 'Fecha de llegada: imprescindible para entradas (C). Fecha de partida: debe consignarse para salidas (D). Duración prevista de estancia: para determinar migrantes por largo plazo (A). Duración prevista en el extranjero: para emigrantes por largo plazo (B).',
+            distractores: [
+                'Asignación incorrecta de duración prevista.',
+                'Asignación incorrecta de fecha de partida y llegada.',
+                'Asignación incorrecta de todas.'
+            ]
+        },
+        {
+            tipo: 'multiple',
+            pregunta: 'Según el párrafo 140, ¿por qué es imprescindible consignar la fecha de llegada?',
+            opciones: [
+                'Para calcular la edad del migrante',
+                'Para que los datos correspondan al año de ocurrencia',
+                'Para determinar la ciudadanía',
+                'Para conocer el país de origen'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 140 dice: "Es imprescindible consignar esta información en el caso de todas las personas que sean consideradas parte de la corriente de entrada de migrantes internacionales... para que los datos correspondientes a un año determinado se refieran efectivamente a acontecimientos ocurridos ese año."',
+            distractores: [
+                'No es para calcular edad.',
+                'No es para ciudadanía.',
+                'No es para país de origen.'
+            ]
+        },
+        {
+            tipo: 'completar',
+            pregunta: 'El párrafo 141 indica que la fecha de partida debe consignarse respecto de cada persona que sea considerada parte de la corriente de ________ de migrantes internacionales.',
+            opciones: [
+                'entrada',
+                'salida',
+                'tránsito',
+                'retorno'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 141 dice: "La fecha de partida debe consignarse respecto de cada persona que sea considerada parte de la corriente de salida de migrantes internacionales."',
+            distractores: [
+                'No es entrada; es salida.',
+                'No es tránsito.',
+                'No es retorno.'
+            ]
+        },
+        {
+            tipo: 'multiple',
+            pregunta: '¿Qué segundo indicador útil de la duración de la estancia se menciona en el párrafo 142 para los extranjeros que no tienen derecho a establecerse libremente?',
+            opciones: [
+                'La fecha de nacimiento',
+                'La duración del permiso de residencia, permiso de trabajo o visado',
+                'El país de nacimiento',
+                'La fecha de llegada'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 142 dice: "Con respecto a otros extranjeros, un segundo indicador útil de la duración de la estancia es la duración del permiso de residencia, el permiso de trabajo o el visado que posea el extranjero a su llegada."',
+            distractores: [
+                'No es fecha de nacimiento.',
+                'No es país de nacimiento.',
+                'No es fecha de llegada.'
+            ]
+        },
+        {
+            tipo: 'relacion',
+            pregunta: 'Relacione el concepto con su definición (párrafos 138-146):',
+            lista: '1. País de residencia habitual anterior\n2. País de residencia habitual futura\n3. País de nacimiento',
+            opciones: [
+                '1-B, 2-C, 3-A',
+                '1-C, 2-B, 3-A',
+                '1-A, 2-B, 3-C',
+                '1-B, 2-A, 3-C'
+            ],
+            correcta: 0,
+            explicacion: 'País de residencia habitual anterior: país donde ha vivido durante el año anterior (B). País de residencia habitual futura: país donde proyecta vivir el año siguiente (C). País de nacimiento: país donde nació (A).',
+            distractores: [
+                'Asignación incorrecta.',
+                'Asignación incorrecta.',
+                'Asignación incorrecta.'
+            ]
+        },
+        {
+            tipo: 'completar',
+            pregunta: 'Según el párrafo 144, para determinar el país de residencia habitual anterior, se puede preguntar: "¿En qué países ha vivido durante los últimos ________ meses?"',
+            opciones: [
+                '6',
+                '12',
+                '24',
+                '36'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 144 incluye la pregunta: "1. ¿En qué países ha vivido durante los últimos 12 meses?"',
+            distractores: [
+                'No son 6, son 12.',
+                'No son 24, son 12.',
+                'No son 36, son 12.'
+            ]
+        },
+        {
+            tipo: 'multiple',
+            pregunta: 'Según el párrafo 146, ¿cómo se debe obtener la información sobre el país de nacimiento?',
+            opciones: [
+                'A la luz de las fronteras nacionales existentes en el momento de reunirse los datos',
+                'Según las fronteras históricas del país',
+                'Según la ciudadanía actual',
+                'Según la residencia habitual'
+            ],
+            correcta: 0,
+            explicacion: 'El párrafo 146 dice: "Para facilitar la reunión y la codificación de los datos, se recomienda obtener la información sobre el país de nacimiento a la luz de las fronteras nacionales existentes en el momento de reunirse los datos."',
+            distractores: [
+                'No es según fronteras históricas.',
+                'No es según ciudadanía actual.',
+                'No es según residencia habitual.'
+            ]
+        },
+        {
+            tipo: 'multiple',
+            pregunta: '¿Qué grupos de edad se recomiendan en las tabulaciones según el párrafo 139?',
+            opciones: [
+                'Grupos de edad de 10 años',
+                'Grupos de edad de 5 años, con intervalo abierto para 85 o más',
+                'Grupos de edad de 1 año',
+                'Sin grupos de edad específicos'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 139 dice: "los grupos de edad empleados deben ser de cinco años y el último grupo, de 85 o más años de edad."',
+            distractores: [
+                'No son de 10 años, son de 5.',
+                'No son de 1 año.',
+                'Sí hay grupos específicos.'
+            ]
+        },
+        {
+            tipo: 'relacion',
+            pregunta: 'Relacione el dato con su utilidad según los párrafos 138-146:',
+            lista: '1. Fecha de llegada\n2. Duración prevista de la estancia\n3. País de residencia habitual futura\n4. País de nacimiento',
+            opciones: [
+                '1-B, 2-A, 3-D, 4-C',
+                '1-A, 2-B, 3-C, 4-D',
+                '1-B, 2-A, 3-C, 4-D',
+                '1-A, 2-D, 3-B, 4-C'
+            ],
+            correcta: 0,
+            explicacion: 'Fecha de llegada: para que los datos correspondan al año (B). Duración prevista: para determinar migrantes por largo plazo (A). País de residencia futura: para saber dónde proyectan vivir (D). País de nacimiento: para migrantes vitalicios (C).',
+            distractores: [
+                'Asignación incorrecta.',
+                'Asignación incorrecta.',
+                'Asignación incorrecta.'
+            ]
+        },
+        {
+            tipo: 'completar',
+            pregunta: 'Según el párrafo 145, el país de residencia habitual futura se determina preguntando: "¿Dónde tiene previsto vivir el ________?"',
+            opciones: [
+                'mes próximo',
+                'año próximo',
+                'próximo viaje',
+                'próximo mes'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 145 dice: "El país de residencia habitual futura puede determinarse preguntando: ¿Dónde tiene previsto vivir el próximo año?"',
+            distractores: [
+                'No es mes próximo; es año próximo.',
+                'No es próximo viaje.',
+                'No es próximo mes.'
+            ]
+        },
+        {
+            tipo: 'multiple',
+            pregunta: 'Según el párrafo 142, ¿para quiénes es el único medio de individualizar por anticipado a los posibles inmigrantes por largo plazo que entran?',
+            opciones: [
+                'Para los extranjeros',
+                'Para los ciudadanos',
+                'Para los apátridas',
+                'Para los refugiados'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 142 dice: "En el caso de los ciudadanos, la información sobre la duración prevista de la estancia en su propio país es el único medio de individualizar por anticipado a los posibles inmigrantes por largo plazo que entran."',
+            distractores: [
+                'No es para extranjeros; ellos tienen permisos como indicador.',
+                'No es para apátridas.',
+                'No es para refugiados.'
+            ]
+        },
+        {
+            tipo: 'multiple',
+            pregunta: '¿Qué se debe hacer en caso de duda sobre el país de nacimiento según el párrafo 146?',
+            opciones: [
+                'Dejar la casilla en blanco',
+                'Consignar el país según existía en el momento del nacimiento y hacer ajustes',
+                'Preguntar al migrante su ciudadanía',
+                'Usar el país de residencia habitual'
+            ],
+            correcta: 1,
+            explicacion: 'El párrafo 146 dice: "En caso de duda, se debe consignar el nombre del país de nacimiento según existía en el momento del nacimiento y se deben efectuar ajustes en el momento de la incorporación de los datos."',
+            distractores: [
+                'No se debe dejar en blanco.',
+                'No es ciudadanía.',
+                'No es residencia habitual.'
+            ]
+        },
+        {
+            tipo: 'relacion',
+            pregunta: 'Relacione el tipo de migrante con la información necesaria para determinarlo según los párrafos 138-146:',
+            lista: '1. Inmigrante por largo plazo\n2. Emigrante por largo plazo',
+            opciones: [
+                '1-A, 2-B',
+                '1-B, 2-A',
+                '1-A, 2-A',
+                '1-B, 2-B'
+            ],
+            correcta: 0,
+            explicacion: 'Inmigrante por largo plazo: necesita duración prevista de estancia en el país receptor (A). Emigrante por largo plazo: necesita duración prevista de estancia en el extranjero (B).',
+            distractores: [
+                'Asignación incorrecta.',
+                'No es la misma información para ambos.',
+                'No es la misma información para ambos.'
+            ]
+        },
+        {
+            tipo: 'completar',
+            pregunta: 'Según el párrafo 141, algunos sistemas de reunión de datos permiten comparar la fecha de llegada con la fecha de partida para calcular la ________ de la estancia.',
+            opciones: [
+                'duración efectiva',
+                'duración prevista',
+                'fecha de inicio',
+                'fecha de término'
+            ],
+            correcta: 0,
+            explicacion: 'El párrafo 141 dice: "En el caso de los sistemas de reunión de datos que permitan comparar la fecha de llegada con la fecha de partida de los migrantes, se debe aprovechar esa posibilidad para calcular la duración efectiva de la estancia de los migrantes que parten."',
+            distractores: [
+                'No es duración prevista; es efectiva.',
+                'No es fecha de inicio.',
+                'No es fecha de término.'
+            ]
+        },
+        {
+            tipo: 'multiple',
+            pregunta: '¿Qué recomienda el párrafo 146 para la codificación del país de nacimiento?',
+            opciones: [
+                'Usar el sistema de codificación numérico de Códigos Uniformes de País',
+                'Usar nombres completos de países',
+                'Usar códigos de tres letras',
+                'No hay recomendación'
+            ],
+            correcta: 0,
+            explicacion: 'El párrafo 146 dice: "A efectos de la codificación, se recomienda que los países utilicen el sistema de codificación numérico que figura en el documento Códigos Uniformes de País o de Zona para Uso Estadístico."',
+            distractores: [
+                'No son nombres completos; es codificación numérica.',
+                'No son códigos de tres letras; es numérico.',
+                'Sí hay recomendación.'
+            ]
+        },
+        {
+            tipo: 'completar',
+            pregunta: 'El párrafo 143 señala que las personas que son residentes habituales del país de partida y que lo abandonan con la intención de permanecer en el extranjero menos de un año pueden considerarse ________ si la duración prevista es de al menos 3 meses y no es por fines de ocio, etc.',
+            opciones: [
+                'migrantes por breve plazo',
+                'turistas',
+                'excursionistas',
+                'viajeros de negocios'
+            ],
+            correcta: 0,
+            explicacion: 'El párrafo 143 dice: "Cabe señalar, sin embargo, que las personas que son residentes habituales del país de partida y que lo abandonan con la intención de permanecer en el extranjero menos de un año pueden considerarse migrantes por breve plazo si la duración prevista de su estancia en el extranjero es de al menos 3 meses y no obedece a fines de recreación, vacaciones, etc."',
+            distractores: [
+                'No son turistas; son migrantes por breve plazo.',
+                'No son excursionistas.',
+                'No son viajeros de negocios.'
+            ]
+        },
+        {
+            tipo: 'multiple',
+            pregunta: 'Según el párrafo 144, ¿qué pregunta se formula para determinar la duración prevista de la estancia en el país de llegada?',
+            opciones: [
+                '¿Cuánto tiempo piensa quedarse en el país?',
+                '¿Cuál es su país de origen?',
+                '¿Dónde nació?',
+                '¿Cuál es su ciudadanía?'
+            ],
+            correcta: 0,
+            explicacion: 'El párrafo 144 incluye la pregunta: "5. ¿Cuánto tiempo tiene previsto quedarse en el país A? — Menos de 3 meses — Al menos 3 meses, pero menos de 12 meses — Un año o más"',
+            distractores: [
+                'No es país de origen.',
+                'No es lugar de nacimiento.',
+                'No es ciudadanía.'
+            ]
+        },
+        {
+            tipo: 'relacion',
+            pregunta: 'Relacione el concepto con la forma de obtenerlo según los párrafos 138-146:',
+            lista: '1. Edad\n2. País de residencia habitual anterior\n3. País de residencia habitual futura',
+            opciones: [
+                '1-A, 2-B, 3-C',
+                '1-B, 2-C, 3-A',
+                '1-A, 2-C, 3-B',
+                '1-C, 2-A, 3-B'
+            ],
+            correcta: 0,
+            explicacion: 'Edad: se establece registrando fecha de nacimiento (A). País de residencia habitual anterior: se pregunta en qué país ha vivido en los últimos 12 meses (B). País de residencia habitual futura: se pregunta dónde tiene previsto vivir el próximo año (C).',
+            distractores: [
+                'Asignación incorrecta.',
+                'Asignación incorrecta.',
+                'Asignación incorrecta.'
+            ]
+        },
+        {
+            tipo: 'completar',
+            pregunta: 'Según el párrafo 146, la información sobre el país de nacimiento es útil porque no cambia durante la vida de la persona, y por ello permite individualizar a la población de ________.',
+            opciones: [
+                'migrantes vitalicios',
+                'ciudadanos naturalizados',
+                'extranjeros',
+                'refugiados'
+            ],
+            correcta: 0,
+            explicacion: 'El párrafo 146 dice: "La información sobre el país de nacimiento es útil porque no cambia durante la vida de la persona... resulta útil para individualizar a la población de migrantes vitalicios."',
+            distractores: [
+                'No es ciudadanos naturalizados.',
+                'No es extranjeros (aunque pueden serlo, el término específico es migrantes vitalicios).',
+                'No es refugiados.'
+            ]
+        }
+    ];
+
+    // Mezclar el array de preguntas
+    function mezclarArray(array) {
+        for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        return array;
+    }
+
+    var preguntas = [];
+    var indiceActual = 0;
+    var respuestas = [];
+    var respondidas = [];
+    var score = 0;
+    var finalizado = false;
+
+    var questionArea = document.getElementById('questionArea');
+    var progressLabel = document.getElementById('progressLabel');
+    var progressFill = document.getElementById('progressFill');
+    var resultsPanel = document.getElementById('resultsPanel');
+
+    function iniciar() {
+        preguntas = mezclarArray([].concat(preguntasData));
+        indiceActual = 0;
+        respuestas = new Array(preguntas.length);
+        respondidas = new Array(preguntas.length);
+        for (var i = 0; i < preguntas.length; i++) {
+            respuestas[i] = undefined;
+            respondidas[i] = false;
+        }
+        score = 0;
+        finalizado = false;
+        resultsPanel.style.display = 'none';
+        renderPregunta();
+    }
+
+    function renderPregunta() {
+        if (finalizado) return;
+        var pregunta = preguntas[indiceActual];
+        var total = preguntas.length;
+        var num = indiceActual + 1;
+
+        progressLabel.textContent = 'Pregunta ' + num + ' / ' + total;
+        progressFill.style.width = ((num / total) * 100) + '%';
+
+        var html = '<div class="question-card">';
+        html += '<div class="question-number">Pregunta ' + num + ' / ' + total + '</div>';
+        html += '<div class="question-text">' + pregunta.pregunta + '</div>';
+
+        // Mostrar lista de conceptos numerados si es relación
+        if (pregunta.tipo === 'relacion' && pregunta.lista) {
+            var items = pregunta.lista.split('\n').filter(function(line) { return line.trim() !== ''; });
+            html += '<div class="relation-list">';
+            items.forEach(function(item) {
+                html += '<div>' + item + '</div>';
+            });
+            html += '</div>';
+        }
+
+        // Mostrar definiciones (A, B, C, D) si es relación
+        if (pregunta.tipo === 'relacion' && pregunta.definiciones) {
+            html += '<div class="definitions-box">';
+            var letras = ['A', 'B', 'C', 'D'];
+            letras.forEach(function(letra) {
+                if (pregunta.definiciones[letra]) {
+                    html += '<div><span class="def-label">' + letra + '.</span> ' + pregunta.definiciones[letra] + '</div>';
+                }
+            });
+            html += '</div>';
+        }
+
+        html += '<div class="options" id="opciones">';
+
+        var letras = ['A', 'B', 'C', 'D'];
+        var yaRespondida = respondidas[indiceActual];
+        var respuestaSeleccionada = respuestas[indiceActual] || null;
+        var correctaLetra = letras[pregunta.correcta];
+
+        pregunta.opciones.forEach(function(texto, idx) {
+            var letra = letras[idx];
+            var checked = (respuestaSeleccionada === letra) ? 'checked' : '';
+            var disabled = yaRespondida ? 'disabled' : '';
+            var claseExtra = '';
+            if (yaRespondida) {
+                if (letra === correctaLetra && letra === respuestaSeleccionada) {
+                    claseExtra = 'correct-option';
+                } else if (letra === respuestaSeleccionada && letra !== correctaLetra) {
+                    claseExtra = 'incorrect-option';
+                } else if (letra === correctaLetra) {
+                    claseExtra = 'correct-option';
+                }
+            }
+            html += '<div class="option ' + (yaRespondida ? 'disabled' : '') + ' ' + claseExtra + '" id="optCont_' + letra + '">';
+            html += '<input type="radio" name="pregunta" value="' + letra + '" id="opt_' + letra + '" ' + checked + ' ' + disabled + '>';
+            html += '<label for="opt_' + letra + '"><strong>' + letra + '.</strong> ' + texto + '</label>';
+            html += '</div>';
+        });
+
+        html += '</div>';
+
+        // Feedback
+        var feedbackClass = '';
+        var feedbackTitle = '';
+        var feedbackDetail = '';
+        var mostrarFeedback = false;
+
+        if (yaRespondida) {
+            var esCorrecta = (respuestaSeleccionada === correctaLetra);
+            if (esCorrecta) {
+                feedbackClass = 'correct';
+                feedbackTitle = '✅ Correcto';
+            } else {
+                feedbackClass = 'incorrect';
+                feedbackTitle = '❌ Incorrecto';
+            }
+            var detalle = '<p><strong>Explicación:</strong> ' + pregunta.explicacion + '</p>';
+            if (pregunta.distractores) {
+                detalle += '<p><strong>Análisis de distractores:</strong></p><ul>';
+                pregunta.distractores.forEach(function(d, i) {
+                    detalle += '<li><em>' + letras[i] + ':</em> ' + d + '</li>';
+                });
+                detalle += '</ul>';
+            }
+            feedbackDetail = detalle;
+            mostrarFeedback = true;
+        }
+
+        if (mostrarFeedback) {
+            html += '<div class="feedback ' + feedbackClass + '" id="feedbackPanel" style="display:block;">';
+            html += '<div class="feedback-title">' + feedbackTitle + '</div>';
+            html += '<div class="feedback-detail">' + feedbackDetail + '</div>';
+            html += '</div>';
+        } else {
+            html += '<div class="feedback" id="feedbackPanel" style="display:none;"></div>';
+        }
+
+        // Botones de navegación
+        var hayRespuesta = respuestaSeleccionada !== null;
+        var puedeVerificar = !yaRespondida && hayRespuesta;
+
+        html += '<div class="actions">';
+        html += '<div class="nav-group">';
+        if (indiceActual > 0) {
+            html += '<button class="btn btn-outline" onclick="irAPregunta(' + (indiceActual - 1) + ')">◀ Anterior</button>';
+        }
+        if (indiceActual < total - 1) {
+            html += '<button class="btn btn-outline" onclick="irAPregunta(' + (indiceActual + 1) + ')">Siguiente ▶</button>';
+        }
+        html += '</div>';
+        html += '<div class="nav-group">';
+        if (puedeVerificar) {
+            html += '<button class="btn btn-success" id="btnVerificar" onclick="verificarRespuesta()">Verificar respuesta</button>';
+        }
+        if (yaRespondida && indiceActual === total - 1) {
+            html += '<button class="btn btn-primary" onclick="finalizar()">Ver resultados</button>';
+        }
+        html += '</div>';
+        html += '</div>';
+
+        html += '</div>';
+        questionArea.innerHTML = html;
+
+        // Event listeners para los radio buttons
+        document.querySelectorAll('input[name="pregunta"]').forEach(function(input) {
+            input.addEventListener('change', function(e) {
+                if (respondidas[indiceActual]) return;
+                var val = this.value;
+                respuestas[indiceActual] = val;
+                renderPregunta();
+            });
+        });
+    }
+
+    function irAPregunta(nuevoIndice) {
+        if (nuevoIndice >= 0 && nuevoIndice < preguntas.length) {
+            indiceActual = nuevoIndice;
+            renderPregunta();
+        }
+    }
+
+    function verificarRespuesta() {
+        if (respondidas[indiceActual]) return;
+        var letra = respuestas[indiceActual];
+        if (!letra) return;
+        var pregunta = preguntas[indiceActual];
+        var letras = ['A', 'B', 'C', 'D'];
+        var correctaLetra = letras[pregunta.correcta];
+        var esCorrecta = (letra === correctaLetra);
+        if (esCorrecta) score++;
+        respondidas[indiceActual] = true;
+        renderPregunta();
+    }
+
+    function finalizar() {
+        finalizado = true;
+        var total = preguntas.length;
+        var porcentaje = Math.round((score / total) * 100);
+        document.getElementById('finalScore').textContent = porcentaje + '%';
+        var mensaje = '';
+        if (porcentaje >= 90) mensaje = '¡Excelente! Dominas los conceptos de migraciones internacionales.';
+        else if (porcentaje >= 70) mensaje = 'Buen trabajo, pero revisa los conceptos clave.';
+        else if (porcentaje >= 50) mensaje = 'Es necesario repasar la teoría con más detalle.';
+        else mensaje = 'Te recomiendo estudiar nuevamente los párrafos indicados.';
+        document.getElementById('finalMessage').textContent = mensaje;
+        resultsPanel.style.display = 'block';
+        questionArea.innerHTML = '';
+        progressLabel.textContent = 'Cuestionario completado';
+        progressFill.style.width = '100%';
+    }
+
+    function reiniciar() {
+        iniciar();
+    }
+
+    iniciar();
+</script>
+</body>
+</html>
