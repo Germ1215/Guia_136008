@@ -303,7 +303,7 @@
     // --------------------------------------------------------------
     // BANCO DE PREGUNTAS (basado en págs. 23 y 25 del documento)
     // --------------------------------------------------------------
-    const preguntasData = [
+    var preguntasData = [
         {
             tipo: 'multiple',
             pregunta: 'Según el párrafo 49, ¿qué hechos deben tener la más alta prioridad en el establecimiento de procedimientos de inscripción?',
@@ -314,7 +314,7 @@
                 'Todos por igual'
             ],
             correcta: 1,
-            explicacion: 'El párrafo 49 establece: "al establecer o mejorar un sistema de estadísticas vitales, debe otorgarse prioridad al desarrollo de procedimientos de inscripción de a) los nacimientos vivos y b) las defunciones y, después, c) las defunciones fetales". Por lo tanto, los tres primeros tienen prioridad, pero en ese orden.',
+            explicacion: 'El párrafo 49 establece: "al establecer o mejorar un sistema de estadísticas vitales, debe otorgarse prioridad al desarrollo de procedimientos de inscripción de a) los nacimientos vivos y b) las defunciones y, después, c) las defunciones fetales".',
             distractores: [
                 'Omite las defunciones fetales, que también tienen prioridad.',
                 'Incorrecto, los matrimonios y divorcios tienen menor prioridad.',
@@ -369,7 +369,7 @@
             distractores: [
                 'El texto dice "respire", no "llore".',
                 'El texto dice "respire", no "se mueva" (aunque el movimiento es un signo, la palabra exacta es "respire").',
-                'El texto dice "respire", no "tenga latido cardiaco" (aunque el latido es un signo, la palabra exacta es "respire").'
+                'El texto dice "respire", no "tenga latido cardiaco".'
             ]
         },
         {
@@ -399,18 +399,14 @@
                 'por adopción',
                 'en el extranjero'
             ],
-            correcta: 0,
-            explicacion: 'El párrafo 57 define legitimación como "el otorgamiento formal a una persona de la condición jurídica y los derechos del hijo nacido dentro del matrimonio". Atención: la definición dice "dentro del matrimonio", pero la pregunta dice "nacido ________" y la respuesta correcta es "fuera del matrimonio" porque la legitimación se aplica a hijos nacidos fuera del matrimonio. Revisando: el texto dice "nacido dentro del matrimonio" para la definición de legitimación. Sin embargo, la legitimación es el acto de dar la condición de legítimo a un hijo nacido fuera del matrimonio. La definición en el párrafo 57: "LEGITIMACIÓN es el otorgamiento formal a una persona de la condición jurídica y los derechos del hijo nacido dentro del matrimonio". Eso parece contradictorio. Pero la definición correcta es que se otorgan los derechos de un hijo nacido dentro del matrimonio, pero la persona que recibe la legitimación es alguien que no lo era. Por lo tanto, la pregunta busca que el estudiante identifique que la legitimación se aplica a hijos nacidos fuera del matrimonio. Sin embargo, la frase literal es "nacido dentro del matrimonio". Para evitar ambigüedad, pondré la opción correcta como "fuera del matrimonio" porque la legitimación es para hijos ilegítimos. Pero según el texto, dice "nacido dentro del matrimonio". La pregunta puede ser: "La legitimación es el otorgamiento formal a una persona de la condición jurídica y los derechos del hijo nacido ________." y la respuesta correcta es "dentro del matrimonio" según el texto. Pero eso sería contradictorio porque la legitimación es para hijos ilegítimos. Sin embargo, el texto dice: "LEGITIMACIÓN es el otorgamiento formal a una persona de la condición jurídica y los derechos del hijo nacido dentro del matrimonio". Eso podría interpretarse como que se otorgan los derechos que tendría si hubiera nacido dentro del matrimonio. Pero la frase dice "nacido dentro del matrimonio". Voy a respetar el texto literal. Entonces la respuesta correcta es "dentro del matrimonio". Pero la pregunta dice "nacido ________" y la opción "fuera del matrimonio" sería más lógica. Sin embargo, debo ceñirme al texto. El texto dice "dentro del matrimonio". Por lo tanto, la respuesta correcta es B (dentro del matrimonio). Pero la definición de legitimación es para hijos ilegítimos, pero el texto dice "nacido dentro del matrimonio". Puede ser un error del texto o una interpretación. Voy a poner la respuesta correcta como "dentro del matrimonio" y en la explicación aclararé que la legitimación otorga los derechos de un hijo nacido dentro del matrimonio a alguien que no lo era. Pero la pregunta es de completar con la frase exacta. El texto dice "nacido dentro del matrimonio". Por lo tanto, respuesta correcta: B.
+            correcta: 1,
+            explicacion: 'El párrafo 57 define LEGITIMACIÓN como "el otorgamiento formal a una persona de la condición jurídica y los derechos del hijo nacido dentro del matrimonio".',
             distractores: [
-                'No es fuera del matrimonio; el texto dice "dentro del matrimonio".',
+                'La definición dice "dentro del matrimonio".',
                 'No es adopción.',
                 'No es en el extranjero.'
             ]
         },
-        // Corrijo la pregunta 6 para que sea clara: la legitimación otorga los derechos de hijo nacido dentro del matrimonio.
-        // Pero la pregunta 6 ya la tengo, voy a modificarla para que sea más precisa.
-        // La dejaré como está, pero con la respuesta correcta B (dentro del matrimonio) y en la explicación aclararé.
-        // Ahora sigo.
         {
             tipo: 'multiple',
             pregunta: '¿Qué es la adopción?',
@@ -826,36 +822,38 @@
         }
     ];
 
-    // Ajuste: la pregunta 6 (legitimación) la corregí para que la respuesta correcta sea "dentro del matrimonio". Pero en mi array, la pregunta 6 es la de completar sobre legitimación. La tengo con opciones y correcta: 1 (dentro del matrimonio). Voy a verificar que esté bien.
-
-    // Ahora, estado de la aplicación
-    let preguntas = [];
-    let indiceActual = 0;
-    let respuestas = []; // almacena la letra seleccionada
-    let respondidas = []; // booleano
-    let score = 0;
-    let finalizado = false;
-
-    const questionArea = document.getElementById('questionArea');
-    const progressLabel = document.getElementById('progressLabel');
-    const progressFill = document.getElementById('progressFill');
-    const resultsPanel = document.getElementById('resultsPanel');
-
+    // Mezclar el array de preguntas
     function mezclarArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+        for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
         }
         return array;
     }
 
+    var preguntas = [];
+    var indiceActual = 0;
+    var respuestas = [];
+    var respondidas = [];
+    var score = 0;
+    var finalizado = false;
+
+    var questionArea = document.getElementById('questionArea');
+    var progressLabel = document.getElementById('progressLabel');
+    var progressFill = document.getElementById('progressFill');
+    var resultsPanel = document.getElementById('resultsPanel');
+
     function iniciar() {
-        // Tomar todas las preguntas y mezclarlas
-        preguntas = mezclarArray([...preguntasData]);
-        // Tomar solo 30 (ya son 30)
+        preguntas = mezclarArray([].concat(preguntasData));
         indiceActual = 0;
-        respuestas = new Array(preguntas.length).fill(undefined);
-        respondidas = new Array(preguntas.length).fill(false);
+        respuestas = new Array(preguntas.length);
+        respondidas = new Array(preguntas.length);
+        for (var i = 0; i < preguntas.length; i++) {
+            respuestas[i] = undefined;
+            respondidas[i] = false;
+        }
         score = 0;
         finalizado = false;
         resultsPanel.style.display = 'none';
@@ -864,38 +862,37 @@
 
     function renderPregunta() {
         if (finalizado) return;
-        const pregunta = preguntas[indiceActual];
-        const total = preguntas.length;
-        const num = indiceActual + 1;
+        var pregunta = preguntas[indiceActual];
+        var total = preguntas.length;
+        var num = indiceActual + 1;
 
-        progressLabel.textContent = `Pregunta ${num} / ${total}`;
-        progressFill.style.width = `${(num / total) * 100}%`;
+        progressLabel.textContent = 'Pregunta ' + num + ' / ' + total;
+        progressFill.style.width = ((num / total) * 100) + '%';
 
-        let html = `<div class="question-card">`;
-        html += `<div class="question-text">${pregunta.pregunta}</div>`;
+        var html = '<div class="question-card">';
+        html += '<div class="question-text">' + pregunta.pregunta + '</div>';
 
-        // Si es tipo relación y tiene lista, mostrarla
         if (pregunta.tipo === 'relacion' && pregunta.lista) {
-            const items = pregunta.lista.split('\n').filter(line => line.trim() !== '');
-            html += `<div class="relation-list">`;
-            items.forEach(item => {
-                html += `<div>${item}</div>`;
+            var items = pregunta.lista.split('\n').filter(function(line) { return line.trim() !== ''; });
+            html += '<div class="relation-list">';
+            items.forEach(function(item) {
+                html += '<div>' + item + '</div>';
             });
-            html += `</div>`;
+            html += '</div>';
         }
 
-        html += `<div class="options" id="opciones">`;
+        html += '<div class="options" id="opciones">';
 
-        const letras = ['A', 'B', 'C', 'D'];
-        const yaRespondida = respondidas[indiceActual];
-        const respuestaSeleccionada = respuestas[indiceActual] || null;
-        const correctaLetra = letras[pregunta.correcta];
+        var letras = ['A', 'B', 'C', 'D'];
+        var yaRespondida = respondidas[indiceActual];
+        var respuestaSeleccionada = respuestas[indiceActual] || null;
+        var correctaLetra = letras[pregunta.correcta];
 
-        pregunta.opciones.forEach((texto, idx) => {
-            const letra = letras[idx];
-            const checked = (respuestaSeleccionada === letra) ? 'checked' : '';
-            const disabled = yaRespondida ? 'disabled' : '';
-            let claseExtra = '';
+        pregunta.opciones.forEach(function(texto, idx) {
+            var letra = letras[idx];
+            var checked = (respuestaSeleccionada === letra) ? 'checked' : '';
+            var disabled = yaRespondida ? 'disabled' : '';
+            var claseExtra = '';
             if (yaRespondida) {
                 if (letra === correctaLetra && letra === respuestaSeleccionada) {
                     claseExtra = 'correct-option';
@@ -905,24 +902,21 @@
                     claseExtra = 'correct-option';
                 }
             }
-            html += `
-                <div class="option ${yaRespondida ? 'disabled' : ''} ${claseExtra}" id="optCont_${letra}">
-                    <input type="radio" name="pregunta" value="${letra}" id="opt_${letra}" ${checked} ${disabled}>
-                    <label for="opt_${letra}"><strong>${letra}.</strong> ${texto}</label>
-                </div>
-            `;
+            html += '<div class="option ' + (yaRespondida ? 'disabled' : '') + ' ' + claseExtra + '" id="optCont_' + letra + '">';
+            html += '<input type="radio" name="pregunta" value="' + letra + '" id="opt_' + letra + '" ' + checked + ' ' + disabled + '>';
+            html += '<label for="opt_' + letra + '"><strong>' + letra + '.</strong> ' + texto + '</label>';
+            html += '</div>';
         });
 
-        html += `</div>`;
+        html += '</div>';
 
-        // Feedback
-        let feedbackClass = '';
-        let feedbackTitle = '';
-        let feedbackDetail = '';
-        let mostrarFeedback = false;
+        var feedbackClass = '';
+        var feedbackTitle = '';
+        var feedbackDetail = '';
+        var mostrarFeedback = false;
 
         if (yaRespondida) {
-            const esCorrecta = (respuestaSeleccionada === correctaLetra);
+            var esCorrecta = (respuestaSeleccionada === correctaLetra);
             if (esCorrecta) {
                 feedbackClass = 'correct';
                 feedbackTitle = '✅ Correcto';
@@ -930,49 +924,47 @@
                 feedbackClass = 'incorrect';
                 feedbackTitle = '❌ Incorrecto';
             }
-            let detalle = `<p><strong>Explicación:</strong> ${pregunta.explicacion}</p>`;
+            var detalle = '<p><strong>Explicación:</strong> ' + pregunta.explicacion + '</p>';
             if (pregunta.distractores) {
-                detalle += `<p><strong>Análisis de distractores:</strong></p><ul>`;
-                pregunta.distractores.forEach((d, i) => {
-                    detalle += `<li><em>${letras[i]}:</em> ${d}</li>`;
+                detalle += '<p><strong>Análisis de distractores:</strong></p><ul>';
+                pregunta.distractores.forEach(function(d, i) {
+                    detalle += '<li><em>' + letras[i] + ':</em> ' + d + '</li>';
                 });
-                detalle += `</ul>`;
+                detalle += '</ul>';
             }
             feedbackDetail = detalle;
             mostrarFeedback = true;
         }
 
         if (mostrarFeedback) {
-            html += `<div class="feedback ${feedbackClass}" id="feedbackPanel" style="display:block;">`;
-            html += `<div class="feedback-title">${feedbackTitle}</div>`;
-            html += `<div class="feedback-detail">${feedbackDetail}</div>`;
-            html += `</div>`;
+            html += '<div class="feedback ' + feedbackClass + '" id="feedbackPanel" style="display:block;">';
+            html += '<div class="feedback-title">' + feedbackTitle + '</div>';
+            html += '<div class="feedback-detail">' + feedbackDetail + '</div>';
+            html += '</div>';
         } else {
-            html += `<div class="feedback" id="feedbackPanel" style="display:none;"></div>`;
+            html += '<div class="feedback" id="feedbackPanel" style="display:none;"></div>';
         }
 
-        // Botones
-        const hayRespuesta = respuestaSeleccionada !== null;
-        html += `<div class="actions">`;
+        var hayRespuesta = respuestaSeleccionada !== null;
+        html += '<div class="actions">';
         if (!yaRespondida && hayRespuesta) {
-            html += `<button class="btn btn-primary" id="btnVerificar" onclick="verificarRespuesta()">Verificar respuesta</button>`;
+            html += '<button class="btn btn-primary" id="btnVerificar" onclick="verificarRespuesta()">Verificar respuesta</button>';
         }
         if (yaRespondida && indiceActual < total - 1) {
-            html += `<button class="btn btn-primary" onclick="siguientePregunta()">Siguiente →</button>`;
+            html += '<button class="btn btn-primary" onclick="siguientePregunta()">Siguiente →</button>';
         }
         if (yaRespondida && indiceActual === total - 1) {
-            html += `<button class="btn btn-primary" onclick="finalizar()">Ver resultados</button>`;
+            html += '<button class="btn btn-primary" onclick="finalizar()">Ver resultados</button>';
         }
-        html += `</div>`;
+        html += '</div>';
 
-        html += `</div>`;
+        html += '</div>';
         questionArea.innerHTML = html;
 
-        // Eventos para radio buttons
-        document.querySelectorAll('input[name="pregunta"]').forEach(input => {
+        document.querySelectorAll('input[name="pregunta"]').forEach(function(input) {
             input.addEventListener('change', function(e) {
                 if (respondidas[indiceActual]) return;
-                const val = this.value;
+                var val = this.value;
                 respuestas[indiceActual] = val;
                 renderPregunta();
             });
@@ -981,12 +973,12 @@
 
     function verificarRespuesta() {
         if (respondidas[indiceActual]) return;
-        const letra = respuestas[indiceActual];
+        var letra = respuestas[indiceActual];
         if (!letra) return;
-        const pregunta = preguntas[indiceActual];
-        const letras = ['A', 'B', 'C', 'D'];
-        const correctaLetra = letras[pregunta.correcta];
-        const esCorrecta = (letra === correctaLetra);
+        var pregunta = preguntas[indiceActual];
+        var letras = ['A', 'B', 'C', 'D'];
+        var correctaLetra = letras[pregunta.correcta];
+        var esCorrecta = (letra === correctaLetra);
         if (esCorrecta) score++;
         respondidas[indiceActual] = true;
         renderPregunta();
@@ -1001,10 +993,10 @@
 
     function finalizar() {
         finalizado = true;
-        const total = preguntas.length;
-        const porcentaje = Math.round((score / total) * 100);
-        document.getElementById('finalScore').textContent = `${porcentaje}%`;
-        let mensaje = '';
+        var total = preguntas.length;
+        var porcentaje = Math.round((score / total) * 100);
+        document.getElementById('finalScore').textContent = porcentaje + '%';
+        var mensaje = '';
         if (porcentaje >= 90) mensaje = '¡Excelente! Dominas los conceptos de estadísticas vitales.';
         else if (porcentaje >= 70) mensaje = 'Buen trabajo, pero revisa los conceptos clave.';
         else if (porcentaje >= 50) mensaje = 'Es necesario repasar la teoría con más detalle.';
@@ -1020,7 +1012,6 @@
         iniciar();
     }
 
-    // Inicializar
     iniciar();
 </script>
 </body>
