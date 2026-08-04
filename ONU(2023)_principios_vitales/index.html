@@ -96,7 +96,7 @@
             padding: 16px 20px;
             border-radius: 14px;
             border: 1px solid #e2e9f2;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             font-size: 0.98rem;
             line-height: 1.8;
         }
@@ -112,6 +112,22 @@
             padding: 2px 8px;
             border-radius: 6px;
             font-weight: 500;
+        }
+        .definitions-box {
+            background: #f0f7ff;
+            padding: 16px 20px;
+            border-radius: 14px;
+            border: 1px solid #d0e2f5;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+        .definitions-box div {
+            padding: 2px 0;
+        }
+        .definitions-box .def-label {
+            font-weight: 600;
+            color: #1f3a5f;
         }
         .options {
             display: flex;
@@ -412,6 +428,12 @@
             tipo: 'relacion',
             pregunta: 'Relacione el suceso vital con su definición:',
             lista: '1. Defunción fetal\n2. Defunción\n3. Divorcio\n4. Matrimonio',
+            definiciones: {
+                'A': 'Disolución jurídica definitiva de un matrimonio que confiere derecho a nuevas nupcias',
+                'B': 'Muerte anterior a la expulsión completa sin signos de vida',
+                'C': 'Acto por el que se constituye la relación legal de marido y mujer',
+                'D': 'Desaparición permanente de todo signo de vida después del nacimiento'
+            },
             opciones: [
                 '1-B, 2-D, 3-A, 4-C',
                 '1-D, 2-B, 3-A, 4-C',
@@ -464,6 +486,11 @@
             tipo: 'relacion',
             pregunta: 'Relacione el término con su definición:',
             lista: '1. Anulación\n2. Separación judicial\n3. Reconocimiento',
+            definiciones: {
+                'A': 'Aceptación legal de la paternidad de un hijo nacido fuera del matrimonio',
+                'B': 'Invalidación de un matrimonio que confiere la condición de no haber estado casados',
+                'C': 'Desunión de personas casadas sin derecho a contraer nuevo matrimonio'
+            },
             opciones: [
                 '1-B, 2-C, 3-A',
                 '1-C, 2-B, 3-A',
@@ -567,6 +594,12 @@
             tipo: 'relacion',
             pregunta: 'Relacione el tipo de suceso vital con su prioridad según el párrafo 49:',
             lista: '1. Nacimientos vivos\n2. Defunciones\n3. Defunciones fetales\n4. Matrimonios y divorcios',
+            definiciones: {
+                'A': 'Prioridad principal (junto con nacimientos vivos)',
+                'B': 'Menor prioridad',
+                'C': 'Prioridad principal (junto con defunciones)',
+                'D': 'Prioridad media (después de nacimientos y defunciones)'
+            },
             opciones: [
                 '1-C, 2-A, 3-B, 4-D',
                 '1-A, 2-C, 3-B, 4-D',
@@ -653,6 +686,12 @@
             tipo: 'relacion',
             pregunta: 'Relacione el término con su definición (según párrafo 57):',
             lista: '1. Nacimiento vivo\n2. Defunción\n3. Defunción fetal\n4. Matrimonio',
+            definiciones: {
+                'A': 'Desaparición permanente de todo signo de vida después del nacimiento',
+                'B': 'Expulsión que respira o muestra signos de vida',
+                'C': 'Muerte antes de la expulsión sin signos de vida',
+                'D': 'Acto por el que se constituye la relación legal de marido y mujer'
+            },
             opciones: [
                 '1-B, 2-A, 3-C, 4-D',
                 '1-A, 2-B, 3-C, 4-D',
@@ -722,6 +761,12 @@
             tipo: 'relacion',
             pregunta: 'Relacione el suceso con su definición (párrafo 57):',
             lista: '1. Legitimación\n2. Adopción\n3. Anulación\n4. Separación judicial',
+            definiciones: {
+                'A': 'Invalidación de matrimonio que confiere condición de no casado',
+                'B': 'Desunión sin derecho a nuevas nupcias',
+                'C': 'Otorgamiento de condición de hijo nacido dentro del matrimonio',
+                'D': 'Aceptación del hijo de otros como propio'
+            },
             opciones: [
                 '1-C, 2-D, 3-A, 4-B',
                 '1-D, 2-C, 3-A, 4-B',
@@ -791,11 +836,16 @@
             tipo: 'relacion',
             pregunta: 'Relacione el método de recopilación con su prioridad según el párrafo 48:',
             lista: '1. Registro civil\n2. Encuestas por muestreo\n3. Censos de población',
+            definiciones: {
+                'A': 'Método principal recomendado',
+                'B': 'Complementario, proporciona denominadores',
+                'C': 'Complementario, puede investigar hechos del estado civil'
+            },
             opciones: [
-                '1-A, 2-B, 3-C',
+                '1-A, 2-C, 3-B',
                 '1-B, 2-A, 3-C',
                 '1-C, 2-B, 3-A',
-                '1-A, 2-C, 3-B'
+                '1-A, 2-B, 3-C'
             ],
             correcta: 0,
             explicacion: 'El párrafo 48 establece que el registro civil es el método recomendado como principal. Las encuestas y censos son complementarios. Los censos proporcionan denominadores.',
@@ -909,12 +959,24 @@
         html += '<div class="question-number">Pregunta ' + num + ' / ' + total + '</div>';
         html += '<div class="question-text">' + pregunta.pregunta + '</div>';
 
-        // Mostrar lista de relación si existe
+        // Mostrar lista de conceptos numerados
         if (pregunta.tipo === 'relacion' && pregunta.lista) {
             var items = pregunta.lista.split('\n').filter(function(line) { return line.trim() !== ''; });
             html += '<div class="relation-list">';
             items.forEach(function(item) {
                 html += '<div>' + item + '</div>';
+            });
+            html += '</div>';
+        }
+
+        // Mostrar definiciones (A, B, C, D) si es relación
+        if (pregunta.tipo === 'relacion' && pregunta.definiciones) {
+            html += '<div class="definitions-box">';
+            var letras = ['A', 'B', 'C', 'D'];
+            letras.forEach(function(letra) {
+                if (pregunta.definiciones[letra]) {
+                    html += '<div><span class="def-label">' + letra + '.</span> ' + pregunta.definiciones[letra] + '</div>';
+                }
             });
             html += '</div>';
         }
