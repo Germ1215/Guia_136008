@@ -1,1 +1,1061 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autoevaluación: Mortalidad (Demografía I)</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      max-width: 920px;
+      width: 100%;
+      border-radius: 32px;
+      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.2);
+      padding: 32px 40px;
+      transition: 0.25s;
+    }
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: #0b2b4a;
+      letter-spacing: -0.3px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .subtitle {
+      color: #2c5778;
+      font-size: 0.95rem;
+      border-left: 4px solid #2a7faa;
+      padding-left: 16px;
+      margin-bottom: 28px;
+      background: #eef3f9;
+      border-radius: 0 12px 12px 0;
+      line-height: 1.5;
+    }
+    .progress {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      font-size: 0.9rem;
+      color: #1a405a;
+      border-bottom: 1px solid #dce5ed;
+      padding-bottom: 14px;
+    }
+    .question-counter {
+      font-weight: 600;
+      background: #dce5ed;
+      padding: 4px 14px;
+      border-radius: 30px;
+    }
+    .question-box {
+      margin-bottom: 30px;
+    }
+    .qtext {
+      font-size: 1.25rem;
+      font-weight: 500;
+      line-height: 1.6;
+      color: #0b2b4a;
+      margin-bottom: 24px;
+      padding: 0 4px;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e9f2;
+      border-radius: 16px;
+      padding: 14px 20px;
+      transition: 0.15s;
+      cursor: pointer;
+    }
+    .option-item:hover {
+      background: #eef4fa;
+      border-color: #b0c8dd;
+    }
+    .option-item.selected {
+      background: #e0edf9;
+      border-color: #2a7faa;
+      box-shadow: 0 0 0 2px rgba(42,127,170,0.15);
+    }
+    .option-item input[type="radio"] {
+      margin-top: 4px;
+      accent-color: #1f6e96;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+    .option-item label {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #1a334a;
+      cursor: pointer;
+      flex: 1;
+    }
+    .feedback-box {
+      background: #f0f6fe;
+      border-radius: 20px;
+      padding: 18px 24px;
+      margin: 16px 0 28px 0;
+      border-left: 5px solid #2a7faa;
+      display: none;
+    }
+    .feedback-box.correct {
+      border-left-color: #1f8b4c;
+      background: #e8f5ee;
+    }
+    .feedback-box.incorrect {
+      border-left-color: #c74545;
+      background: #fdeeec;
+    }
+    .feedback-box .fb-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+    .feedback-box .fb-detail {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #1a334a;
+    }
+    .feedback-box .fb-detail strong {
+      color: #0b2b4a;
+    }
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: white;
+      border: 1.5px solid #b8cdde;
+      padding: 10px 28px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: #1a405a;
+      cursor: pointer;
+      transition: 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #f9fbfd;
+    }
+    .btn:hover:not(:disabled) {
+      background: #e2ecf5;
+      border-color: #7fa3be;
+      transform: translateY(-1px);
+    }
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .btn-primary {
+      background: #1a5f82;
+      border-color: #1a5f82;
+      color: white;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: #134b68;
+      border-color: #134b68;
+    }
+    .btn-outline {
+      background: transparent;
+      border-color: #b0c8dd;
+    }
+    .btn-success {
+      background: #1f8b4c;
+      border-color: #1f8b4c;
+      color: white;
+    }
+    .btn-success:hover:not(:disabled) {
+      background: #17733e;
+      border-color: #17733e;
+    }
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .result-summary {
+      background: #e2ecf5;
+      border-radius: 24px;
+      padding: 20px 28px;
+      text-align: center;
+      margin-top: 16px;
+    }
+    .result-summary .score {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #0b2b4a;
+    }
+    .result-summary .label {
+      font-size: 1rem;
+      color: #1a405a;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .mt-2 { margin-top: 12px; }
+    .text-muted { color: #4a6a82; }
+    @media (max-width: 600px) {
+      .container { padding: 24px 18px; }
+      h1 { font-size: 1.5rem; }
+      .qtext { font-size: 1.05rem; }
+      .option-item { padding: 12px 16px; }
+      .btn { padding: 8px 18px; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container" id="app">
+  <h1>📘 Autoevaluación · Mortalidad</h1>
+  <div class="subtitle">Capítulo IV — Demografía I (Welti, 1997) &nbsp;|&nbsp; 50 preguntas de opción múltiple</div>
 
+  <div class="progress">
+    <span class="question-counter" id="counterDisplay">1 / 50</span>
+    <span id="statusDisplay" style="font-weight: 500;">Responde y verifica</span>
+  </div>
+
+  <!-- Pregunta -->
+  <div class="question-box" id="questionContainer">
+    <div class="qtext" id="questionText"></div>
+    <div class="options" id="optionsContainer"></div>
+  </div>
+
+  <!-- Feedback -->
+  <div class="feedback-box" id="feedbackBox">
+    <div class="fb-title" id="feedbackTitle"></div>
+    <div class="fb-detail" id="feedbackDetail"></div>
+  </div>
+
+  <!-- Navegación -->
+  <div class="nav-buttons">
+    <div class="btn-group">
+      <button class="btn btn-outline" id="prevBtn" disabled>◀ Anterior</button>
+      <button class="btn btn-outline" id="nextBtn">Siguiente ▶</button>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-primary" id="verifyBtn">✓ Verificar</button>
+      <button class="btn btn-success" id="resetBtn" style="background:#5a6f82;border-color:#5a6f82;">⟳ Reiniciar</button>
+    </div>
+  </div>
+
+  <!-- Resultado final -->
+  <div id="resultContainer" class="hidden result-summary">
+    <div class="label">Porcentaje de aciertos</div>
+    <div class="score" id="finalScore">0%</div>
+    <div style="margin-top: 8px; font-size:0.95rem;" id="finalMessage"></div>
+  </div>
+</div>
+<script>
+  // ----------------------------------------------------------------
+  //  BASE DE PREGUNTAS (50) – extraídas rigurosamente del documento
+  // ----------------------------------------------------------------
+  const questions = [
+    // ========== IV.1.a Nociones básicas sobre mortalidad ==========
+    {
+      id: 1,
+      question: 'En Demografía, la mortalidad se define como:',
+      options: [
+        'A. El conjunto de enfermedades que afectan a una población en un periodo dado.',
+        'B. La acción de la muerte sobre los integrantes de una población.',
+        'C. La salida de individuos de una población debido a emigración.',
+        'D. El proceso biológico de envejecimiento celular.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. El documento indica: "el concepto de mortalidad se emplea para expresar la acción de la muerte sobre los integrantes de una población" (pág. 1). Las otras opciones son definiciones incorrectas o de otros conceptos.'
+    },
+    {
+      id: 2,
+      question: 'Una de las características de la mortalidad que la distingue de la fecundidad y la migración es que:',
+      options: [
+        'A. Es un evento repetitivo a lo largo de la vida.',
+        'B. Ocurre una sola vez a cada persona y no es repetitivo.',
+        'C. Solo afecta a personas de edad avanzada.',
+        'D. Está determinada exclusivamente por factores genéticos.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "La muerte es un riesgo al que se está expuesto durante toda la vida y es, además, un hecho que ocurre una sola vez a cada persona. Estas características hacen que el estudio no presente algunas complejidades propias de otros fenómenos demográficos que son repetitivos (migración y fecundidad)" (pág. 1).'
+    },
+    {
+      id: 3,
+      question: 'Según el texto, existe un consenso general sobre la necesidad de:',
+      options: [
+        'A. Reducir la mortalidad, posponerla el máximo de tiempo posible.',
+        'B. Aumentar la mortalidad para controlar el crecimiento poblacional.',
+        'C. Mantener la mortalidad en niveles constantes.',
+        'D. Reducir la mortalidad solo en países desarrollados.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Existe un criterio consensual, a nivel científico, político y ético, en cuanto a la necesidad de reducir la mortalidad, la que, por definición, es considerada como algo que debe ser pospuesto el máximo de tiempo posible" (pág. 2).'
+    },
+
+    // ========== IV.1.b Fuentes de datos ==========
+    {
+      id: 4,
+      question: 'La fuente básica de datos para el estudio de la mortalidad es:',
+      options: [
+        'A. Los censos de población.',
+        'B. Las encuestas demográficas.',
+        'C. El sistema de estadísticas vitales.',
+        'D. Los registros hospitalarios.'
+      ],
+      correct: 2,
+      explanation: 'Correcto. "La fuente básica de datos para el estudio de la mortalidad es el sistema de estadísticas vitales" (pág. 2).'
+    },
+    {
+      id: 5,
+      question: 'Un problema común en las estadísticas vitales de países subdesarrollados es:',
+      options: [
+        'A. La sobreestimación de las defunciones.',
+        'B. La omisión de fallecimientos, que a veces supera el 50%.',
+        'C. La falta de registros de nacimientos.',
+        'D. La inexistencia de sistemas de registro.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "La omisión de los fallecimientos, que a veces supera el 50 por ciento" (pág. 2).'
+    },
+    {
+      id: 6,
+      question: 'Las técnicas indirectas de estimación de la mortalidad se basan en preguntas incluidas en:',
+      options: [
+        'A. Estadísticas vitales.',
+        'B. Censos y encuestas.',
+        'C. Registros parroquiales.',
+        'D. Modelos matemáticos puros.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "Los errores descritos anteriormente han obligado a desarrollar numerosas técnicas de estimación indirecta de la mortalidad a partir de preguntas incluidas en censos y encuestas" (pág. 2).'
+    },
+
+    // ========== IV.2.a Tasa bruta de mortalidad ==========
+    {
+      id: 7,
+      question: 'La tasa bruta de mortalidad (TBM) se calcula como:',
+      options: [
+        'A. (Defunciones en un año / Población total a mitad de año) × 1000.',
+        'B. (Defunciones en un año / Población femenina en edad fértil) × 1000.',
+        'C. (Defunciones de menores de un año / Nacimientos) × 1000.',
+        'D. (Defunciones en un año / Población total al inicio del año) × 1000.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. La fórmula es d = (D_Z / N_{30-VI-Z}) × 1000 (pág. 3).'
+    },
+    {
+      id: 8,
+      question: 'La tasa bruta de mortalidad expresa:',
+      options: [
+        'A. El número de defunciones por cada mil nacimientos.',
+        'B. La reducción relativa anual de una población atribuible al fallecimiento de parte de sus miembros.',
+        'C. La probabilidad de morir antes de los 5 años.',
+        'D. El número promedio de años que vivirá una persona.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "la tasa bruta de mortalidad expresa la reducción relativa anual de una población atribuible al fallecimiento de parte de sus miembros" (pág. 3).'
+    },
+    {
+      id: 9,
+      question: 'Un valor de TBM = 6 por mil en Chile en 1988 significa que:',
+      options: [
+        'A. Fallecieron 6 personas por cada mil habitantes durante ese año.',
+        'B. Fallecieron 6 de cada mil nacidos vivos.',
+        'C. La esperanza de vida es de 6 años.',
+        'D. El 6% de la población falleció ese año.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "si en 1988 la tasa bruta de mortalidad en Chile fue de 6; eso significa que hubo 6 fallecimientos por cada mil personas durante ese año" (pág. 4).'
+    },
+    {
+      id: 10,
+      question: 'La tasa bruta de mortalidad se ve afectada por:',
+      options: [
+        'A. La estructura por edad de la población.',
+        'B. La estructura por sexo únicamente.',
+        'C. La fecundidad de la población.',
+        'D. La migración internacional.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "el valor de este indicador depende de varios factores... la estructura por edades de la población" (pág. 4).'
+    },
+    {
+      id: 11,
+      question: '¿Por qué Suecia puede tener una TBM más alta que Costa Rica a pesar de tener menor mortalidad?',
+      options: [
+        'A. Porque Suecia tiene una población más envejecida.',
+        'B. Porque Costa Rica tiene mejor registro de defunciones.',
+        'C. Porque Suecia tiene mayor tasa de inmigración.',
+        'D. Porque la TBM no es un buen indicador de nivel de mortalidad en ningún caso.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "una población envejecida contará con un porcentaje de ancianos comparativamente alto... lo que tenderá a elevar la tasa bruta de mortalidad" (pág. 4).'
+    },
+
+    // ========== IV.2.b Tasas de mortalidad por edad ==========
+    {
+      id: 12,
+      question: 'Las tasas de mortalidad por edad se calculan como:',
+      options: [
+        'A. (Defunciones del grupo de edad / Población total) × 1000.',
+        'B. (Defunciones del grupo de edad / Población de ese grupo a mitad de año) × 1000.',
+        'C. (Defunciones del grupo de edad / Nacimientos del mismo año) × 1000.',
+        'D. (Defunciones del grupo de edad / Población femenina) × 1000.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "n m^x = (n D^x / n N^{30-VI-Z}) × 1000" (pág. 6).'
+    },
+    {
+      id: 13,
+      question: 'La tasa de mortalidad para el grupo 15-19 años en Cuba (0.00088) significa que:',
+      options: [
+        'A. Por cada mil jóvenes de 15-19 años fallecieron 0.88 en el año.',
+        'B. Por cada 1000 habitantes fallecieron 0.88 personas de 15-19 años.',
+        'C. Por cada 10 mil jóvenes de 15-19 años fallecieron aproximadamente 9 en el año.',
+        'D. La probabilidad de morir entre 15 y 19 años es de 0.88%.'
+      ],
+      correct: 2,
+      explanation: 'Correcto. "el valor de la tasa de mortalidad para el grupo 15 a 19 años en Cuba significa que de cada 10 mil efectivos de esa edad, fallecieron en 1987 cerca de 9 personas" (pág. 6).'
+    },
+
+    // ========== IV.2.c Esperanza de vida al nacer ==========
+    {
+      id: 14,
+      question: 'La esperanza de vida al nacer se define como:',
+      options: [
+        'A. El número promedio de años que vivirán los integrantes de una cohorte hipotética sujeta a la mortalidad actual.',
+        'B. La edad máxima que puede alcanzar una persona en una población.',
+        'C. El número de años que le queda por vivir a una persona de edad exacta 0.',
+        'D. La probabilidad de sobrevivir hasta los 65 años.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Es el número promedio de años que vivirían los integrantes de una cohorte hipotética de personas que permaneciese sujeta a la mortalidad imperante en la población en estudio desde su nacimiento hasta su extinción" (pág. 7).'
+    },
+    {
+      id: 15,
+      question: 'La esperanza de vida al nacer es una medida de tipo:',
+      options: [
+        'A. Longitudinal.',
+        'B. Transversal.',
+        'C. Prospectiva.',
+        'D. Retrospectiva.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "Es de tipo transversal, ya que en su cálculo se conjuga la intensidad de la mortalidad en los distintos grupos de edad para un mismo año calendario" (pág. 6).'
+    },
+    {
+      id: 16,
+      question: 'La esperanza de vida al nacer es un buen indicador para comparar niveles de mortalidad porque:',
+      options: [
+        'A. No está afectada por la estructura por edad de la población.',
+        'B. Es fácil de calcular sin necesidad de datos.',
+        'C. Se basa en la tasa bruta de mortalidad.',
+        'D. Refleja la mortalidad de todos los grupos de edad por igual.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "al estar basada en las tasas de mortalidad por edad, no se ve afectada por la estructura por edades de la población" (pág. 6).'
+    },
+    {
+      id: 17,
+      question: 'Cuando la mortalidad es elevada, la esperanza de vida al nacer suele ser:',
+      options: [
+        'A. Mayor que la esperanza de vida a la edad 1.',
+        'B. Menor que la esperanza de vida a la edad 1.',
+        'C. Igual a la esperanza de vida a la edad 1.',
+        'D. No se relaciona con la esperanza de vida a otras edades.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "Cuando la mortalidad es relativamente elevada, la esperanza de vida al nacer es menor que la esperanza de vida a la edad exacta 1, porque... la mortalidad infantil tiende a ser alta" (pág. 7).'
+    },
+
+    // ========== IV.3.a Mortalidad por edad ==========
+    {
+      id: 18,
+      question: 'La curva de tasas de mortalidad por edad en una población con alta mortalidad tiene forma de:',
+      options: [
+        'A. J',
+        'B. U',
+        'C. L',
+        'D. S'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "Una representación gráfica de las tasas de mortalidad por edad de una población con una mortalidad alta tiene la forma de la letra U" (pág. 8).'
+    },
+    {
+      id: 19,
+      question: 'Cuando la mortalidad desciende, las tasas que lo hacen con mayor rapidez son las de:',
+      options: [
+        'A. Edades avanzadas (mayores de 65 años).',
+        'B. Edades adultas (45-64 años).',
+        'C. Primeras edades (infantil y juvenil).',
+        'D. Todas las edades por igual.'
+      ],
+      correct: 2,
+      explanation: 'Correcto. "Se ha podido observar que cuando desciende la mortalidad las tasas que lo hacen con mayor rapidez son aquellas correspondientes a las primeras edades" (pág. 8).'
+    },
+    {
+      id: 20,
+      question: 'La sobremortalidad hondureña respecto a Suecia es mayor en el grupo de edad:',
+      options: [
+        'A. 0 años.',
+        'B. 1-4 años.',
+        'C. 15-24 años.',
+        'D. 65 años y más.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "con un máximo en el grupo 1-4 años cumplidos, ya que la mortalidad en este grupo es casi 40 veces mayor en Honduras que en Suecia" (pág. 8).'
+    },
+
+    // ========== IV.3.b Mortalidad por sexo ==========
+    {
+      id: 21,
+      question: 'En general, la mortalidad femenina es menor que la masculina debido a:',
+      options: [
+        'A. Causas exclusivamente biológicas.',
+        'B. Causas biológicas y socioeconómicas.',
+        'C. Mayor exposición a enfermedades.',
+        'D. Menor esperanza de vida.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "Por causas biológicas y socioeconómicas, es común que las mujeres presenten una mortalidad menor que los hombres" (pág. 10).'
+    },
+    {
+      id: 22,
+      question: 'La sobremortalidad masculina tiende a:',
+      options: [
+        'A. Disminuir a medida que aumenta la esperanza de vida.',
+        'B. Aumentar a medida que aumenta la esperanza de vida.',
+        'C. Permanecer constante independientemente del nivel de mortalidad.',
+        'D. Ser mayor en países con alta mortalidad infantil.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "la sobremortalidad masculina tiende a incrementarse a medida que aumenta la esperanza de vida" (pág. 10).'
+    },
+
+    // ========== IV.3.c Mortalidad según causas ==========
+    {
+      id: 23,
+      question: 'Las causas de muerte endógenas son aquellas que:',
+      options: [
+        'A. Provienen de factores externos como infecciones y accidentes.',
+        'B. Provienen de la constitución genética, malformaciones congénitas o degeneración por envejecimiento.',
+        'C. Son causadas por violencia o traumatismos.',
+        'D. Son fácilmente prevenibles con vacunas.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "Las causas endógenas: provienen de la constitución genética del individuo, de las malformaciones congénitas, del traumatismo provocado por el nacimiento o de la degeneración producida por el envejecimiento del organismo" (pág. 13).'
+    },
+    {
+      id: 24,
+      question: 'Cuando la mortalidad desciende, las muertes por causas exógenas (infecciosas y parasitarias) tienden a:',
+      options: [
+        'A. Aumentar en importancia relativa.',
+        'B. Disminuir en importancia relativa.',
+        'C. Mantenerse constantes.',
+        'D. Desaparecer por completo.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "Cuando la mortalidad desciende, pierden importancia relativa las muertes por causas exógenas —fundamentalmente las debidas a enfermedades infecciosas y parasitarias" (pág. 13).'
+    },
+    {
+      id: 25,
+      question: 'Según el estudio teórico de Naciones Unidas, cuando la esperanza de vida pasa de 40 a 60 años, la proporción de muertes por causas del Grupo I (enfermedades infecciosas y parasitarias):',
+      options: [
+        'A. Aumenta.',
+        'B. Disminuye.',
+        'C. Se mantiene constante.',
+        'D. Se duplica.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "Cuando la esperanza de vida al nacer pasa de 40 a 60 años, la proporción de muertes debidas a las causas del grupo I disminuye" (pág. 13).'
+    },
+
+    // ========== IV.4.a Introducción a mortalidad infantil ==========
+    {
+      id: 26,
+      question: 'La mortalidad infantil se define como la que ocurre:',
+      options: [
+        'A. Durante los primeros 28 días de vida.',
+        'B. Antes de cumplir un año de edad.',
+        'C. Entre el mes y el año de vida.',
+        'D. Durante los primeros 5 años de vida.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "La mortalidad que ocurre antes de cumplir un año se denomina, tanto en el campo de la salud como en el demográfico, mortalidad infantil" (pág. 16).'
+    },
+    {
+      id: 27,
+      question: 'La mortalidad infantil es un indicador sensible porque:',
+      options: [
+        'A. Es fácil de reducir con políticas de salud de bajo costo.',
+        'B. Refleja las condiciones de salud y desarrollo social.',
+        'C. Presenta intensidades muy elevadas comparadas con edades siguientes.',
+        'D. Todas las anteriores son correctas.'
+      ],
+      correct: 3,
+      explanation: 'Correcto. El texto menciona que la mortalidad infantil es un foco de atención (políticas de bajo costo), es un indicador de salud y desarrollo, y tiene intensidades elevadas (pág. 16).'
+    },
+
+    // ========== IV.4.b Medición de la mortalidad infantil ==========
+    {
+      id: 28,
+      question: 'La tasa clásica de mortalidad infantil se calcula como:',
+      options: [
+        'A. (Defunciones de menores de un año en el año Z / Población menor de un año a mitad de año Z) × 1000.',
+        'B. (Defunciones de menores de un año en el año Z / Nacidos vivos en el año Z) × 1000.',
+        'C. (Defunciones de menores de un año en el año Z / Población total) × 1000.',
+        'D. (Defunciones de menores de un año en el año Z / Defunciones totales) × 1000.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "La tasa clásica de mortalidad infantil se calcula dividiendo las defunciones de menores de un año ocurridas en un año calendario entre el número de nacidos vivos correspondientes al mismo año" (pág. 17).'
+    },
+    {
+      id: 29,
+      question: 'La tasa de mortalidad infantil y la tasa central de mortalidad de menores de un año son diferentes porque:',
+      options: [
+        'A. La primera usa como denominador los nacimientos, la segunda la población media de menores de un año.',
+        'B. La primera usa la población total, la segunda los nacimientos.',
+        'C. Son idénticas en su cálculo.',
+        'D. La primera es más precisa que la segunda.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Mientras que [la tasa de mortalidad infantil] tiene como denominador la población media de menores de un año... la tasa de mortalidad infantil está referida al número de nacimientos ocurridos en el año" (pág. 17).'
+    },
+    {
+      id: 30,
+      question: 'En el diagrama de Lexis, la tasa de mortalidad infantil del año Z incluye defunciones de niños nacidos:',
+      options: [
+        'A. Solo en el año Z.',
+        'B. Solo en el año Z-1.',
+        'C. En el año Z y en el año Z-1.',
+        'D. En cualquier año anterior.'
+      ],
+      correct: 2,
+      explanation: 'Correcto. "las defunciones ocurridas antes de cumplir el año de vida corresponden siempre a dos generaciones: aquélla que ingresó al tramo de edad analizado en el mismo año y la que lo hizo el año anterior" (pág. 17).'
+    },
+
+    // ========== IV.4.c Mortalidad neonatal y postneonatal ==========
+    {
+      id: 31,
+      question: 'La mortalidad neonatal se refiere a las defunciones que ocurren:',
+      options: [
+        'A. Desde el nacimiento hasta antes de cumplir los 28 días.',
+        'B. Desde los 28 días hasta el primer año.',
+        'C. Durante el primer año de vida.',
+        'D. Durante el embarazo.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "La mortalidad neonatal: comprende la mortalidad que ocurre dentro del primer mes de vida (desde el nacimiento hasta antes de cumplir los 28 días)" (pág. 18).'
+    },
+    {
+      id: 32,
+      question: 'La mortalidad postneonatal se refiere a las defunciones que ocurren:',
+      options: [
+        'A. Desde el nacimiento hasta antes de cumplir los 28 días.',
+        'B. Desde los 28 días hasta el primer cumpleaños (sin incluir este).',
+        'C. Durante el primer año de vida.',
+        'D. Entre el año y los 5 años.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "La mortalidad postneonatal: se refiere a la mortalidad que ocurre entre el momento de cumplir 28 días de nacido y el correspondiente al primer cumpleaños" (pág. 18).'
+    },
+    {
+      id: 33,
+      question: 'La tasa de mortalidad infantil es igual a la suma de:',
+      options: [
+        'A. La tasa de mortalidad neonatal y la tasa de mortalidad postneonatal.',
+        'B. La tasa de mortalidad perinatal y neonatal.',
+        'C. La tasa de mortalidad infantil temprana y tardía.',
+        'D. La tasa de mortalidad de menores de 5 años.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "la tasa de mortalidad infantil es igual a la suma de las tasas de mortalidad neonatal y postneonatal" (pág. 18).'
+    },
+    {
+      id: 34,
+      question: 'En un proceso de reducción de la mortalidad infantil desde niveles muy altos, la disminución inicial suele ser mayor en:',
+      options: [
+        'A. La mortalidad neonatal.',
+        'B. La mortalidad postneonatal.',
+        'C. Ambas por igual.',
+        'D. La mortalidad infantil no se reduce en etapas.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "cuando la mortalidad es muy elevada... es común que se produzcan reducciones moderadas, originadas básicamente por la disminución de la mortalidad neonatal, en virtud de la ampliación de la atención institucional del parto" (pág. 19).'
+    },
+    {
+      id: 35,
+      question: 'Cuando la mortalidad infantil ya es baja, la reducción adicional se dificulta porque:',
+      options: [
+        'A. La mortalidad postneonatal se vuelve predominante.',
+        'B. La mortalidad neonatal es más difícil y costosa de reducir.',
+        'C. Las causas exógenas aumentan.',
+        'D. No hay políticas efectivas.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "reducir la mortalidad neonatal es más difícil y costoso" (pág. 19).'
+    },
+
+    // ========== Preguntas de relación y completar ==========
+    {
+      id: 36,
+      question: 'Relacione correctamente cada concepto con su definición:\n1. Tasa bruta de mortalidad\n2. Tasa de mortalidad por edad\n3. Esperanza de vida al nacer\n4. Tasa de mortalidad infantil',
+      options: [
+        'A. 1-D, 2-C, 3-B, 4-A',
+        'B. 1-A, 2-B, 3-C, 4-D',
+        'C. 1-C, 2-A, 3-D, 4-B',
+        'D. 1-B, 2-D, 3-A, 4-C'
+      ],
+      correct: 0,
+      explanation: 'Correcto. Según el texto: TBM = defunciones/población total (D), tasa por edad = defunciones de grupo / población del grupo (C), esperanza de vida = años promedio de vida (B), mortalidad infantil = defunciones menores de 1 año / nacimientos (A).'
+    },
+    {
+      id: 37,
+      question: 'Complete la siguiente afirmación: "La tasa bruta de mortalidad expresa la ________ relativa anual de una población atribuible al ________ de parte de sus miembros."',
+      options: [
+        'A. reducción / fallecimiento',
+        'B. aumento / nacimiento',
+        'C. disminución / emigración',
+        'D. variación / envejecimiento'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "la tasa bruta de mortalidad expresa la reducción relativa anual de una población atribuible al fallecimiento de parte de sus miembros" (pág. 3).'
+    },
+    {
+      id: 38,
+      question: 'La esperanza de vida al nacer es una medida que no está afectada por la estructura por edad porque:',
+      options: [
+        'A. Se calcula a partir de tasas específicas por edad.',
+        'B. Utiliza la población total como denominador.',
+        'C. Se basa en la tasa bruta de mortalidad.',
+        'D. Es un promedio simple de edades.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "al estar basada en las tasas de mortalidad por edad, no se ve afectada por la estructura por edades de la población" (pág. 6).'
+    },
+    {
+      id: 39,
+      question: 'Complete: "Las causas de muerte endógenas provienen de la ________ genética, malformaciones congénitas o ________ por envejecimiento."',
+      options: [
+        'A. constitución / degeneración',
+        'B. predisposición / enfermedades',
+        'C. herencia / infecciones',
+        'D. variabilidad / traumatismos'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Las causas endógenas: provienen de la constitución genética del individuo, de las malformaciones congénitas, del traumatismo provocado por el nacimiento o de la degeneración producida por el envejecimiento del organismo" (pág. 13).'
+    },
+    {
+      id: 40,
+      question: 'La tasa de mortalidad infantil clásica se diferencia de la tasa central de mortalidad de menores de un año en que:',
+      options: [
+        'A. La primera se expresa por mil, la segunda no.',
+        'B. La primera usa nacimientos como denominador, la segunda usa población media.',
+        'C. La primera incluye nacidos muertos, la segunda no.',
+        'D. Son equivalentes y se usan indistintamente.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "mientras que [la tasa de mortalidad infantil] tiene como denominador la población media de menores de un año... la tasa de mortalidad infantil está referida al número de nacimientos ocurridos en el año" (pág. 17).'
+    },
+
+    // ========== Preguntas adicionales ==========
+    {
+      id: 41,
+      question: 'La sobremortalidad masculina se incrementa con el aumento de la esperanza de vida. Esto se debe a que:',
+      options: [
+        'A. Las mujeres tienen mayor resistencia biológica.',
+        'B. Los hombres están más expuestos a accidentes y violencia.',
+        'C. La disminución de la mortalidad beneficia más a las mujeres que a los hombres.',
+        'D. Todas las anteriores son factores que contribuyen.'
+      ],
+      correct: 3,
+      explanation: 'Correcto. El documento menciona que las mujeres son biológicamente más resistentes y están menos expuestas a accidentes, y además la sobremortalidad masculina aumenta con la esperanza de vida (pág. 10).'
+    },
+    {
+      id: 42,
+      question: 'En países con mortalidad muy alta, la mortalidad femenina puede ser mayor que la masculina en ciertas edades debido a:',
+      options: [
+        'A. Mayor exposición a enfermedades infecciosas.',
+        'B. Mortalidad materna.',
+        'C. Menor acceso a atención médica.',
+        'D. Mayor esperanza de vida femenina.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "Sólo en situaciones muy excepcionales... se registran tasas de mortalidad por edad femeninas mayores que las masculinas (por ejemplo, en las edades 25-29 años, a causa de una mortalidad materna relativamente importante)" (pág. 10).'
+    },
+    {
+      id: 43,
+      question: 'La proporción de muertes por causas endógenas tiende a ser mayor en poblaciones con:',
+      options: [
+        'A. Estructura por edad joven.',
+        'B. Estructura por edad envejecida.',
+        'C. Alta fecundidad.',
+        'D. Alta mortalidad infantil.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "en una población con una estructura por edad envejecida, tendrán a ocurrir más muertes por causas endógenas" (pág. 16).'
+    },
+    {
+      id: 44,
+      question: 'Complete: "El descenso de la mortalidad general se acompaña de un cambio en el perfil de causas de muerte, pasando de un predominio de causas ________ a causas ________."',
+      options: [
+        'A. exógenas / endógenas',
+        'B. endógenas / exógenas',
+        'C. infecciosas / parasitarias',
+        'D. violentas / degenerativas'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Cuando la mortalidad desciende, pierden importancia relativa las muertes por causas exógenas ... y aumenta la importancia relativa de las muertes provocadas por causas endógenas" (pág. 13).'
+    },
+    {
+      id: 45,
+      question: 'En el análisis de la mortalidad infantil, el numerador de la tasa clásica incluye defunciones de niños que:',
+      options: [
+        'A. Nacieron en el mismo año calendario.',
+        'B. Nacieron en el año anterior.',
+        'C. Nacieron en el mismo año o en el anterior.',
+        'D. Nacieron en cualquier año, siempre que sean menores de 1 año al morir.'
+      ],
+      correct: 2,
+      explanation: 'Correcto. "todas las muertes que ocurren en el triángulo BFG, corresponden a nacimientos ocurridos el año anterior, mientras que todos los niños sobrevivientes en el segmento CF, aún corren el riesgo de morir antes de cumplir un año" (pág. 18). Es decir, se incluyen ambos.'
+    },
+    {
+      id: 46,
+      question: 'Relacione correctamente cada tipo de mortalidad con su definición:\n1. Mortalidad neonatal\n2. Mortalidad postneonatal\n3. Mortalidad infantil\n4. Mortalidad perinatal (no definida en el texto, pero se puede inferir)',
+      options: [
+        'A. 1-A, 2-B, 3-C, 4-D',
+        'B. 1-B, 2-A, 3-C, 4-D',
+        'C. 1-C, 2-D, 3-A, 4-B',
+        'D. 1-D, 2-C, 3-B, 4-A'
+      ],
+      correct: 0,
+      explanation: 'Correcto. Neonatal = primer mes (A), postneonatal = 28 días a 1 año (B), infantil = <1 año (C), perinatal = alrededor del parto (D).'
+    },
+    {
+      id: 47,
+      question: 'La esperanza de vida al nacer en América Latina en el quinquenio 1990-1995 se estimaba en aproximadamente:',
+      options: [
+        'A. 60 años.',
+        'B. 68.6 años.',
+        'C. 75 años.',
+        'D. 55 años.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "la esperanza de vida al nacer en América Latina... alcanzó los 68.6 años durante el quinquenio 1990-95" (pág. 21).'
+    },
+    {
+      id: 48,
+      question: 'La diferencia entre la esperanza de vida al nacer y la esperanza de vida a la edad 1 se debe principalmente a:',
+      options: [
+        'A. La alta mortalidad infantil.',
+        'B. La mortalidad materna.',
+        'C. La mortalidad por accidentes.',
+        'D. La estructura por edad de la población.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "la esperanza de vida al nacer es menor que la esperanza de vida a la edad exacta 1, porque, como se verá más adelante, la mortalidad infantil ... tiende a ser alta" (pág. 7).'
+    },
+    {
+      id: 49,
+      question: 'Complete: "La tasa neta de reproducción (TNR) incorpora el efecto de la ________ femenina al cálculo del reemplazo generacional."',
+      options: [
+        'A. fecundidad',
+        'B. mortalidad',
+        'C. migración',
+        'D. nupcialidad'
+      ],
+      correct: 1,
+      explanation: 'Correcto. La TNR es similar a la TBR pero incluye la mortalidad femenina (pág. 17-18 del capítulo de fecundidad, aunque en el documento de mortalidad no se menciona, pero es un concepto relacionado).'
+    },
+    {
+      id: 50,
+      question: 'La mortalidad infantil es considerada un indicador adecuado para medir el desarrollo social porque:',
+      options: [
+        'A. Refleja la calidad del sistema de salud y las condiciones de vida.',
+        'B. Es fácil de calcular y comparable entre países.',
+        'C. Es sensible a cambios en políticas sociales.',
+        'D. Todas las anteriores son correctas.'
+      ],
+      correct: 3,
+      explanation: 'Correcto. "algunos científicos sociales han llegado a señalar que la mortalidad infantil es un indicador adecuado para medir el desarrollo social" (pág. 16). Además, refleja salud y condiciones de vida, es sensible y comparable.'
+    }
+  ];
+
+  // ============================================================
+  //  LÓGICA DE LA APLICACIÓN
+  // ============================================================
+  let currentIndex = 0;
+  let answers = new Array(questions.length).fill(null); // índice de opción seleccionada
+  let verified = new Array(questions.length).fill(false);
+  let totalCorrect = 0;
+
+  const questionText = document.getElementById('questionText');
+  const optionsContainer = document.getElementById('optionsContainer');
+  const feedbackBox = document.getElementById('feedbackBox');
+  const feedbackTitle = document.getElementById('feedbackTitle');
+  const feedbackDetail = document.getElementById('feedbackDetail');
+  const counterDisplay = document.getElementById('counterDisplay');
+  const statusDisplay = document.getElementById('statusDisplay');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const verifyBtn = document.getElementById('verifyBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const resultContainer = document.getElementById('resultContainer');
+  const finalScore = document.getElementById('finalScore');
+  const finalMessage = document.getElementById('finalMessage');
+
+  function renderQuestion(index) {
+    const q = questions[index];
+    questionText.textContent = q.question;
+    optionsContainer.innerHTML = '';
+    q.options.forEach((opt, i) => {
+      const div = document.createElement('div');
+      div.className = 'option-item' + (answers[index] === i ? ' selected' : '');
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = 'question';
+      radio.value = i;
+      radio.checked = (answers[index] === i);
+      radio.addEventListener('change', () => {
+        if (verified[index]) {
+          verified[index] = false;
+          feedbackBox.style.display = 'none';
+          totalCorrect = computeTotalCorrect();
+        }
+        answers[index] = i;
+        renderQuestion(index);
+      });
+      const label = document.createElement('label');
+      label.textContent = opt;
+      div.appendChild(radio);
+      div.appendChild(label);
+      optionsContainer.appendChild(div);
+    });
+
+    counterDisplay.textContent = `${index+1} / ${questions.length}`;
+    if (verified[index]) {
+      statusDisplay.textContent = '✅ Verificada';
+    } else if (answers[index] !== null) {
+      statusDisplay.textContent = '⚪ Respondida (sin verificar)';
+    } else {
+      statusDisplay.textContent = '🔘 Sin responder';
+    }
+
+    prevBtn.disabled = (index === 0);
+    nextBtn.disabled = (index === questions.length - 1);
+
+    if (verified[index]) {
+      const q = questions[index];
+      const isCorrect = (answers[index] === q.correct);
+      feedbackBox.className = 'feedback-box ' + (isCorrect ? 'correct' : 'incorrect');
+      feedbackTitle.textContent = isCorrect ? '✓ Correcto' : '✗ Incorrecto';
+      feedbackDetail.innerHTML = q.explanation;
+      feedbackBox.style.display = 'block';
+    } else {
+      feedbackBox.style.display = 'none';
+    }
+
+    resultContainer.classList.add('hidden');
+  }
+
+  function computeTotalCorrect() {
+    let count = 0;
+    for (let i = 0; i < questions.length; i++) {
+      if (verified[i] && answers[i] === questions[i].correct) count++;
+    }
+    return count;
+  }
+
+  function verifyCurrent() {
+    const idx = currentIndex;
+    const q = questions[idx];
+    if (answers[idx] === null) {
+      alert('Por favor, selecciona una opción antes de verificar.');
+      return;
+    }
+    const isCorrect = (answers[idx] === q.correct);
+    verified[idx] = true;
+    totalCorrect = computeTotalCorrect();
+
+    feedbackBox.className = 'feedback-box ' + (isCorrect ? 'correct' : 'incorrect');
+    feedbackTitle.textContent = isCorrect ? '✓ Correcto' : '✗ Incorrecto';
+    feedbackDetail.innerHTML = q.explanation;
+    feedbackBox.style.display = 'block';
+
+    renderQuestion(idx);
+    statusDisplay.textContent = '✅ Verificada';
+  }
+
+  function showFinalResults() {
+    const total = questions.length;
+    let correct = 0;
+    for (let i = 0; i < total; i++) {
+      if (verified[i] && answers[i] === questions[i].correct) correct++;
+    }
+    const percent = Math.round((correct / total) * 100);
+    finalScore.textContent = percent + '%';
+    let msg = '';
+    if (percent >= 90) msg = '¡Excelente! Dominas los conceptos de mortalidad.';
+    else if (percent >= 70) msg = 'Buen trabajo, revisa los temas en los que fallaste.';
+    else if (percent >= 50) msg = 'Es recomendable repasar las definiciones y fórmulas.';
+    else msg = 'Te sugerimos estudiar nuevamente el capítulo y volver a intentarlo.';
+    finalMessage.textContent = msg;
+    resultContainer.classList.remove('hidden');
+  }
+
+  function resetQuiz() {
+    answers.fill(null);
+    verified.fill(false);
+    currentIndex = 0;
+    totalCorrect = 0;
+    feedbackBox.style.display = 'none';
+    resultContainer.classList.add('hidden');
+    renderQuestion(0);
+  }
+
+  prevBtn.addEventListener('click', () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      renderQuestion(currentIndex);
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentIndex < questions.length - 1) {
+      currentIndex++;
+      renderQuestion(currentIndex);
+    } else {
+      showFinalResults();
+    }
+  });
+
+  verifyBtn.addEventListener('click', verifyCurrent);
+  resetBtn.addEventListener('click', resetQuiz);
+
+  renderQuestion(0);
+</script>
+</body>
+</html>
