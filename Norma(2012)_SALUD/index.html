@@ -1,1033 +1,1049 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Autoevaluación: NOM-035-SSA3-2012</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-      background: #f5f7fa;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    .container {
-      background: white;
-      max-width: 920px;
-      width: 100%;
-      border-radius: 32px;
-      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.2);
-      padding: 32px 40px;
-      transition: 0.25s;
-    }
-    h1 {
-      font-size: 1.9rem;
-      font-weight: 600;
-      color: #0b2b4a;
-      letter-spacing: -0.3px;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .subtitle {
-      color: #2c5778;
-      font-size: 0.95rem;
-      border-left: 4px solid #2a7faa;
-      padding-left: 16px;
-      margin-bottom: 28px;
-      background: #eef3f9;
-      border-radius: 0 12px 12px 0;
-      line-height: 1.5;
-    }
-    .progress {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 28px;
-      font-size: 0.9rem;
-      color: #1a405a;
-      border-bottom: 1px solid #dce5ed;
-      padding-bottom: 14px;
-    }
-    .question-counter {
-      font-weight: 600;
-      background: #dce5ed;
-      padding: 4px 14px;
-      border-radius: 30px;
-    }
-    .question-box { margin-bottom: 30px; }
-    .qtext {
-      font-size: 1.25rem;
-      font-weight: 500;
-      line-height: 1.6;
-      color: #0b2b4a;
-      margin-bottom: 24px;
-      padding: 0 4px;
-    }
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 28px;
-    }
-    .option-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      background: #f8fafc;
-      border: 1.5px solid #e2e9f2;
-      border-radius: 16px;
-      padding: 14px 20px;
-      transition: 0.15s;
-      cursor: pointer;
-    }
-    .option-item:hover {
-      background: #eef4fa;
-      border-color: #b0c8dd;
-    }
-    .option-item.selected {
-      background: #e0edf9;
-      border-color: #2a7faa;
-      box-shadow: 0 0 0 2px rgba(42,127,170,0.15);
-    }
-    .option-item input[type="radio"] {
-      margin-top: 4px;
-      accent-color: #1f6e96;
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
-    }
-    .option-item label {
-      font-size: 1rem;
-      line-height: 1.5;
-      color: #1a334a;
-      cursor: pointer;
-      flex: 1;
-    }
-    .feedback-box {
-      background: #f0f6fe;
-      border-radius: 20px;
-      padding: 18px 24px;
-      margin: 16px 0 28px 0;
-      border-left: 5px solid #2a7faa;
-      display: none;
-    }
-    .feedback-box.correct {
-      border-left-color: #1f8b4c;
-      background: #e8f5ee;
-    }
-    .feedback-box.incorrect {
-      border-left-color: #c74545;
-      background: #fdeeec;
-    }
-    .feedback-box .fb-title {
-      font-weight: 600;
-      font-size: 1rem;
-      margin-bottom: 6px;
-    }
-    .feedback-box .fb-detail {
-      font-size: 0.95rem;
-      line-height: 1.6;
-      color: #1a334a;
-    }
-    .feedback-box .fb-detail strong { color: #0b2b4a; }
-    .nav-buttons {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .btn {
-      background: white;
-      border: 1.5px solid #b8cdde;
-      padding: 10px 28px;
-      border-radius: 40px;
-      font-weight: 500;
-      font-size: 0.95rem;
-      color: #1a405a;
-      cursor: pointer;
-      transition: 0.15s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #f9fbfd;
-    }
-    .btn:hover:not(:disabled) {
-      background: #e2ecf5;
-      border-color: #7fa3be;
-      transform: translateY(-1px);
-    }
-    .btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-    .btn-primary {
-      background: #1a5f82;
-      border-color: #1a5f82;
-      color: white;
-    }
-    .btn-primary:hover:not(:disabled) {
-      background: #134b68;
-      border-color: #134b68;
-    }
-    .btn-outline { background: transparent; border-color: #b0c8dd; }
-    .btn-success {
-      background: #1f8b4c;
-      border-color: #1f8b4c;
-      color: white;
-    }
-    .btn-success:hover:not(:disabled) {
-      background: #17733e;
-      border-color: #17733e;
-    }
-    .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
-    .result-summary {
-      background: #e2ecf5;
-      border-radius: 24px;
-      padding: 20px 28px;
-      text-align: center;
-      margin-top: 16px;
-    }
-    .result-summary .score {
-      font-size: 2.4rem;
-      font-weight: 700;
-      color: #0b2b4a;
-    }
-    .result-summary .label { font-size: 1rem; color: #1a405a; }
-    .hidden { display: none !important; }
-    .mt-2 { margin-top: 12px; }
-    .text-muted { color: #4a6a82; }
-    @media (max-width: 600px) {
-      .container { padding: 24px 18px; }
-      h1 { font-size: 1.5rem; }
-      .qtext { font-size: 1.05rem; }
-      .option-item { padding: 12px 16px; }
-      .btn { padding: 8px 18px; font-size: 0.85rem; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoevaluación: NOM-035-SSA3-2012 (Definiciones)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            max-width: 920px;
+            width: 100%;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2);
+            padding: 32px 40px;
+            transition: 0.25s;
+        }
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            color: #0b2b4a;
+            letter-spacing: -0.3px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .subtitle {
+            color: #2c5778;
+            font-size: 0.95rem;
+            border-left: 4px solid #2a7faa;
+            padding-left: 16px;
+            margin-bottom: 28px;
+            background: #eef3f9;
+            border-radius: 0 12px 12px 0;
+            line-height: 1.5;
+        }
+        .progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            font-size: 0.9rem;
+            color: #1a405a;
+            border-bottom: 1px solid #dce5ed;
+            padding-bottom: 14px;
+        }
+        .question-counter {
+            font-weight: 600;
+            background: #dce5ed;
+            padding: 4px 14px;
+            border-radius: 30px;
+        }
+        .question-box {
+            margin-bottom: 30px;
+        }
+        .qtext {
+            font-size: 1.25rem;
+            font-weight: 500;
+            line-height: 1.6;
+            color: #0b2b4a;
+            margin-bottom: 24px;
+            padding: 0 4px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+        .option-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: #f8fafc;
+            border: 1.5px solid #e2e9f2;
+            border-radius: 16px;
+            padding: 14px 20px;
+            transition: 0.15s;
+            cursor: pointer;
+        }
+        .option-item:hover {
+            background: #eef4fa;
+            border-color: #b0c8dd;
+        }
+        .option-item.selected {
+            background: #e0edf9;
+            border-color: #2a7faa;
+            box-shadow: 0 0 0 2px rgba(42, 127, 170, 0.15);
+        }
+        .option-item input[type="radio"] {
+            margin-top: 4px;
+            accent-color: #1f6e96;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+        .option-item label {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #1a334a;
+            cursor: pointer;
+            flex: 1;
+        }
+        .feedback-box {
+            background: #f0f6fe;
+            border-radius: 20px;
+            padding: 18px 24px;
+            margin: 16px 0 28px 0;
+            border-left: 5px solid #2a7faa;
+            display: none;
+        }
+        .feedback-box.correct {
+            border-left-color: #1f8b4c;
+            background: #e8f5ee;
+        }
+        .feedback-box.incorrect {
+            border-left-color: #c74545;
+            background: #fdeeec;
+        }
+        .feedback-box .fb-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+        .feedback-box .fb-detail {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #1a334a;
+        }
+        .feedback-box .fb-detail strong {
+            color: #0b2b4a;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: white;
+            border: 1.5px solid #b8cdde;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #1a405a;
+            cursor: pointer;
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f9fbfd;
+        }
+        .btn:hover:not(:disabled) {
+            background: #e2ecf5;
+            border-color: #7fa3be;
+            transform: translateY(-1px);
+        }
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .btn-primary {
+            background: #1a5f82;
+            border-color: #1a5f82;
+            color: white;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #134b68;
+            border-color: #134b68;
+        }
+        .btn-outline {
+            background: transparent;
+            border-color: #b0c8dd;
+        }
+        .btn-success {
+            background: #1f8b4c;
+            border-color: #1f8b4c;
+            color: white;
+        }
+        .btn-success:hover:not(:disabled) {
+            background: #17733e;
+            border-color: #17733e;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .result-summary {
+            background: #e2ecf5;
+            border-radius: 24px;
+            padding: 20px 28px;
+            text-align: center;
+            margin-top: 16px;
+        }
+        .result-summary .score {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #0b2b4a;
+        }
+        .result-summary .label {
+            font-size: 1rem;
+            color: #1a405a;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .mt-2 {
+            margin-top: 12px;
+        }
+        .text-muted {
+            color: #4a6a82;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 24px 18px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .qtext {
+                font-size: 1.05rem;
+            }
+            .option-item {
+                padding: 12px 16px;
+            }
+            .btn {
+                padding: 8px 18px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="container" id="app">
-  <h1>📘 Autoevaluación · NOM-035-SSA3-2012</h1>
-  <div class="subtitle">Información en Salud — 50 preguntas de opción múltiple</div>
+    <h1>📘 NOM-035-SSA3-2012 · Definiciones</h1>
+    <div class="subtitle">Autoevaluación de 50 preguntas sobre el numeral 3 (págs. 4–11)</div>
 
-  <div class="progress">
-    <span class="question-counter" id="counterDisplay">1 / 50</span>
-    <span id="statusDisplay" style="font-weight: 500;">Responde y verifica</span>
-  </div>
-
-  <div class="question-box" id="questionContainer">
-    <div class="qtext" id="questionText"></div>
-    <div class="options" id="optionsContainer"></div>
-  </div>
-
-  <div class="feedback-box" id="feedbackBox">
-    <div class="fb-title" id="feedbackTitle"></div>
-    <div class="fb-detail" id="feedbackDetail"></div>
-  </div>
-
-  <div class="nav-buttons">
-    <div class="btn-group">
-      <button class="btn btn-outline" id="prevBtn" disabled>◀ Anterior</button>
-      <button class="btn btn-outline" id="nextBtn">Siguiente ▶</button>
+    <div class="progress">
+        <span class="question-counter" id="counterDisplay">1 / 50</span>
+        <span id="statusDisplay" style="font-weight: 500;">Responde y verifica</span>
     </div>
-    <div class="btn-group">
-      <button class="btn btn-primary" id="verifyBtn">✓ Verificar</button>
-      <button class="btn btn-success" id="resetBtn" style="background:#5a6f82;border-color:#5a6f82;">⟳ Reiniciar</button>
-    </div>
-  </div>
 
-  <div id="resultContainer" class="hidden result-summary">
-    <div class="label">Porcentaje de aciertos</div>
-    <div class="score" id="finalScore">0%</div>
-    <div style="margin-top: 8px; font-size:0.95rem;" id="finalMessage"></div>
-  </div>
+    <div class="question-box" id="questionContainer">
+        <div class="qtext" id="questionText"></div>
+        <div class="options" id="optionsContainer"></div>
+    </div>
+
+    <div class="feedback-box" id="feedbackBox">
+        <div class="fb-title" id="feedbackTitle"></div>
+        <div class="fb-detail" id="feedbackDetail"></div>
+    </div>
+
+    <div class="nav-buttons">
+        <div class="btn-group">
+            <button class="btn btn-outline" id="prevBtn" disabled>◀ Anterior</button>
+            <button class="btn btn-outline" id="nextBtn">Siguiente ▶</button>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary" id="verifyBtn">✓ Verificar</button>
+            <button class="btn btn-success" id="resetBtn" style="background:#5a6f82;border-color:#5a6f82;">⟳ Reiniciar</button>
+        </div>
+    </div>
+
+    <div id="resultContainer" class="hidden result-summary">
+        <div class="label">Porcentaje de aciertos</div>
+        <div class="score" id="finalScore">0%</div>
+        <div style="margin-top: 8px; font-size:0.95rem;" id="finalMessage"></div>
+    </div>
 </div>
 <script>
-  // ----------------------------------------------------------------
-  //  50 preguntas basadas en NOM-035-SSA3-2012 (Capítulos 1-10 y Transitorios)
-  // ----------------------------------------------------------------
-  const questions = [
-    // ========== Capítulo 1. Objetivo y campo de aplicación ==========
-    {
-      id: 1,
-      question: 'La NOM-035-SSA3-2012 tiene por objeto establecer los criterios y procedimientos para:',
-      options: [
-        'A. Regular únicamente la expedición de certificados de defunción.',
-        'B. Producir, captar, integrar, procesar, sistematizar, evaluar y divulgar la Información en Salud.',
-        'C. Establecer los requisitos de infraestructura hospitalaria.',
-        'D. Normar la atención médica en establecimientos privados.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. El numeral 1.1 establece: "Esta norma tiene por objeto establecer los criterios y procedimientos que se deben seguir para producir, captar, integrar, procesar, sistematizar, evaluar y divulgar la Información en Salud." Las otras opciones describen objetos de otras normas o son limitadas.'
-    },
-    {
-      id: 2,
-      question: 'El campo de aplicación de la NOM-035-SSA3-2012 es de observancia obligatoria para:',
-      options: [
-        'A. Solo las instituciones públicas del Sistema Nacional de Salud.',
-        'B. Todos los integrantes del Sistema Nacional de Salud que presten servicios de atención a la salud en establecimientos fijos y/o móviles.',
-        'C. Únicamente los hospitales de alta especialidad.',
-        'D. Las dependencias de la Secretaría de Salud en el ámbito federal.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. El numeral 1.2 indica: "Esta norma es de observancia obligatoria en todo el territorio nacional para todos los integrantes del Sistema Nacional de Salud, que presten servicios de atención a la salud en establecimientos fijos y/o móviles."'
-    },
-
-    // ========== Capítulo 2. Referencias ==========
-    {
-      id: 3,
-      question: '¿Cuál de las siguientes normas se menciona como referencia en la NOM-035-SSA3-2012?',
-      options: [
-        'A. NOM-004-SSA3-2012, del Expediente Clínico.',
-        'B. NOM-030-SSA2-2009, para la prevención de la violencia.',
-        'C. NOM-001-SSA1-2010, sobre saneamiento básico.',
-        'D. NOM-012-SSA3-2012, sobre residuos peligrosos.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. En el numeral 2.3 se cita la "Norma Oficial Mexicana NOM 004-SSA3-2012, del Expediente Clínico." Las otras no se mencionan en el apartado de referencias.'
-    },
-    {
-      id: 4,
-      question: 'El Acuerdo por el que se establece el Sistema Nacional de Información Básica en Materia de Salud fue publicado en el DOF el:',
-      options: [
-        'A. 5 de septiembre de 2012.',
-        'B. 30 de noviembre de 2012.',
-        'C. 28 de septiembre de 2005.',
-        'D. 23 de agosto de 2012.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. En la referencia 2.1 se indica: "Acuerdo por el que se establece el Sistema Nacional de Información Básica en Materia de Salud publicado en el Diario Oficial de la Federación el 5 de septiembre de 2012."'
-    },
-
-    // ========== Capítulo 3. Definiciones ==========
-    {
-      id: 5,
-      question: 'Según la definición, la "afección principal" es:',
-      options: [
-        'A. La primera enfermedad que padece el paciente al ingresar.',
-        'B. La situación diagnosticada al final del proceso de atención como la causante primaria de la necesidad de tratamiento.',
-        'C. Cualquier síntoma que presente el paciente.',
-        'D. La enfermedad que requiere mayor tiempo de hospitalización.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. La definición 3.2 establece: "Afección principal.- Situación diagnosticada al final del proceso de atención de la salud, como la causante primaria de la necesidad de tratamiento o investigación que tuvo el paciente."'
-    },
-    {
-      id: 6,
-      question: 'La "cama censable" se caracteriza fundamentalmente porque:',
-      options: [
-        'A. Genera un Egreso Hospitalario.',
-        'B. Se destina a la atención transitoria o provisional.',
-        'C. No requiere recursos de personal.',
-        'D. Es exclusiva para servicios de urgencias.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Definición 3.6: "Cama censable.- Su característica fundamental, es que genera un Egreso Hospitalario; ésta se encuentra en el servicio instalado en el área de hospitalización."'
-    },
-    {
-      id: 7,
-      question: 'La "causa básica de defunción" se define como:',
-      options: [
-        'A. La enfermedad que aparece en primer lugar en el certificado.',
-        'B. La enfermedad o lesión que inició la cadena de acontecimientos patológicos que condujeron directamente a la muerte.',
-        'C. La causa inmediata de la muerte.',
-        'D. Cualquier circunstancia que acompañe al deceso.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Definición 3.8: "Causa básica de defunción.- Enfermedad o lesión que inició la cadena de acontecimientos patológicos que condujeron directamente a la muerte o las circunstancias del accidente o violencia que produjeron la lesión fatal."'
-    },
-    {
-      id: 8,
-      question: 'El "Certificado de Nacimiento" es:',
-      options: [
-        'A. Un documento legal equivalente al Acta de Nacimiento.',
-        'B. Un formato único nacional que hace constar el nacimiento de un nacido vivo y las circunstancias que acompañaron el hecho.',
-        'C. Un documento que solo se expide en hospitales públicos.',
-        'D. Un requisito opcional para el registro civil.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Definición 3.13: "Certificado de Nacimiento.- Formato único nacional establecido por la Secretaría de Salud, de expedición gratuita y obligatoria, con carácter individual e intransferible, que hace constar el nacimiento de un nacido vivo y las circunstancias que acompañaron el hecho."'
-    },
-    {
-      id: 9,
-      question: 'La "defunción materna" se define como la muerte de una mujer:',
-      options: [
-        'A. Durante el embarazo, parto o dentro de los 42 días siguientes a la terminación del embarazo, por cualquier causa relacionada con el embarazo.',
-        'B. Ocurrida durante el parto por causas accidentales.',
-        'C. Que fallece por causas no relacionadas con el embarazo dentro del año posterior.',
-        'D. Durante el embarazo debido a causas externas.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Definición 3.28: "Defunción materna.- Muerte de una mujer mientras está embarazada, durante el parto o dentro de los 42 días siguientes a la terminación del embarazo, independientemente de la duración y el sitio del embarazo, debida a cualquier causa relacionada con o agravada por el embarazo mismo o por su atención, pero no por causas accidentales o incidentales."'
-    },
-    {
-      id: 10,
-      question: 'Los "días paciente" se cuentan:',
-      options: [
-        'A. Desde el ingreso hasta el egreso del paciente.',
-        'B. Entre las horas en que se toma el censo diario (de 12:01 a.m. a 12:01 a.m. del día siguiente).',
-        'C. Solo cuando el paciente permanece más de 24 horas.',
-        'D. Exclusivamente para pacientes en terapia intensiva.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Definición 3.30: "Días paciente.- Período de servicios prestados a un paciente interno, entre las horas en que se toma el censo diario, es decir, de 12.01 a.m. a 12.01 a.m. del día siguiente."'
-    },
-    {
-      id: 11,
-      question: 'La "discapacidad" según la Convención de los Derechos de las Personas con Discapacidad resulta de:',
-      options: [
-        'A. La interacción entre las personas con deficiencias y las barreras debidas a la actitud y al entorno.',
-        'B. Las limitaciones en la actividad y restricciones en la participación.',
-        'C. Las deficiencias en las funciones y estructuras corporales.',
-        'D. Las condiciones de salud que impiden el trabajo.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Definición 3.32: "De acuerdo a la Convención de los Derechos de las Personas con Discapacidad, la discapacidad resulta de la interacción entre las personas con deficiencias y las barreras debidas a la actitud y al entorno que evitan su participación plena y efectiva en la sociedad."'
-    },
-    {
-      id: 12,
-      question: 'El "egreso hospitalario" implica:',
-      options: [
-        'A. La salida del paciente del servicio de hospitalización con desocupación de una cama censable.',
-        'B. Cualquier movimiento entre servicios dentro del mismo hospital.',
-        'C. La salida del paciente por alta voluntaria solamente.',
-        'D. La defunción del paciente.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Definición 3.33: "Egreso hospitalario.- Evento de salida del paciente del servicio de hospitalización que implica la desocupación de una cama censable. Incluye altas por curación, mejoría, traslado a otra unidad hospitalaria, defunción, alta voluntaria o fuga. Excluye movimientos entre diferentes servicios dentro del mismo hospital."'
-    },
-    {
-      id: 13,
-      question: 'La "información nominal" se define como:',
-      options: [
-        'A. Información que no incluye datos personales.',
-        'B. Registro de un evento de uso estadístico, recolectado a través de un sistema nominal.',
-        'C. Información agregada por institución.',
-        'D. Datos anónimos para estudios epidemiológicos.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Definición 3.42: "Información nominal.- Registro de un evento de uso estadístico, recolectado a través de un sistema nominal."'
-    },
-    {
-      id: 14,
-      question: 'El "parto normal" se define como:',
-      options: [
-        'A. Nacimiento por vía abdominal.',
-        'B. Nacimiento por vía vaginal sin alguna variación o complicación.',
-        'C. Nacimiento por vía vaginal que requiere fórceps.',
-        'D. Nacimiento que requiere maniobras de versión.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Definición 3.47: "Parto normal.- Nacimiento por vía vaginal sin alguna variación o complicación, como sería la aplicación de maniobras."'
-    },
-    {
-      id: 15,
-      question: 'El "personal médico en contacto directo con el paciente" incluye:',
-      options: [
-        'A. Solo a los médicos especialistas.',
-        'B. Médicos generales, especialistas, pasantes, residentes e internos de pregrado.',
-        'C. Personal administrativo y de investigación.',
-        'D. Exclusivamente a los que realizan cirugías.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Definición 3.51 a): "Médico en contacto directo con el paciente.- Profesional en salud con título y cédula profesional que realiza actividades propias de su profesión o especialidad, de atención directa a la salud de pacientes; no incluye a los que se desarrollan en áreas de apoyo técnico, investigación, docente y administrativo." El grupo incluye médicos generales y especialistas, odontólogos, pasantes, internos y residentes (9.2.4).'
-    },
-    {
-      id: 16,
-      question: 'La "población derechohabiente" se refiere a:',
-      options: [
-        'A. Personas que reciben atención en instituciones privadas.',
-        'B. Personas con derecho a recibir prestaciones en especie y/o dinero conforme a las disposiciones de cada institución de seguridad social.',
-        'C. Personas afiliadas al Seguro Popular.',
-        'D. Personas que utilizan servicios de salud al menos una vez al año.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Definición 3.55: "Población derechohabiente.- Personas con derecho a recibir prestaciones en especie y/o en dinero conforme a lo establecido por las disposiciones jurídicas aplicables que rigen cada institución de seguridad social."'
-    },
-    {
-      id: 17,
-      question: 'Los "servicios personales de salud" son aquellos que:',
-      options: [
-        'A. Se aplican al medio ambiente o a la colectividad.',
-        'B. Son proporcionados a un solo individuo en forma específica, como consulta externa, hospitalización, urgencias, etc.',
-        'C. Incluyen protección contra riesgos sanitarios.',
-        'D. Se refieren a promoción y educación para la salud.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Definición 3.72: "Servicios personales de salud.- Aquéllos que son proporcionados a un solo individuo en forma específica, tales como consulta externa, hospitalización, urgencias, servicios de corta estancia, servicios auxiliares de diagnóstico y tratamiento y actividades que se realizan en la población por personal auxiliar de salud."'
-    },
-    {
-      id: 18,
-      question: 'El "Sistema Nacional de Información Básica en Materia de Salud" (SNIBMS) es administrado por:',
-      options: [
-        'A. El INEGI.',
-        'B. La Secretaría de Salud a través de la Dirección General de Información en Salud.',
-        'C. El Consejo Nacional de Población.',
-        'D. La Comisión Nacional de Protección Social en Salud.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Definición 3.70: "Sistema Nacional de Información Básica en Materia de Salud.- ... Es administrado por la Secretaría de Salud, en su carácter de coordinadora del Sistema Nacional de Salud, por conducto de la Dirección General de Información en Salud."'
-    },
-
-    // ========== Capítulo 4. Abreviaturas ==========
-    {
-      id: 19,
-      question: 'La abreviatura "CIF" corresponde a:',
-      options: [
-        'A. Clasificación Internacional de Funcionamiento, de la Discapacidad y de la Salud.',
-        'B. Centro de Inteligencia en Salud.',
-        'C. Clasificación Internacional de Enfermedades.',
-        'D. Comité Técnico Especializado Sectorial en Salud.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. En el numeral 4.4 se define: "CIF.- Clasificación Internacional del Funcionamiento, de la Discapacidad y de la Salud. Versión vigente adoptada en el país."'
-    },
-    {
-      id: 20,
-      question: 'La abreviatura "CLUES" significa:',
-      options: [
-        'A. Clave Única de Establecimientos de Salud.',
-        'B. Clave Única de Registro de Población.',
-        'C. Comité Local de Unidades de Salud.',
-        'D. Centro de Información en Salud.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. En el numeral 4.9: "CLUES.- Clave Unica de Establecimientos de Salud."'
-    },
-
-    // ========== Capítulo 5. Generalidades ==========
-    {
-      id: 21,
-      question: 'Según la NOM-035, la codificación de las clasificaciones internacionales (CIE, CIF, CIE-MC) debe efectuarse al nivel de:',
-      options: [
-        'A. Tres dígitos.',
-        'B. Cuatro dígitos.',
-        'C. Cinco dígitos.',
-        'D. Dos dígitos.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Numeral 5.3: "En todos los casos en los que sea necesario utilizar las clasificaciones internacionales (CIE, CIF y CIE-MC) la codificación debe efectuarse al nivel de cuatro dígitos."'
-    },
-    {
-      id: 22,
-      question: 'La instancia que regula y vigila el uso de la Familia de Clasificaciones Internacionales de la OMS en México es:',
-      options: [
-        'A. La Dirección General de Información en Salud.',
-        'B. El Centro Mexicano para la Clasificación de Enfermedades (CEMECE).',
-        'C. El INEGI.',
-        'D. La Comisión Nacional de Protección Social en Salud.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Numeral 5.6: "La instancia que regula y vigila el uso de la Familia de Clasificaciones Internacionales de la OMS en México, es el CEMECE."'
-    },
-    {
-      id: 23,
-      question: 'Todo establecimiento del Sistema Nacional de Salud debe contar con:',
-      options: [
-        'A. CLUES.',
-        'B. CURP.',
-        'C. CIF.',
-        'D. CIE.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 5.5: "Todo establecimiento del SNS debe contar con CLUES."'
-    },
-    {
-      id: 24,
-      question: 'La información generada por el SNS debe observar los aspectos de confidencialidad y reserva de acuerdo con:',
-      options: [
-        'A. Solo la Ley Federal de Transparencia.',
-        'B. La Ley del SNIEG, la Ley Federal de Transparencia y la Ley Federal de Protección de Datos Personales.',
-        'C. Únicamente la Ley General de Salud.',
-        'D. La NOM-004-SSA3-2012.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Numeral 5.7: "La información generada por el SNS debe observar los aspectos de confidencialidad y reserva que señalan las disposiciones jurídicas aplicables en materia de transparencia y protección de datos personales, particularmente los siguientes ordenamientos: a) Ley del Sistema Nacional de Información Estadística y Geográfica; b) Ley Federal de Transparencia y Acceso a la Información Pública Gubernamental; y, c) Ley Federal de Protección de Datos Personales en Posesión de los Particulares."'
-    },
-
-    // ========== Capítulo 6. Flujos de información ==========
-    {
-      id: 25,
-      question: 'La coordinación del SINAIS y del SNIBMS se ejerce por conducto de:',
-      options: [
-        'A. La Dirección General de Epidemiología.',
-        'B. La Dirección General de Información en Salud (DGIS).',
-        'C. El INEGI.',
-        'D. La Comisión Nacional de Protección Social en Salud.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Numeral 6.1: "La coordinación de dichas funciones se ejercen por conducto de la DGIS y para la información de vigilancia epidemiológica, por conducto de la Dirección General de Epidemiología." La DGIS es la responsable general.'
-    },
-    {
-      id: 26,
-      question: 'Los niveles administrativos para la coordinación del SNS son:',
-      options: [
-        'A. Unidades médicas y estatales únicamente.',
-        'B. Unidades médicas, jurisdiccional/delegacional, estatal y federal.',
-        'C. Local, municipal y estatal.',
-        'D. Hospitalario y ambulatorio.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Numeral 6.2: "a) Unidades médicas, de apoyo, de asistencia social y administrativas; b) Jurisdiccional/Delegacional; c) Estatal, y d) Federal."'
-    },
-    {
-      id: 27,
-      question: 'La información solicitada con periodicidad anual debe ser entregada a la DGIS a más tardar:',
-      options: [
-        'A. El último día hábil de marzo del año siguiente al que corresponde la información.',
-        'B. El último día hábil de abril del mismo año.',
-        'C. El 30 de junio del año siguiente.',
-        'D. El 31 de diciembre del año en curso.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 7.2: "La información solicitada con periodicidad anual debe ser entregada a la DGIS de acuerdo a los flujos establecidos para cada componente del SINAIS, a más tardar el último día hábil de marzo del año siguiente al año que corresponde la información."'
-    },
-    {
-      id: 28,
-      question: 'La información solicitada con periodicidad mensual debe ser entregada:',
-      options: [
-        'A. A más tardar el último día hábil del mes siguiente.',
-        'B. Dentro de los primeros quince días hábiles del mes posterior.',
-        'C. Conforme a los flujos establecidos para cada componente del SINAIS.',
-        'D. Trimestralmente.'
-      ],
-      correct: 2,
-      explanation: 'Correcto. Numeral 7.5: "La información solicitada con periodicidad mensual debe ser entregada a la DGIS de acuerdo a los flujos establecidos para cada componente del SINAIS." No se especifica un plazo fijo en este numeral, sino que se remite a los flujos.'
-    },
-
-    // ========== Capítulo 7. Aspectos específicos ==========
-    {
-      id: 29,
-      question: 'Los componentes del SINAIS incluyen, entre otros:',
-      options: [
-        'A. Población y cobertura, recursos para la salud, servicios para la salud, nacimientos y daños a la salud.',
-        'B. Solo recursos humanos y financieros.',
-        'C. Únicamente estadísticas de mortalidad.',
-        'D. Exclusivamente información de consulta externa.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 7.1: "El SINAIS administra información de acuerdo a los siguientes componentes: a) Población y cobertura: b) Recursos para la salud: c) Servicios para la salud: d) Nacimientos: e) Daños a la salud, e f) Información en materia de salud diferente a la contenida en los incisos anteriores."'
-    },
-    {
-      id: 30,
-      question: 'Los atributos de calidad de la información incluyen:',
-      options: [
-        'A. Oportunidad, cobertura, integridad, validez, veracidad y consistencia.',
-        'B. Exactitud, precisión, confiabilidad y pertinencia.',
-        'C. Claridad, transparencia, accesibilidad y seguridad.',
-        'D. Oportunidad, relevancia, utilidad y confiabilidad.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 7.8: "La información generada en todos los componentes del SINAIS, debe cumplir con los siguientes atributos de calidad: a) Oportunidad; b) Cobertura; c) Integridad; d) Validez; e) Veracidad; f) Consistencia."'
-    },
-    {
-      id: 31,
-      question: 'La aplicación tecnológica "SAEH" corresponde a:',
-      options: [
-        'A. Subsistema Automatizado de Egresos Hospitalarios.',
-        'B. Sistema de Atención en Emergencias Hospitalarias.',
-        'C. Subsistema de Análisis de Egresos Hospitalarios.',
-        'D. Sistema de Archivo de Expedientes Hospitalarios.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. En el numeral 4.21 se define: "SAEH.- Subsistema Automatizado de Egresos Hospitalarios." Además en 7.9 se menciona como una de las aplicaciones.'
-    },
-
-    // ========== Capítulo 8. Población y cobertura ==========
-    {
-      id: 32,
-      question: 'Las estimaciones de población utilizadas para la construcción de indicadores deben ser las proyecciones vigentes elaboradas por:',
-      options: [
-        'A. El INEGI.',
-        'B. El CONAPO.',
-        'C. La Secretaría de Salud.',
-        'D. La Dirección General de Información en Salud.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Numeral 8.1.1: "Las estimaciones de población, en cuanto a su volumen, estructura y distribución en el territorio nacional, son las proyecciones vigentes elaboradas por el CONAPO."'
-    },
-    {
-      id: 33,
-      question: 'Para la construcción de indicadores, la población a utilizar como denominador debe ser la estimación a:',
-      options: [
-        'A. Principio de año.',
-        'B. Mitad de año.',
-        'C. Fin de año.',
-        'D. Cualquier fecha del año.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Numeral 8.1.2: "Para la construcción de indicadores en los que el denominador sea la población, deben utilizarse las estimaciones de población a mitad de año elaboradas por el CONAPO."'
-    },
-    {
-      id: 34,
-      question: 'El Padrón General de Salud (PGS) tiene como objetivo identificar a la población afiliada mediante un registro único por:',
-      options: [
-        'A. CLUES.',
-        'B. CURP.',
-        'C. CIE.',
-        'D. CIF.'
-      ],
-      correct: 1,
-      explanation: 'Correcto. Numeral 8.2.2: "El PGS, tiene entre sus objetivos identificar a la población afiliada mediante un registro único por CURP."'
-    },
-    {
-      id: 35,
-      question: 'El PGS es un sistema de datos personales y contiene como mínimo:',
-      options: [
-        'A. CURP, nombre, fecha de nacimiento, sexo, nacionalidad, entidad de residencia, entre otros.',
-        'B. Solo CURP y nombre.',
-        'C. CLUES y CURP.',
-        'D. Número de afiliación y diagnóstico.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 8.2.3: "El PGS es de tipo nominal y contiene por lo menos, los siguientes datos: CURP, nombre, primer apellido, segundo apellido, fecha de nacimiento, entidad federativa de nacimiento, sexo, nacionalidad, folio o número de identificación con el que las instituciones participantes identifican al afiliado, localidad, municipio, entidad federativa de residencia, tipo de beneficiario, clave de la dependencia y clave del programa de salud."'
-    },
-    {
-      id: 36,
-      question: 'La información mensual correspondiente a nuevos afiliados y actualización de vigencias debe entregarse:',
-      options: [
-        'A. Durante los primeros quince días hábiles del mes posterior al que corresponde la información.',
-        'B. A más tardar el último día hábil del mes.',
-        'C. Trimestralmente.',
-        'D. Anualmente.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 8.2.7: "Los períodos para la entrega de información mensual, correspondiente a nuevos afiliados y actualización de vigencias, se deben realizar en el transcurso de los primeros quince días hábiles del mes posterior al que corresponde la información."'
-    },
-
-    // ========== Capítulo 9. Recursos para la salud ==========
-    {
-      id: 37,
-      question: 'El componente de Recursos para la Salud está integrado por:',
-      options: [
-        'A. Recursos humanos, físicos, infraestructura, equipo médico y financieros.',
-        'B. Solo recursos humanos y financieros.',
-        'C. Infraestructura y equipo médico únicamente.',
-        'D. Recursos materiales y presupuesto.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 9.1.1: "El componente de Recursos para la Salud está integrado por: a) Recursos humanos: b) Recursos físicos: c) Infraestructura: d) Equipo médico, y e) Recursos financieros."'
-    },
-    {
-      id: 38,
-      question: 'La estadística de recursos humanos debe reportar información mínima por persona relacionada con:',
-      options: [
-        'A. CURP, sexo, fecha de nacimiento, plaza ocupada, especialidad(es) y horario laboral.',
-        'B. Nombre y puesto únicamente.',
-        'C. CURP y número de seguridad social.',
-        'D. Especialidad y años de servicio.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 9.2.2: "Se debe reportar información mínima por persona relacionada con la CURP, sexo, fecha de nacimiento, plaza ocupada, especialidad(es) conforme a escolaridad comprobable (cédula profesional cuando aplique) y horario laboral de acuerdo al establecimiento donde presta sus servicios."'
-    },
-    {
-      id: 39,
-      question: 'Los recursos físicos incluyen, entre otros:',
-      options: [
-        'A. Camas, quirófanos, áreas médicas y consultorios.',
-        'B. Solo camas censables.',
-        'C. Equipo médico.',
-        'D. Personal administrativo.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 9.3.1: "La estadística de Recursos Físicos se refiere a camas, quirófanos, áreas médicas, espacios ... existentes en las unidades médicas." Y 9.3.4 menciona consultorios.'
-    },
-    {
-      id: 40,
-      question: 'La estadística de infraestructura considera:',
-      options: [
-        'A. El total de inmuebles y unidades móviles operando, obras en proceso y concluidas que no prestan servicio.',
-        'B. Únicamente los hospitales en funcionamiento.',
-        'C. Solo las unidades móviles.',
-        'D. Exclusivamente las obras en construcción.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 9.4.1: "La estadística del componente de Infraestructura se refiere a los establecimientos de salud existentes y en operación dentro del territorio nacional. Considera el total de inmuebles y unidades móviles operando, parcial o totalmente, obras en proceso de construcción y concluidas que por alguna razón no están prestando servicio."'
-    },
-    {
-      id: 41,
-      question: 'El registro de equipo médico debe distinguir de manera independiente el instalado en áreas de servicio médico de aquél que se encuentre en:',
-      options: [
-        'A. Almacén (no instalados).',
-        'B. Mantenimiento.',
-        'C. Otras unidades.',
-        'D. Desuso.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 9.5.4: "El registro de Equipo Médico debe distinguir de manera independiente el instalado en áreas de servicio médico de aquél que se encuentre en almacén (no instalados)."'
-    },
-    {
-      id: 42,
-      question: 'La estadística de recursos financieros para instituciones públicas se integra considerando clasificadores como:',
-      options: [
-        'A. Clasificador por Objeto del Gasto, por Actividad Institucional y por Funciones de Atención.',
-        'B. Solo el clasificador por objeto del gasto.',
-        'C. Clasificador por tipo de servicio.',
-        'D. Clasificador por programa presupuestario.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 9.6.2: "Toda la información de las instituciones públicas se debe integrar en los formatos y/o medios electrónicos establecidos por la Secretaría a través de la DGIS, en los que se toman en cuenta los siguientes clasificadores: a) Clasificador por Objeto del Gasto; b) Clasificador por Actividad Institucional, y c) Clasificador por Funciones de Atención."'
-    },
-
-    // ========== Capítulo 10. Servicios para la salud ==========
-    {
-      id: 43,
-      question: 'Los servicios personales de salud incluyen:',
-      options: [
-        'A. Consulta externa, hospitalización, urgencias y servicios de corta estancia.',
-        'B. Promoción y educación para la salud.',
-        'C. Protección contra riesgos sanitarios.',
-        'D. Prevención y control de enfermedades a nivel poblacional.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 10.1.1: "Los servicios personales incluyen: a) Consulta externa: b) Hospitalización: c) Urgencias: d) Servicios de corta estancia: e) Servicios auxiliares de diagnóstico y tratamiento."'
-    },
-    {
-      id: 44,
-      question: 'Los servicios no personales incluyen:',
-      options: [
-        'A. Protección contra riesgos sanitarios, promoción y educación para la salud, y prevención y control de enfermedades a nivel poblacional.',
-        'B. Consulta externa y hospitalización.',
-        'C. Urgencias y servicios de corta estancia.',
-        'D. Servicios auxiliares de diagnóstico.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 10.1.2: "Los servicios no personales incluyen: a) Protección contra riesgos sanitarios; b) Promoción y educación para la salud, y c) Prevención y control de enfermedades a nivel poblacional."'
-    },
-    {
-      id: 45,
-      question: 'El registro de información sobre servicios personales debe considerar, entre otros:',
-      options: [
-        'A. Datos generales del paciente, diagnóstico médico, tipo de servicio, características de la atención, datos de la institución y personal que brindó la atención.',
-        'B. Solo el diagnóstico médico.',
-        'C. Únicamente los datos de la institución.',
-        'D. Exclusivamente el tipo de servicio.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 10.7: "El registro de información sobre servicios personales otorgados debe considerar: a) Datos generales del paciente; b) Diagnóstico médico y/o motivo de la consulta; c) Tipo de servicio médico otorgado; d) Características de la atención brindada; e) Datos de la institución a nivel unidad médica y de acuerdo a la CLUES; y, f) Personal que brindó la atención."'
-    },
-    {
-      id: 46,
-      question: 'En la atención de urgencias se debe diferenciar entre:',
-      options: [
-        'A. Urgencia calificada y no calificada.',
-        'B. Urgencia mayor y menor.',
-        'C. Urgencia quirúrgica y médica.',
-        'D. Urgencia ambulatoria y hospitalaria.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 10.9: "Las variables para el registro sobre la atención de urgencias, deben diferenciar entre urgencia calificada y no calificada."'
-    },
-    {
-      id: 47,
-      question: 'En caso de atención obstétrica se debe registrar:',
-      options: [
-        'A. Parto normal o complicado, parto por cesárea y aborto.',
-        'B. Solo el tipo de parto.',
-        'C. Número de nacidos vivos.',
-        'D. Edad gestacional.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 10.11: "En caso de atención obstétrica: a) Parto normal o complicado; b) Parto por Cesárea, y c) Aborto."'
-    },
-    {
-      id: 48,
-      question: 'Los integrantes del SNS deben capacitar permanentemente al personal responsable del registro estadístico para:',
-      options: [
-        'A. Garantizar que el registro se lleve a cabo de manera correcta.',
-        'B. Aumentar el número de registros.',
-        'C. Reducir costos.',
-        'D. Cumplir con metas administrativas.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. Numeral 10.16: "Los integrantes del SNS deben capacitar permanentemente al personal responsable del registro estadístico de los Servicios para la Salud, con la finalidad de promover y garantizar que éste se lleve a cabo de manera correcta."'
-    },
-
-    // ========== Transitorios ==========
-    {
-      id: 49,
-      question: 'La entrada en vigor de la NOM-035-SSA3-2012 deja sin efectos a:',
-      options: [
-        'A. La NOM-040-SSA2-2004 En Materia de Información en Salud.',
-        'B. La NOM-004-SSA3-2012 del Expediente Clínico.',
-        'C. La NOM-017-SSA2-1994 para Vigilancia Epidemiológica.',
-        'D. La NOM-024-SSA3-2012 de Sistemas de Información.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. En el Transitorio se indica: "La entrada en vigor de la presente Norma, deja sin efectos a la Norma Oficial Mexicana NOM-040-SSA2-2004 En Materia de Información en Salud, publicada el 28 de septiembre de 2005."'
-    },
-    {
-      id: 50,
-      question: 'La NOM-035-SSA3-2012 entró en vigor a los 60 días naturales contados a partir de:',
-      options: [
-        'A. La fecha de su publicación en el Diario Oficial de la Federación.',
-        'B. El 1 de enero de 2013.',
-        'C. La fecha de aprobación por el Comité Consultivo.',
-        'D. El 30 de noviembre de 2012.'
-      ],
-      correct: 0,
-      explanation: 'Correcto. El numeral 17 establece: "Esta norma entrará en vigor a los 60 días naturales, contados a partir de la fecha de su publicación en el Diario Oficial de la Federación."'
-    }
-  ];
-
-  // ============================================================
-  //  LÓGICA DE LA APLICACIÓN
-  // ============================================================
-  let currentIndex = 0;
-  let answers = new Array(questions.length).fill(null);
-  let verified = new Array(questions.length).fill(false);
-  let totalCorrect = 0;
-
-  const questionText = document.getElementById('questionText');
-  const optionsContainer = document.getElementById('optionsContainer');
-  const feedbackBox = document.getElementById('feedbackBox');
-  const feedbackTitle = document.getElementById('feedbackTitle');
-  const feedbackDetail = document.getElementById('feedbackDetail');
-  const counterDisplay = document.getElementById('counterDisplay');
-  const statusDisplay = document.getElementById('statusDisplay');
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const verifyBtn = document.getElementById('verifyBtn');
-  const resetBtn = document.getElementById('resetBtn');
-  const resultContainer = document.getElementById('resultContainer');
-  const finalScore = document.getElementById('finalScore');
-  const finalMessage = document.getElementById('finalMessage');
-
-  function renderQuestion(index) {
-    const q = questions[index];
-    questionText.textContent = q.question;
-    optionsContainer.innerHTML = '';
-    q.options.forEach((opt, i) => {
-      const div = document.createElement('div');
-      div.className = 'option-item' + (answers[index] === i ? ' selected' : '');
-      const radio = document.createElement('input');
-      radio.type = 'radio';
-      radio.name = 'question';
-      radio.value = i;
-      radio.checked = (answers[index] === i);
-      radio.addEventListener('change', () => {
-        if (verified[index]) {
-          verified[index] = false;
-          feedbackBox.style.display = 'none';
-          totalCorrect = computeTotalCorrect();
+    // ----------------------------------------------------------------
+    //  50 preguntas basadas en las definiciones del numeral 3
+    //  NOM-035-SSA3-2012 (páginas 4 a 11)
+    // ----------------------------------------------------------------
+    const questions = [
+        // ========== Definiciones clave ==========
+        {
+            id: 1,
+            question: 'Según la NOM-035, la "Afección principal" se define como:',
+            options: [
+                'A. La primera enfermedad que presenta el paciente al ingresar.',
+                'B. La situación diagnosticada al final del proceso de atención como la causante primaria de la necesidad de tratamiento.',
+                'C. Cualquier síntoma que haya motivado la consulta.',
+                'D. La enfermedad que requiere mayor tiempo de hospitalización.'
+            ],
+            correct: 1,
+            explanation: 'Correcto. Definición 3.2: "Afección principal.- Situación diagnosticada al final del proceso de atención de la salud, como la causante primaria de la necesidad de tratamiento o investigación que tuvo el paciente."'
+        },
+        {
+            id: 2,
+            question: 'La "Atención a la salud" se define como:',
+            options: [
+                'A. El conjunto de acciones coordinadas de promoción, protección, detección, limitación del daño, atención médica y rehabilitación, para preservar o recuperar la salud del individuo en conjunto con la familia o comunidad.',
+                'B. La atención médica que se otorga exclusivamente en hospitales.',
+                'C. La consulta externa y la hospitalización.',
+                'D. Las acciones de prevención de enfermedades.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.3: "Atención a la salud (servicio de atención a la salud).- Conjunto de acciones coordinadas de promoción y/o de educación para la salud, protección específica, detección, limitación del daño, atención médica de enfermedades y rehabilitación, que se desarrollan por interacción de diferentes grupos de profesionales y técnicos, con el fin de preservar la salud del individuo o recuperarla, en conjunto con la familia o la comunidad."'
+        },
+        {
+            id: 3,
+            question: 'La "cama censable" se caracteriza fundamentalmente porque:',
+            options: [
+                'A. Genera un Egreso Hospitalario.',
+                'B. Se destina a la atención transitoria o provisional.',
+                'C. No requiere recursos de personal.',
+                'D. Es exclusiva para servicios de urgencias.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.6: "Cama censable.- Su característica fundamental, es que genera un Egreso Hospitalario; ésta se encuentra en el servicio instalado en el área de hospitalización (para el uso regular de pacientes internos; debe contar con los recursos indispensables de espacio, así como los recursos materiales y de personal para la atención médica del paciente), incluye incubadoras para la atención a pacientes recién nacidos en estado patológico."'
+        },
+        {
+            id: 4,
+            question: 'La "cama no censable" también es denominada:',
+            options: [
+                'A. Cama de tránsito.',
+                'B. Cama de hospitalización.',
+                'C. Cama de terapia intensiva.',
+                'D. Cama de recuperación.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.7: "Cama no censable.- Su característica fundamental, es que no genera un Egreso Hospitalario; es la cama que se destina a la atención transitoria o provisional, para observación del paciente, iniciar un tratamiento o intensificar la aplicación de procedimientos médico-quirúrgicos. También es denominada cama de tránsito."'
+        },
+        {
+            id: 5,
+            question: 'La "causa básica de defunción" se define como:',
+            options: [
+                'A. La enfermedad que aparece en primer lugar en el certificado.',
+                'B. La enfermedad o lesión que inició la cadena de acontecimientos patológicos que condujeron directamente a la muerte.',
+                'C. La causa inmediata de la muerte.',
+                'D. Cualquier circunstancia que acompañe al deceso.'
+            ],
+            correct: 1,
+            explanation: 'Correcto. Definición 3.8: "Causa básica de defunción.- Enfermedad o lesión que inició la cadena de acontecimientos patológicos que condujeron directamente a la muerte o las circunstancias del accidente o violencia que produjeron la lesión fatal."'
+        },
+        {
+            id: 6,
+            question: 'Las "causas externas" se definen como:',
+            options: [
+                'A. La clasificación de acontecimientos ambientales y circunstancias que causan traumatismos, envenenamientos y otros efectos adversos.',
+                'B. Las enfermedades que se originan fuera del organismo.',
+                'C. Los accidentes laborales.',
+                'D. Las causas de muerte no especificadas.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.10: "Causas externas.- Clasificación de acontecimientos ambientales y circunstancias como la causa de traumatismos, envenenamientos y otros efectos adversos. Cuando se registra una afección como traumatismo, envenenamiento u otro efecto de causas externas, debe describirse tanto la naturaleza de la afección como la de las circunstancias que la originaron."'
+        },
+        {
+            id: 7,
+            question: 'El "Certificado de Defunción" es:',
+            options: [
+                'A. Un formato único nacional que hace constar la ocurrencia de una defunción y las circunstancias que acompañaron el hecho.',
+                'B. Un documento legal equivalente al Acta de Defunción.',
+                'C. Un formato que solo se expide en hospitales públicos.',
+                'D. Un requisito opcional para el registro civil.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.11: "Certificado de Defunción.- Formato único nacional establecido por la Secretaría de Salud, de expedición gratuita y obligatoria, con carácter individual e intransferible, que hace constar la ocurrencia de una defunción y las circunstancias que acompañaron el hecho."'
+        },
+        {
+            id: 8,
+            question: 'El "Certificado de Nacimiento" es:',
+            options: [
+                'A. Un formato único nacional que hace constar el nacimiento de un nacido vivo y las circunstancias que acompañaron el hecho.',
+                'B. Un documento legal equivalente al Acta de Nacimiento.',
+                'C. Un formato que solo se expide en hospitales públicos.',
+                'D. Un requisito opcional para el registro civil.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.13: "Certificado de Nacimiento.- Formato único nacional establecido por la Secretaría de Salud, de expedición gratuita y obligatoria, con carácter individual e intransferible, que hace constar el nacimiento de un nacido vivo y las circunstancias que acompañaron el hecho."'
+        },
+        {
+            id: 9,
+            question: 'El "Certificante" es:',
+            options: [
+                'A. El profesional de la salud o persona facultada por la autoridad sanitaria que expide Certificados de Defunción, Muerte Fetal o Nacimiento.',
+                'B. El director de la unidad médica.',
+                'C. El responsable del archivo clínico.',
+                'D. El familiar del paciente que solicita el certificado.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.14: "Certificante.- Profesional de la salud o persona facultada por la autoridad sanitaria correspondiente que expide Certificados de Defunción, Muerte Fetal o Nacimiento."'
+        },
+        {
+            id: 10,
+            question: 'La "Cesárea" se define como:',
+            options: [
+                'A. La intervención quirúrgica para extraer el producto de la concepción, vivo o muerto, de 22 semanas o más, a través de una incisión en la pared abdominal y uterina.',
+                'B. El parto por vía vaginal con asistencia de fórceps.',
+                'C. La extracción del producto mediante maniobras manuales.',
+                'D. La inducción del parto con medicamentos.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.15: "Cesárea.- Intervención quirúrgica que tiene por objeto, extraer el producto de la concepción, vivo o muerto, de 22 semanas cumplidas o más, así como la placenta y sus anexos, a través de una incisión en la pared abdominal y uterina."'
+        },
+        {
+            id: 11,
+            question: 'La "Cirugía (intervención quirúrgica)" se define como un procedimiento que:',
+            options: [
+                'A. Extirpa, explora, sustituye, trasplanta o repara un defecto o lesión, o efectúa una modificación en un tejido u órgano, con fines terapéuticos, diagnósticos, profilácticos o estéticos, mediante técnicas invasivas.',
+                'B. Solo se realiza dentro de una sala de operaciones.',
+                'C. Es exclusivamente para fines terapéuticos.',
+                'D. No requiere anestesia.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.16: "Cirugía (intervención quirúrgica).- Procedimiento que consiste en extirpar, explorar, sustituir, trasplantar o reparar un defecto o lesión o efectuar una modificación en un tejido u órgano dañado o sano, con fines terapéuticos, diagnósticos, profilácticos o estéticos, mediante técnicas invasivas que implican generalmente el uso de anestesia y de instrumentos cortantes, mecánicos u otros medios físicos, que se lleva a cabo dentro o fuera de una sala de operaciones."'
+        },
+        {
+            id: 12,
+            question: 'La "Clasificación de procedimientos en medicina" es un estándar de uso obligatorio para:',
+            options: [
+                'A. La codificación y generación de estadísticas de procedimientos médicos: quirúrgicos y no quirúrgicos (diagnóstico y terapéuticos).',
+                'B. Solo la codificación de procedimientos quirúrgicos.',
+                'C. La clasificación de enfermedades.',
+                'D. La codificación de causas de muerte.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.17: "Clasificación de procedimientos en medicina.- Estándar de uso obligatorio en todo el país para la codificación y generación de estadísticas de procedimientos médicos: quirúrgicos y no quirúrgicos (diagnóstico y terapéuticos); que permite la comparabilidad nacional. Para efectos de esta norma se considera la versión vigente adoptada en nuestro país."'
+        },
+        {
+            id: 13,
+            question: 'La "Clasificación Estadística Internacional de Enfermedades y Problemas Relacionados con la Salud" (CIE) es un estándar internacional de uso obligatorio para:',
+            options: [
+                'A. La codificación y generación de estadísticas de morbilidad y mortalidad uniformes.',
+                'B. La clasificación de procedimientos médicos.',
+                'C. La codificación de discapacidad.',
+                'D. La clasificación de causas externas solamente.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.18: "Clasificación Estadística Internacional de Enfermedades y Problemas Relacionados con la Salud.- Estándar internacional de uso obligatorio en todo el país, para la codificación y generación de estadísticas de morbilidad y mortalidad uniformes, que permiten la comparabilidad nacional e internacional. Para efectos de esta Norma se considera la versión vigente adoptada en nuestro país."'
+        },
+        {
+            id: 14,
+            question: 'La "Clasificación Internacional del Funcionamiento, de la Discapacidad y de la Salud" (CIF) es un estándar internacional de uso obligatorio para:',
+            options: [
+                'A. El estudio, codificación y generación de estadísticas de funcionamiento y discapacidad.',
+                'B. La clasificación de enfermedades.',
+                'C. La codificación de causas de muerte.',
+                'D. La clasificación de procedimientos médicos.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.19: "Clasificación Internacional del Funcionamiento, de la Discapacidad y de la Salud.- Estándar internacional de uso obligatorio en todo el país para el estudio, codificación y generación de estadísticas de funcionamiento y discapacidad, que permiten la comparabilidad nacional e internacional. Para efectos de esta Norma se considera la versión vigente adoptada en nuestro país."'
+        },
+        {
+            id: 15,
+            question: 'La "Clave Única de Establecimientos de Salud" (CLUES) es:',
+            options: [
+                'A. Un identificador único, consecutivo e intransferible que asigna la Secretaría de Salud a cada establecimiento de salud en el territorio nacional.',
+                'B. Un identificador para los médicos certificados.',
+                'C. Un código para los pacientes.',
+                'D. Un número de folio para certificados de nacimiento.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.20: "Clave Unica de Establecimientos de Salud.- Identificador único, consecutivo e intransferible que asigna la Secretaría de Salud a través de la Dirección General de Información en Salud de manera obligatoria a cada establecimiento de salud (entre los que se encuentran: unidades médicas, laboratorios, centros de diagnóstico, centros de tratamiento, oficinas administrativas, sean estos fijos o móviles) que exista en el territorio nacional, sea público, privado o social, y con la cual se identifica toda la información reportada por el mismo a cada uno de los componentes del Sistema Nacional de Información en Salud."'
+        },
+        {
+            id: 16,
+            question: 'El "Comité Técnico Especializado Sectorial en Salud" (CTESS) es:',
+            options: [
+                'A. Un órgano colegiado de participación y consulta para la coordinación sectorial en materia de información en salud.',
+                'B. Un comité de vigilancia epidemiológica.',
+                'C. El órgano encargado de la certificación de establecimientos.',
+                'D. El comité que emite las normas oficiales mexicanas.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.21: "Comité Técnico Especializado Sectorial en Salud.- Organo colegiado de participación y consulta constituido conforme a la Ley del Sistema Nacional de Información Estadística y Geográfica para fungir como la instancia de coordinación sectorial, donde se identifican y desarrollan acciones conjuntas para la captación, integración, producción, procesamiento, sistematización, análisis y difusión de la información, que sirven de base para la consolidación del Sistema Nacional de Información en Salud y su vinculación con el Sistema Nacional de Información Estadística y Geográfica."'
+        },
+        {
+            id: 17,
+            question: 'La "Consulta de primera vez" es:',
+            options: [
+                'A. La atención otorgada a una persona cuando acude a la primera consulta por una enfermedad o motivo determinado en la unidad.',
+                'B. La primera consulta en la vida de una persona.',
+                'C. La consulta que se otorga al inicio de una enfermedad.',
+                'D. La consulta que se realiza en el domicilio del paciente.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.22: "Consulta de primera vez.- Atención otorgada a una persona, por personal de salud, cuando acude a la primera consulta por una enfermedad o motivo determinado en la unidad."'
+        },
+        {
+            id: 18,
+            question: 'La "Consulta externa" se clasifica como general o de especialidad según:',
+            options: [
+                'A. El tipo de médico que la otorga: general o especialista.',
+                'B. El lugar donde se realiza.',
+                'C. La duración de la consulta.',
+                'D. El motivo de la consulta.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.23: "La consulta externa se clasifica como general cuando es otorgada por un médico general o de familia, mientras que se clasifica como de especialidad cuando es otorgada por un médico especialista, ya sea de alguna de las especialidades o de subespecialidad."'
+        },
+        {
+            id: 19,
+            question: 'La "Consulta subsecuente" es:',
+            options: [
+                'A. La atención otorgada al paciente cuando asiste por la misma enfermedad o motivo por el que ya se le otorgó una consulta en la unidad.',
+                'B. La consulta que se realiza después de una hospitalización.',
+                'C. La consulta de seguimiento en el domicilio.',
+                'D. La consulta que se otorga por una enfermedad diferente.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.24: "Consulta subsecuente.- Atención otorgada al paciente, por personal de salud, cuando asiste por la misma enfermedad o motivo por el que ya se le otorgó una consulta en la unidad."'
+        },
+        {
+            id: 20,
+            question: 'Un "Consultorio" puede clasificarse en:',
+            options: [
+                'A. Medicina general o familiar, de especialidad y de estomatología (odontología).',
+                'B. Solo de medicina general y de especialidad.',
+                'C. Público, privado y social.',
+                'D. De consulta externa y de urgencias.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.25: "Este se puede clasificar en: consultorio de medicina general o familiar, donde se realizan actividades de promoción, prevención, diagnóstico, tratamiento y rehabilitación; consultorio de especialidad cuando está destinado a la atención de una especialidad (no se incluye la odontológica); y, consultorio de estomatología (odontología), es en el que se desarrollan actividades preventivas, curativas y de rehabilitación, dirigidas a promover, mantener y restaurar la salud bucal de las personas."'
+        },
+        {
+            id: 21,
+            question: 'La "Defunción (muerte, fallecimiento)" se define como:',
+            options: [
+                'A. La desaparición permanente de todas las funciones vitales de una persona ocurridas después de ser declarado nacido vivo.',
+                'B. La pérdida de la vida de un producto de la concepción antes de su expulsión.',
+                'C. La muerte de una mujer durante el embarazo o parto.',
+                'D. La muerte de un recién nacido en el primer mes de vida.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.26: "Defunción (muerte, fallecimiento).- Desaparición permanente de todas las funciones vitales de una persona ocurridas después de ser declarado nacido vivo."'
+        },
+        {
+            id: 22,
+            question: 'La "Defunción fetal" se define como:',
+            options: [
+                'A. La pérdida de la vida de un producto de la concepción antes de la expulsión o extracción completa del cuerpo de su madre, sin signos vitales después de la separación.',
+                'B. La muerte de un recién nacido en el primer mes de vida.',
+                'C. La muerte de un feto durante el trabajo de parto.',
+                'D. La muerte de un producto de la concepción de menos de 22 semanas.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.27: "Defunción (muerte, fallecimiento) Fetal.- Pérdida de la vida de un producto de la concepción antes de la expulsión o extracción completa del cuerpo de su madre, independientemente de la duración del embarazo. La muerte está indicada por el hecho de que después de la separación de la madre, el feto no presenta signos vitales, como respiración, latidos del corazón, pulsaciones del cordón umbilical o movimientos efectivos de los músculos de contracción voluntaria."'
+        },
+        {
+            id: 23,
+            question: 'La "Defunción materna" es la muerte de una mujer:',
+            options: [
+                'A. Durante el embarazo, parto o dentro de los 42 días siguientes a la terminación del embarazo, por cualquier causa relacionada con el embarazo, pero no por causas accidentales o incidentales.',
+                'B. Ocurrida durante el parto por causas accidentales.',
+                'C. Que fallece por causas no relacionadas con el embarazo dentro del año posterior.',
+                'D. Durante el embarazo debido a causas externas.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.28: "Defunción materna.- Muerte de una mujer mientras está embarazada, durante el parto o dentro de los 42 días siguientes a la terminación del embarazo, independientemente de la duración y el sitio del embarazo, debida a cualquier causa relacionada con o agravada por el embarazo mismo o por su atención, pero no por causas accidentales o incidentales."'
+        },
+        {
+            id: 24,
+            question: 'La "Derechohabiencia" se define como:',
+            options: [
+                'A. El derecho que tienen las personas para recibir servicios, entre los que se encuentra la atención médica, por instituciones de seguridad social.',
+                'B. El derecho a recibir atención médica gratuita en el sector público.',
+                'C. La afiliación al Seguro Popular.',
+                'D. La posibilidad de contratar un seguro médico privado.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.29: "Derechohabiencia.- Derecho que tienen las personas para recibir servicios, entre los que se encuentran la atención médica, que pueden ser provistos por instituciones de seguridad social dado que cumplen con lo establecido en las disposiciones jurídicas aplicables que rigen a dichas instituciones."'
+        },
+        {
+            id: 25,
+            question: 'Los "Días paciente" se cuentan:',
+            options: [
+                'A. Entre las horas en que se toma el censo diario, de 12:01 a.m. a 12:01 a.m. del día siguiente.',
+                'B. Desde el ingreso hasta el egreso del paciente.',
+                'C. Solo cuando el paciente permanece más de 24 horas.',
+                'D. Exclusivamente para pacientes en terapia intensiva.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.30: "Días paciente.- Período de servicios prestados a un paciente interno, entre las horas en que se toma el censo diario, es decir, de 12.01 a.m. a 12.01 a.m. del día siguiente. El día-paciente se cuenta también para el individuo que ingresa y egresa el mismo día, siempre que ocupe una cama censable y se prepare una Historia Clínica."'
+        },
+        {
+            id: 26,
+            question: 'Los "Días estancia" se calculan:',
+            options: [
+                'A. Restando a la fecha de egreso la de ingreso. Si ingresa y egresa el mismo día ocupando cama censable, se cuenta como un día estancia.',
+                'B. Como el número de noches que el paciente permanece hospitalizado.',
+                'C. Solo cuando el paciente permanece más de 24 horas.',
+                'D. Como el tiempo entre el ingreso y el alta, excluyendo el día de ingreso.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.31: "Días estancia.- Número de días transcurridos desde el ingreso del paciente al servicio de hospitalización y hasta su egreso; se obtiene restando a la fecha de egreso la de ingreso. Cuando el paciente ingresa y egresa en la misma fecha, ocupando una cama censable, se cuenta como un día estancia. Se contabiliza cero días de estancia cuando el paciente es atendido exclusivamente en los servicios de corta estancia, dado que en estos servicios ha utilizado una cama no censable."'
+        },
+        {
+            id: 27,
+            question: 'La "Discapacidad" según la Convención de los Derechos de las Personas con Discapacidad resulta de:',
+            options: [
+                'A. La interacción entre las personas con deficiencias y las barreras debidas a la actitud y al entorno que evitan su participación plena y efectiva.',
+                'B. Las limitaciones en la actividad y restricciones en la participación.',
+                'C. Las deficiencias en las funciones y estructuras corporales.',
+                'D. Las condiciones de salud que impiden el trabajo.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.32: "De acuerdo a la Convención de los Derechos de las Personas con Discapacidad, la discapacidad resulta de la interacción entre las personas con deficiencias y las barreras debidas a la actitud y al entorno que evitan su participación plena y efectiva en la sociedad, en igualdad de condiciones con las demás."'
+        },
+        {
+            id: 28,
+            question: 'El "Egreso hospitalario" implica:',
+            options: [
+                'A. La salida del paciente del servicio de hospitalización con desocupación de una cama censable.',
+                'B. Cualquier movimiento entre servicios dentro del mismo hospital.',
+                'C. La salida del paciente por alta voluntaria solamente.',
+                'D. La defunción del paciente.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.33: "Egreso hospitalario.- Evento de salida del paciente del servicio de hospitalización que implica la desocupación de una cama censable. Incluye altas por curación, mejoría, traslado a otra unidad hospitalaria, defunción, alta voluntaria o fuga. Excluye movimientos entre diferentes servicios dentro del mismo hospital."'
+        },
+        {
+            id: 29,
+            question: 'Los "Establecimientos del Sistema Nacional de Salud" son:',
+            options: [
+                'A. Aquella unidad pública, privada o social, fija o móvil, que preste servicios dentro del sector salud.',
+                'B. Solo los hospitales y clínicas públicas.',
+                'C. Exclusivamente las unidades médicas de la Secretaría de Salud.',
+                'D. Únicamente los consultorios privados.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.34: "Establecimientos del Sistema Nacional de Salud.- Aquella unidad pública, privada o social, sea ésta fija o móvil, que preste servicios dentro del sector salud, cualquiera que sea su denominación. Se consideran establecimientos del Sistema Nacional de Salud a las unidades médicas, establecimientos de apoyo, de asistencia social y unidades administrativas."'
+        },
+        {
+            id: 30,
+            question: 'La "Etnicidad" se define como:',
+            options: [
+                'A. La pertenencia a un grupo cultural particular, cuyos miembros comparten la lengua, las creencias, costumbres, valores e identidad.',
+                'B. La distinción física y corporal de las personas.',
+                'C. La nacionalidad de una persona.',
+                'D. La religión que profesa una persona.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.35: "Etnicidad.- Pertenencia a un grupo cultural particular, cuyos miembros comparten la lengua, las creencias, costumbres, valores e identidad. El concepto de etnicidad no debe ser confundido con el de raza, el cual se refiere sólo a distinciones físicas y corporales."'
+        },
+        {
+            id: 31,
+            question: 'El "Funcionamiento" es un término genérico para designar:',
+            options: [
+                'A. Las funciones y estructuras corporales, la capacidad de desarrollar actividades y la participación social del individuo.',
+                'B. La discapacidad de una persona.',
+                'C. El estado de salud de una persona.',
+                'D. La capacidad laboral de un individuo.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.36: "Funcionamiento.- Término genérico para designar las funciones y estructuras corporales, la capacidad de desarrollar actividades y la participación social del individuo. Indica los aspectos positivos de la interacción de un individuo (con una condición de salud) y sus factores contextuales (factores ambientales y personales)."'
+        },
+        {
+            id: 32,
+            question: 'El "Gasto en salud" se refiere a:',
+            options: [
+                'A. Todas aquellas erogaciones cuyo propósito primordial es la restauración, el mejoramiento y mantenimiento de la salud de los habitantes.',
+                'B. Solo el gasto público en salud.',
+                'C. Exclusivamente el gasto privado en salud.',
+                'D. Los gastos en medicamentos y consultas.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.37: "Gasto en salud.- Todas aquéllas erogaciones cuyo propósito primordial es la restauración, el mejoramiento y mantenimiento de la salud de los habitantes de un país durante un período de tiempo definido."'
+        },
+        {
+            id: 33,
+            question: 'El "Gasto privado en salud" incluye:',
+            options: [
+                'A. El gasto realizado por las personas, seguros privados, empresas e instituciones sin fines de lucro al servicio de las personas.',
+                'B. El gasto financiado mediante impuestos.',
+                'C. Las transferencias a través de los ramos de la administración federal.',
+                'D. Las contribuciones a las instituciones de seguridad social.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.38: "Gasto privado en salud.- Gasto en salud realizado por las personas, a través del gasto de bolsillo, así como por los seguros privados, las empresas e instituciones sin fines de lucro al servicio de las personas, en un país y en determinado período de tiempo."'
+        },
+        {
+            id: 34,
+            question: 'El "Gasto público en salud" es la suma de desembolsos en salud por parte de:',
+            options: [
+                'A. Los Gobiernos Federal, Estatales o Municipales.',
+                'B. Las personas y empresas privadas.',
+                'C. Las instituciones sin fines de lucro.',
+                'D. Los seguros privados.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.39: "Gasto público en salud.- Suma de los desembolsos en salud por parte indistintamente de los Gobiernos Federal, Estatales o Municipales, tales como el gasto sanitario financiado mediante impuestos, transferencias a través de los ramos de la administración federal, contribuciones a las instituciones de seguridad social, así como el gasto en salud de dichas instituciones."'
+        },
+        {
+            id: 35,
+            question: 'Un "Indicador" se define como:',
+            options: [
+                'A. Una cifra o dato que se acepta convencionalmente para medir o comparar los resultados obtenidos en la ejecución de un proyecto, proceso o programa.',
+                'B. Un dato numérico que describe una característica de la población.',
+                'C. Un estadístico que resume la información de una muestra.',
+                'D. Un parámetro que se utiliza para evaluar la calidad de los servicios de salud.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.40: "Indicador.- Cifra o dato que se acepta convencionalmente para medir o comparar los resultados obtenidos en la ejecución de un proyecto, proceso o programa. Permite dimensionar características de tipo cuantitativo o cualitativo."'
+        },
+        {
+            id: 36,
+            question: 'La "Información en salud" incluye:',
+            options: [
+                'A. Datos, información, conocimiento y evidencia relacionados con la generación, acceso, difusión y uso del personal, servicios, recursos, afiliados, pacientes, tratamientos y resultados dentro del sector salud.',
+                'B. Solo información estadística y epidemiológica.',
+                'C. Exclusivamente información financiera del sector salud.',
+                'D. Únicamente los datos de los pacientes.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.41: "Información en salud.- Datos, información, conocimiento y evidencia relacionados con la generación, acceso, difusión y uso del personal, servicios, recursos, afiliados, derechohabientes, beneficiarios, pacientes, tratamientos y resultados dentro del sector salud, entre la que se encuentra indistintamente la información estadística, epidemiológica y financiera."'
+        },
+        {
+            id: 37,
+            question: 'La "Información nominal" es:',
+            options: [
+                'A. El registro de un evento de uso estadístico, recolectado a través de un sistema nominal.',
+                'B. La información que no incluye datos personales.',
+                'C. La información agregada por institución.',
+                'D. Los datos anónimos para estudios epidemiológicos.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.42: "Información nominal.- Registro de un evento de uso estadístico, recolectado a través de un sistema nominal."'
+        },
+        {
+            id: 38,
+            question: 'El "Nacido vivo" se define como:',
+            options: [
+                'A. El producto de la concepción expulsado completamente del cuerpo de la madre, que respire y presente signos vitales después de la separación, independientemente de la duración del embarazo.',
+                'B. El producto de la concepción que nace después de las 28 semanas de gestación.',
+                'C. El recién nacido que sobrevive al menos 24 horas.',
+                'D. El producto de la concepción que se extrae por cesárea.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.43: "Nacido vivo.- Producto de la concepción expulsado o extraído de forma completa del cuerpo de su madre, independientemente de la duración del embarazo, que después de dicha separación respire y presente signos vitales como frecuencia cardiaca, pulsaciones del cordón umbilical o movimientos efectivos de los músculos de contracción voluntaria, tanto si se ha cortado o no el cordón umbilical y esté o no desprendida la placenta."'
+        },
+        {
+            id: 39,
+            question: 'Los "Nacimientos registrados" incluyen:',
+            options: [
+                'A. Los nacidos vivos ocurridos en el mismo año (registro oportuno) y los ocurridos en años anteriores (registro extemporáneo).',
+                'B. Solo los nacidos vivos ocurridos en el año en curso.',
+                'C. Los nacidos vivos que se registran en el mes de nacimiento.',
+                'D. Exclusivamente los nacimientos atendidos en unidades médicas del SNS.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.45: "Nacimientos registrados.- Número de nacidos vivos inscritos en el Registro Civil en determinado período, generalmente de un año. Incluye a los nacidos vivos ocurridos en el mismo año (registro oportuno) y a los nacidos vivos ocurridos en años anteriores (registro extemporáneo)."'
+        },
+        {
+            id: 40,
+            question: 'El "Parto normal" se define como:',
+            options: [
+                'A. Nacimiento por vía vaginal sin alguna variación o complicación.',
+                'B. Nacimiento por vía abdominal sin complicaciones.',
+                'C. Nacimiento por vía vaginal que requiere fórceps.',
+                'D. Nacimiento que requiere maniobras de versión.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.47: "Parto normal.- Nacimiento por vía vaginal sin alguna variación o complicación, como sería la aplicación de maniobras."'
+        },
+        {
+            id: 41,
+            question: 'El "Parto complicado" se define como:',
+            options: [
+                'A. Nacimiento por vía vaginal que no se considera normal por haber requerido algún procedimiento como fórceps o maniobras como versión y extracción podálica.',
+                'B. Nacimiento por vía abdominal.',
+                'C. Nacimiento que ocurre antes de las 37 semanas.',
+                'D. Nacimiento que requiere reanimación del recién nacido.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.48: "Parto complicado.- Nacimiento por vía vaginal que no se considera normal por haber requerido algún procedimiento como: aplicación de fórceps o maniobras como versión y extracción podálica."'
+        },
+        {
+            id: 42,
+            question: 'El "Personal médico en contacto directo con el paciente" incluye:',
+            options: [
+                'A. Médicos generales, especialistas, pasantes, residentes e internos de pregrado.',
+                'B. Solo a los médicos especialistas.',
+                'C. Personal administrativo y de investigación.',
+                'D. Exclusivamente a los que realizan cirugías.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.51 a): "Médico en contacto directo con el paciente.- Profesional en salud con título y cédula profesional que realiza actividades propias de su profesión o especialidad, de atención directa a la salud de pacientes; no incluye a los que se desarrollan en áreas de apoyo técnico, investigación, docente y administrativo." La norma agrupa en 9.2.4 a médicos generales, especialistas, odontólogos, pasantes, internos y residentes.'
+        },
+        {
+            id: 43,
+            question: 'El "Personal paramédico" excluye a:',
+            options: [
+                'A. Las enfermeras.',
+                'B. Trabajadores sociales.',
+                'C. Dietólogos.',
+                'D. Farmacéuticos.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.52: "Personal paramédico.- Personal dedicado al desarrollo de actividades en apoyo a la prestación de servicios médicos, dentro del cual se contempla personal profesional, técnico y auxiliar como lo son: trabajo social, dietología, archivo clínico y farmacia. Las enfermeras se excluyen del personal paramédico."'
+        },
+        {
+            id: 44,
+            question: 'La "Población derechohabiente" se refiere a:',
+            options: [
+                'A. Personas con derecho a recibir prestaciones en especie y/o dinero conforme a las disposiciones de cada institución de seguridad social.',
+                'B. Personas que reciben atención en instituciones privadas.',
+                'C. Personas afiliadas al Seguro Popular.',
+                'D. Personas que utilizan servicios de salud al menos una vez al año.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.55: "Población derechohabiente.- Personas con derecho a recibir prestaciones en especie y/o en dinero conforme a lo establecido por las disposiciones jurídicas aplicables que rigen cada institución de seguridad social. Incluye asegurados directos o cotizantes, pensionados, jubilados y sus beneficiarios."'
+        },
+        {
+            id: 45,
+            question: 'La "Población indígena" se identifica con los siguientes criterios:',
+            options: [
+                'A. Autopertenencia, hablante de lengua indígena, o residente de una localidad o municipio con 40% o más de habitantes con esas características.',
+                'B. Solo autopertenencia.',
+                'C. Ser hablante de lengua indígena.',
+                'D. Residir en una localidad con población indígena.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.56: "Población indígena.- Conjunto de personas que se identifican con alguno de los siguientes criterios: i) autopertenencia, ii) hablante de lengua indígena o, iii) residente de una localidad o municipio con 40% o más de habitantes con las características antes mencionadas."'
+        },
+        {
+            id: 46,
+            question: 'Los "Servicios personales de salud" son aquellos que:',
+            options: [
+                'A. Son proporcionados a un solo individuo en forma específica, como consulta externa, hospitalización, urgencias, etc.',
+                'B. Se aplican al medio ambiente o a la colectividad.',
+                'C. Incluyen protección contra riesgos sanitarios.',
+                'D. Se refieren a promoción y educación para la salud.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.72: "Servicios personales de salud.- Aquéllos que son proporcionados a un solo individuo en forma específica, tales como consulta externa, hospitalización, urgencias, servicios de corta estancia, servicios auxiliares de diagnóstico y tratamiento y actividades que se realizan en la población por personal auxiliar de salud."'
+        },
+        {
+            id: 47,
+            question: 'Los "Servicios no personales de salud" son aquellos que:',
+            options: [
+                'A. Se aplican al medio ambiente o a la colectividad, como protección contra riesgos sanitarios, promoción y educación para la salud.',
+                'B. Son proporcionados a un solo individuo en forma específica.',
+                'C. Incluyen consulta externa y hospitalización.',
+                'D. Son servicios auxiliares de diagnóstico.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.67: "Servicios no personales de salud.- Aquéllos que se aplican al medio ambiente o a la colectividad y que por lo tanto no son apropiables por un sólo individuo en forma específica, tales como protección contra riesgos sanitarios, promoción y educación para la salud, así como prevención y control de enfermedades a nivel poblacional."'
+        },
+        {
+            id: 48,
+            question: 'El "Sistema Nacional de Información Básica en Materia de Salud" (SNIBMS) es administrado por:',
+            options: [
+                'A. La Secretaría de Salud a través de la Dirección General de Información en Salud.',
+                'B. El INEGI.',
+                'C. El Consejo Nacional de Población.',
+                'D. La Comisión Nacional de Protección Social en Salud.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.70: "Sistema Nacional de Información Básica en Materia de Salud.- Sistema que garantiza el intercambio de información y su análisis en materia de salud a nivel nacional... Es administrado por la Secretaría de Salud, en su carácter de coordinadora del Sistema Nacional de Salud, por conducto de la Dirección General de Información en Salud."'
+        },
+        {
+            id: 49,
+            question: 'La "Urgencia calificada" se define como:',
+            options: [
+                'A. Un problema de salud que pone en riesgo la vida, órgano, tejido o función del paciente y que requiere atención médica inmediata.',
+                'B. Un problema de salud que no pone en riesgo la vida, órgano o función del paciente.',
+                'C. Una lesión que requiere atención en el área de urgencias.',
+                'D. Una enfermedad que requiere hospitalización.'
+            ],
+            correct: 0,
+            explanation: 'Correcto. Definición 3.78: "Urgencia calificada.- Problema de salud, habitualmente de presentación súbita, que se atendió en el área de urgencias, que pone en riesgo la vida, órgano, tejido o función del paciente y que, por lo tanto, requiere de una atención médica inmediata."'
+        },
+        {
+            id: 50,
+            question: 'Relacione correctamente los conceptos con sus definiciones: 1. Sistema Nacional de Salud (SNS), 2. Sistema nominal, 3. CLUES, 4. CIF.',
+            options: [
+                'A. 1-A, 2-B, 3-C, 4-D',
+                'B. 1-A, 2-C, 3-D, 4-B',
+                'C. 1-B, 2-A, 3-D, 4-C',
+                'D. 1-C, 2-D, 3-A, 4-B'
+            ],
+            correct: 0,
+            explanation: 'Correcto: SNS = conjunto de dependencias y entidades que prestan servicios de salud (A); Sistema nominal = aplicación automatizada que recaba información por evento (B); CLUES = identificador único de establecimientos (C); CIF = clasificación de funcionamiento y discapacidad (D).'
         }
-        answers[index] = i;
-        renderQuestion(index);
-      });
-      const label = document.createElement('label');
-      label.textContent = opt;
-      div.appendChild(radio);
-      div.appendChild(label);
-      optionsContainer.appendChild(div);
+    ];
+
+    // ============================================================
+    //  LÓGICA DE LA APLICACIÓN
+    // ============================================================
+    let currentIndex = 0;
+    let answers = new Array(questions.length).fill(null);
+    let verified = new Array(questions.length).fill(false);
+    let totalCorrect = 0;
+
+    const questionText = document.getElementById('questionText');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const feedbackBox = document.getElementById('feedbackBox');
+    const feedbackTitle = document.getElementById('feedbackTitle');
+    const feedbackDetail = document.getElementById('feedbackDetail');
+    const counterDisplay = document.getElementById('counterDisplay');
+    const statusDisplay = document.getElementById('statusDisplay');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const resultContainer = document.getElementById('resultContainer');
+    const finalScore = document.getElementById('finalScore');
+    const finalMessage = document.getElementById('finalMessage');
+
+    function renderQuestion(index) {
+        const q = questions[index];
+        questionText.textContent = q.question;
+        optionsContainer.innerHTML = '';
+        q.options.forEach((opt, i) => {
+            const div = document.createElement('div');
+            div.className = 'option-item' + (answers[index] === i ? ' selected' : '');
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'question';
+            radio.value = i;
+            radio.checked = (answers[index] === i);
+            radio.addEventListener('change', () => {
+                if (verified[index]) {
+                    verified[index] = false;
+                    feedbackBox.style.display = 'none';
+                    totalCorrect = computeTotalCorrect();
+                }
+                answers[index] = i;
+                renderQuestion(index);
+            });
+            const label = document.createElement('label');
+            label.textContent = opt;
+            div.appendChild(radio);
+            div.appendChild(label);
+            optionsContainer.appendChild(div);
+        });
+
+        counterDisplay.textContent = `${index + 1} / ${questions.length}`;
+        if (verified[index]) {
+            statusDisplay.textContent = '✅ Verificada';
+        } else if (answers[index] !== null) {
+            statusDisplay.textContent = '⚪ Respondida (sin verificar)';
+        } else {
+            statusDisplay.textContent = '🔘 Sin responder';
+        }
+
+        prevBtn.disabled = (index === 0);
+        nextBtn.disabled = (index === questions.length - 1);
+
+        if (verified[index]) {
+            const q = questions[index];
+            const isCorrect = (answers[index] === q.correct);
+            feedbackBox.className = 'feedback-box ' + (isCorrect ? 'correct' : 'incorrect');
+            feedbackTitle.textContent = isCorrect ? '✓ Correcto' : '✗ Incorrecto';
+            feedbackDetail.innerHTML = q.explanation;
+            feedbackBox.style.display = 'block';
+        } else {
+            feedbackBox.style.display = 'none';
+        }
+
+        resultContainer.classList.add('hidden');
+    }
+
+    function computeTotalCorrect() {
+        let count = 0;
+        for (let i = 0; i < questions.length; i++) {
+            if (verified[i] && answers[i] === questions[i].correct) count++;
+        }
+        return count;
+    }
+
+    function verifyCurrent() {
+        const idx = currentIndex;
+        const q = questions[idx];
+        if (answers[idx] === null) {
+            alert('Por favor, selecciona una opción antes de verificar.');
+            return;
+        }
+        const isCorrect = (answers[idx] === q.correct);
+        verified[idx] = true;
+        totalCorrect = computeTotalCorrect();
+
+        feedbackBox.className = 'feedback-box ' + (isCorrect ? 'correct' : 'incorrect');
+        feedbackTitle.textContent = isCorrect ? '✓ Correcto' : '✗ Incorrecto';
+        feedbackDetail.innerHTML = q.explanation;
+        feedbackBox.style.display = 'block';
+
+        renderQuestion(idx);
+        statusDisplay.textContent = '✅ Verificada';
+    }
+
+    function showFinalResults() {
+        const total = questions.length;
+        let correct = 0;
+        for (let i = 0; i < total; i++) {
+            if (verified[i] && answers[i] === questions[i].correct) correct++;
+        }
+        const percent = Math.round((correct / total) * 100);
+        finalScore.textContent = percent + '%';
+        let msg = '';
+        if (percent >= 90) msg = '¡Excelente! Dominas las definiciones de la NOM-035-SSA3-2012.';
+        else if (percent >= 70) msg = 'Buen trabajo, revisa los términos en los que fallaste.';
+        else if (percent >= 50) msg = 'Es recomendable repasar las definiciones del numeral 3.';
+        else msg = 'Te sugerimos estudiar nuevamente las definiciones y volver a intentarlo.';
+        finalMessage.textContent = msg;
+        resultContainer.classList.remove('hidden');
+    }
+
+    function resetQuiz() {
+        answers.fill(null);
+        verified.fill(false);
+        currentIndex = 0;
+        totalCorrect = 0;
+        feedbackBox.style.display = 'none';
+        resultContainer.classList.add('hidden');
+        renderQuestion(0);
+    }
+
+    prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            renderQuestion(currentIndex);
+        }
     });
 
-    counterDisplay.textContent = `${index+1} / ${questions.length}`;
-    if (verified[index]) {
-      statusDisplay.textContent = '✅ Verificada';
-    } else if (answers[index] !== null) {
-      statusDisplay.textContent = '⚪ Respondida (sin verificar)';
-    } else {
-      statusDisplay.textContent = '🔘 Sin responder';
-    }
+    nextBtn.addEventListener('click', () => {
+        if (currentIndex < questions.length - 1) {
+            currentIndex++;
+            renderQuestion(currentIndex);
+        } else {
+            showFinalResults();
+        }
+    });
 
-    prevBtn.disabled = (index === 0);
-    nextBtn.disabled = (index === questions.length - 1);
+    verifyBtn.addEventListener('click', verifyCurrent);
+    resetBtn.addEventListener('click', resetQuiz);
 
-    if (verified[index]) {
-      const q = questions[index];
-      const isCorrect = (answers[index] === q.correct);
-      feedbackBox.className = 'feedback-box ' + (isCorrect ? 'correct' : 'incorrect');
-      feedbackTitle.textContent = isCorrect ? '✓ Correcto' : '✗ Incorrecto';
-      feedbackDetail.innerHTML = q.explanation;
-      feedbackBox.style.display = 'block';
-    } else {
-      feedbackBox.style.display = 'none';
-    }
-
-    resultContainer.classList.add('hidden');
-  }
-
-  function computeTotalCorrect() {
-    let count = 0;
-    for (let i = 0; i < questions.length; i++) {
-      if (verified[i] && answers[i] === questions[i].correct) count++;
-    }
-    return count;
-  }
-
-  function verifyCurrent() {
-    const idx = currentIndex;
-    const q = questions[idx];
-    if (answers[idx] === null) {
-      alert('Por favor, selecciona una opción antes de verificar.');
-      return;
-    }
-    const isCorrect = (answers[idx] === q.correct);
-    verified[idx] = true;
-    totalCorrect = computeTotalCorrect();
-
-    feedbackBox.className = 'feedback-box ' + (isCorrect ? 'correct' : 'incorrect');
-    feedbackTitle.textContent = isCorrect ? '✓ Correcto' : '✗ Incorrecto';
-    feedbackDetail.innerHTML = q.explanation;
-    feedbackBox.style.display = 'block';
-
-    renderQuestion(idx);
-    statusDisplay.textContent = '✅ Verificada';
-  }
-
-  function showFinalResults() {
-    const total = questions.length;
-    let correct = 0;
-    for (let i = 0; i < total; i++) {
-      if (verified[i] && answers[i] === questions[i].correct) correct++;
-    }
-    const percent = Math.round((correct / total) * 100);
-    finalScore.textContent = percent + '%';
-    let msg = '';
-    if (percent >= 90) msg = '¡Excelente! Dominas los conceptos de la NOM-035-SSA3-2012.';
-    else if (percent >= 70) msg = 'Buen trabajo, revisa los temas en los que fallaste.';
-    else if (percent >= 50) msg = 'Es recomendable repasar las definiciones y procedimientos.';
-    else msg = 'Te sugerimos estudiar nuevamente la norma y volver a intentarlo.';
-    finalMessage.textContent = msg;
-    resultContainer.classList.remove('hidden');
-  }
-
-  function resetQuiz() {
-    answers.fill(null);
-    verified.fill(false);
-    currentIndex = 0;
-    totalCorrect = 0;
-    feedbackBox.style.display = 'none';
-    resultContainer.classList.add('hidden');
     renderQuestion(0);
-  }
-
-  prevBtn.addEventListener('click', () => {
-    if (currentIndex > 0) {
-      currentIndex--;
-      renderQuestion(currentIndex);
-    }
-  });
-
-  nextBtn.addEventListener('click', () => {
-    if (currentIndex < questions.length - 1) {
-      currentIndex++;
-      renderQuestion(currentIndex);
-    } else {
-      showFinalResults();
-    }
-  });
-
-  verifyBtn.addEventListener('click', verifyCurrent);
-  resetBtn.addEventListener('click', resetQuiz);
-
-  renderQuestion(0);
 </script>
 </body>
 </html>
