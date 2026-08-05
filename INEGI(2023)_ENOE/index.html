@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autoevaluación: PEA y PNEA (ENOE)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      max-width: 920px;
+      width: 100%;
+      border-radius: 32px;
+      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.2);
+      padding: 32px 40px;
+      transition: 0.25s;
+    }
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: #0b2b4a;
+      letter-spacing: -0.3px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .subtitle {
+      color: #2c5778;
+      font-size: 0.95rem;
+      border-left: 4px solid #2a7faa;
+      padding-left: 16px;
+      margin-bottom: 28px;
+      background: #eef3f9;
+      border-radius: 0 12px 12px 0;
+      line-height: 1.5;
+    }
+    .progress {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      font-size: 0.9rem;
+      color: #1a405a;
+      border-bottom: 1px solid #dce5ed;
+      padding-bottom: 14px;
+    }
+    .question-counter {
+      font-weight: 600;
+      background: #dce5ed;
+      padding: 4px 14px;
+      border-radius: 30px;
+    }
+    .question-box { margin-bottom: 30px; }
+    .qtext {
+      font-size: 1.25rem;
+      font-weight: 500;
+      line-height: 1.6;
+      color: #0b2b4a;
+      margin-bottom: 24px;
+      padding: 0 4px;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e9f2;
+      border-radius: 16px;
+      padding: 14px 20px;
+      transition: 0.15s;
+      cursor: pointer;
+    }
+    .option-item:hover {
+      background: #eef4fa;
+      border-color: #b0c8dd;
+    }
+    .option-item.selected {
+      background: #e0edf9;
+      border-color: #2a7faa;
+      box-shadow: 0 0 0 2px rgba(42,127,170,0.15);
+    }
+    .option-item input[type="radio"] {
+      margin-top: 4px;
+      accent-color: #1f6e96;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+    .option-item label {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #1a334a;
+      cursor: pointer;
+      flex: 1;
+    }
+    .feedback-box {
+      background: #f0f6fe;
+      border-radius: 20px;
+      padding: 18px 24px;
+      margin: 16px 0 28px 0;
+      border-left: 5px solid #2a7faa;
+      display: none;
+    }
+    .feedback-box.correct {
+      border-left-color: #1f8b4c;
+      background: #e8f5ee;
+    }
+    .feedback-box.incorrect {
+      border-left-color: #c74545;
+      background: #fdeeec;
+    }
+    .feedback-box .fb-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+    .feedback-box .fb-detail {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #1a334a;
+    }
+    .feedback-box .fb-detail strong { color: #0b2b4a; }
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: white;
+      border: 1.5px solid #b8cdde;
+      padding: 10px 28px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: #1a405a;
+      cursor: pointer;
+      transition: 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #f9fbfd;
+    }
+    .btn:hover:not(:disabled) {
+      background: #e2ecf5;
+      border-color: #7fa3be;
+      transform: translateY(-1px);
+    }
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .btn-primary {
+      background: #1a5f82;
+      border-color: #1a5f82;
+      color: white;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: #134b68;
+      border-color: #134b68;
+    }
+    .btn-outline { background: transparent; border-color: #b0c8dd; }
+    .btn-success {
+      background: #1f8b4c;
+      border-color: #1f8b4c;
+      color: white;
+    }
+    .btn-success:hover:not(:disabled) {
+      background: #17733e;
+      border-color: #17733e;
+    }
+    .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+    .result-summary {
+      background: #e2ecf5;
+      border-radius: 24px;
+      padding: 20px 28px;
+      text-align: center;
+      margin-top: 16px;
+    }
+    .result-summary .score {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #0b2b4a;
+    }
+    .result-summary .label { font-size: 1rem; color: #1a405a; }
+    .hidden { display: none !important; }
+    .mt-2 { margin-top: 12px; }
+    .text-muted { color: #4a6a82; }
+    @media (max-width: 600px) {
+      .container { padding: 24px 18px; }
+      h1 { font-size: 1.5rem; }
+      .qtext { font-size: 1.05rem; }
+      .option-item { padding: 12px 16px; }
+      .btn { padding: 8px 18px; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container" id="app">
+  <h1>📘 Autoevaluación · PEA y PNEA</h1>
+  <div class="subtitle">Encuesta Nacional de Ocupación y Empleo (ENOE) — Conceptos fundamentales</div>
+
+  <div class="progress">
+    <span class="question-counter" id="counterDisplay">1 / 30</span>
+    <span id="statusDisplay" style="font-weight: 500;">Responde y verifica</span>
+  </div>
+
+  <div class="question-box" id="questionContainer">
+    <div class="qtext" id="questionText"></div>
+    <div class="options" id="optionsContainer"></div>
+  </div>
+
+  <div class="feedback-box" id="feedbackBox">
+    <div class="fb-title" id="feedbackTitle"></div>
+    <div class="fb-detail" id="feedbackDetail"></div>
+  </div>
+
+  <div class="nav-buttons">
+    <div class="btn-group">
+      <button class="btn btn-outline" id="prevBtn" disabled>◀ Anterior</button>
+      <button class="btn btn-outline" id="nextBtn">Siguiente ▶</button>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-primary" id="verifyBtn">✓ Verificar</button>
+      <button class="btn btn-success" id="resetBtn" style="background:#5a6f82;border-color:#5a6f82;">⟳ Reiniciar</button>
+    </div>
+  </div>
+
+  <div id="resultContainer" class="hidden result-summary">
+    <div class="label">Porcentaje de aciertos</div>
+    <div class="score" id="finalScore">0%</div>
+    <div style="margin-top: 8px; font-size:0.95rem;" id="finalMessage"></div>
+  </div>
+</div>
+<script>
+  // ----------------------------------------------------------------
+  //  30 preguntas basadas en las definiciones de PEA, PNEA, ocupados, desocupados, disponibles, no disponibles
+  //  Fuente: INEGI. Cómo se hace la ENOE. Métodos y procedimientos. 2023. (pp. 20-23)
+  // ----------------------------------------------------------------
+  const questions = [
+    // ========== PEA ==========
+    {
+      id: 1,
+      question: 'Según la ENOE, una persona pertenece a la Población Económicamente Activa (PEA) si:',
+      options: [
+        'A. Forma parte del grupo de proveedores u oferentes de servicios laborales, hayan sido contratados o no, pero que buscan activamente.',
+        'B. Recibe ingresos por transferencias gubernamentales o familiares.',
+        'C. Realiza actividades domésticas no remuneradas en su hogar.',
+        'D. Es menor de 15 años y realiza algún trabajo ocasional.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. El documento define: "Una persona pertenece a la PEA, en términos del mercado laboral, si forma parte del grupo de proveedores u oferentes de servicios laborales, algunos de los cuales han logrado que alguien demande sus servicios (ocupados); mientras que otros, aunque aún no lo consiguen (desocupados), están ejerciendo una presión a través de la búsqueda de trabajo." (pág. 20)'
+    },
+    {
+      id: 2,
+      question: 'La PEA se compone de:',
+      options: [
+        'A. Ocupados y desocupados.',
+        'B. Ocupados y población disponible.',
+        'C. Desocupados y población no disponible.',
+        'D. Población ocupada y no económicamente activa.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. La PEA o fuerza laboral incluye a los desocupados (personas que no cuentan con un trabajo, pero que buscan) así como a los ocupados. (pág. 20)'
+    },
+    {
+      id: 3,
+      question: 'Complete la afirmación: "La PEA o fuerza laboral incluye a los ________ y a los ________."',
+      options: [
+        'A. ocupados / desocupados',
+        'B. ocupados / disponibles',
+        'C. desocupados / no disponibles',
+        'D. ocupados / jubilados'
+      ],
+      correct: 0,
+      explanation: 'Correcto. El texto dice: "Así, la PEA o fuerza laboral incluye a los desocupados (personas que no cuentan con un trabajo, pero que, a través de sus acciones de búsqueda, están presionando en el mercado laboral) así como a los ocupados." (pág. 20)'
+    },
+    // ========== Población ocupada ==========
+    {
+      id: 4,
+      question: 'En la ENOE, se considera ocupada a una persona que:',
+      options: [
+        'A. Trabajó al menos una hora durante la semana de referencia.',
+        'B. Está buscando trabajo activamente.',
+        'C. Recibe una pensión o jubilación.',
+        'D. Se dedica a quehaceres del hogar sin remuneración.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. El criterio de la hora trabajada es el primer referente para determinar si alguien está ocupado. El documento menciona: "La detección de una actividad es el fundamento detrás de la noción de hora trabajada y la razón por la cual tanto OIT como OCDE coinciden en que es el primer referente para determinar si alguien está o no ocupado." (pág. 23)'
+    },
+    {
+      id: 5,
+      question: 'Los ocupados se distinguen de los individuos que solo perciben transferencias en que:',
+      options: [
+        'A. Los ocupados siempre obtienen ingresos, mientras que los que perciben transferencias no.',
+        'B. Los ocupados actúan bajo la premisa de que existe alguien que demanda lo que ofrecen (bienes/servicios o servicios laborales), mientras que los receptores de transferencias operan fuera de esa regla.',
+        'C. Los ocupados no pueden recibir transferencias gubernamentales.',
+        'D. Los ocupados son siempre trabajadores subordinados remunerados.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. El documento explica: "Los ocupados —en contraste con los individuos que solo perciben transferencias— podrán o no tener éxito en la obtención de ingresos, pero siempre están actuando bajo la premisa de que existe alguien que demanda lo que ofrecen, ya sean sus productos/servicios (trabajador independiente) o servicios laborales directos (trabajadores subordinados)." (pág. 19)'
+    },
+    {
+      id: 6,
+      question: 'Según el documento, la actividad económica se define por:',
+      options: [
+        'A. La generación de valor agregado y la contribución a la oferta nacional de bienes y servicios.',
+        'B. La recepción de cualquier tipo de ingreso monetario.',
+        'C. La realización de cualquier actividad que ocupe tiempo, incluso si no es productiva.',
+        'D. La participación en actividades ilegales que generen ingresos.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Si la forma de vida de un individuo se vincula con la generación de valor agregado e implica con ello contribuir a la oferta nacional de bienes y servicios (públicos o privados, legales o ilegales), se considera que sí realiza una actividad económica y que, por ende, es un ocupado." (pág. 19)'
+    },
+    // ========== Población desocupada ==========
+    {
+      id: 7,
+      question: 'Para ser clasificado como desocupado en la ENOE, una persona debe:',
+      options: [
+        'A. No tener trabajo y haber realizado acciones concretas de búsqueda en el periodo de referencia.',
+        'B. No tener trabajo, independientemente de si busca o no.',
+        'C. Haber trabajado menos de 15 horas a la semana.',
+        'D. Estar disponible para trabajar, aunque no haya buscado.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Para ser desocupado no basta entonces, con encontrarse sin trabajo, sino que, además, debe haber adoptado acciones concretas de búsqueda para encontrar uno." (pág. 21)'
+    },
+    {
+      id: 8,
+      question: 'La distinción entre "desocupados" y "no ocupados" radica en que:',
+      options: [
+        'A. Los desocupados buscan trabajo activamente; los no ocupados no buscan o han desistido.',
+        'B. Los desocupados reciben seguro de desempleo; los no ocupados no.',
+        'C. Los desocupados tienen experiencia laboral; los no ocupados no.',
+        'D. Los desocupados son mayores de 15 años; los no ocupados pueden ser menores.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "En el primer caso se trata de personas que no buscan (o han desistido de buscar) un trabajo, es decir, se trata de personas que no ofrecen sus servicios laborales); mientras que, en el segundo, se trata de personas que sí han emprendido alguna acción concreta para conseguir uno." (pág. 21)'
+    },
+    {
+      id: 9,
+      question: 'Complete: "Los desocupados son un caso particular de ________: son específicamente aquellos que sí influyen en el mercado de trabajo al presionar en él bajo el principio de lograr una subsistencia conectando con una demanda."',
+      options: [
+        'A. no ocupados',
+        'B. ocupados',
+        'C. población disponible',
+        'D. población no disponible'
+      ],
+      correct: 0,
+      explanation: 'Correcto. El documento dice: "Así pues, los desocupados son un caso particular de 'no ocupados': son específicamente aquellos que sí influyen en el mercado de trabajo al presionar en él bajo el principio de lograr una subsistencia conectando con una demanda." (pág. 21)'
+    },
+    // ========== PNEA ==========
+    {
+      id: 10,
+      question: 'La Población No Económicamente Activa (PNEA) se caracteriza por:',
+      options: [
+        'A. No estar ocupada y no buscar trabajo, basando su subsistencia en transferencias.',
+        'B. Estar ocupada en actividades informales.',
+        'C. Buscar trabajo activamente pero sin éxito.',
+        'D. Realizar actividades económicas no declaradas.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "La población clasificada en esta categoría se refiere a aquella porción de la población no ocupada cuya subsistencia se basa en la transferencia de ingresos monetarios o no monetarios realizada por un familiar o terceras partes, y que además no intenta modificar esa condición de no ocupación involucrándose en el mercado laboral." (pág. 21)'
+    },
+    {
+      id: 11,
+      question: 'La PNEA incluye a personas que:',
+      options: [
+        'A. Realizan quehaceres del hogar, estudian, están jubiladas o incapacitadas.',
+        'B. Están desempleadas y buscan trabajo.',
+        'C. Trabajan por cuenta propia sin registro.',
+        'D. Reciben ingresos por alquiler de propiedades.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. El documento señala que las actividades no económicas incluyen quehaceres del hogar, cuidado de hijos, enfermos o ancianos, estudiar, etc. (pág. 21-22)'
+    },
+    {
+      id: 12,
+      question: 'Relacione correctamente los conceptos con su definición: 1. PEA, 2. PNEA, 3. Ocupado, 4. Desocupado.',
+      options: [
+        'A. 1-A, 2-B, 3-C, 4-D',
+        'B. 1-A, 2-C, 3-B, 4-D',
+        'C. 1-B, 2-A, 3-D, 4-C',
+        'D. 1-C, 2-D, 3-A, 4-B'
+      ],
+      correct: 0,
+      explanation: 'Correcto: PEA = oferentes de servicios laborales (A); PNEA = no ocupados que basan subsistencia en transferencias (B); Ocupado = trabaja al menos una hora (C); Desocupado = no trabaja pero busca activamente (D).'
+    },
+    // ========== Población disponible ==========
+    {
+      id: 13,
+      question: 'La "población disponible para trabajar" se refiere a:',
+      options: [
+        'A. Personas que no trabajan ni buscan trabajo porque piensan que no tienen ninguna oportunidad al respecto, pero que no se niegan a trabajar.',
+        'B. Personas que están buscando trabajo activamente.',
+        'C. Personas que trabajan menos de 15 horas a la semana y desean trabajar más.',
+        'D. Personas que están incapacitadas permanentemente para trabajar.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Se consideran disponibles las personas que no trabajan ni buscan trabajo porque piensan que no tienen ninguna oportunidad al respecto; esto, por supuesto, no equivale a una negativa para trabajar, aunque su comportamiento no deja de ser pasivo (no realizan acciones con la intención de insertarse en el mercado de trabajo)." (pág. 22)'
+    },
+    {
+      id: 14,
+      question: 'La población disponible se encuentra dentro de la categoría de:',
+      options: [
+        'A. PEA.',
+        'B. PNEA.',
+        'C. Ocupados.',
+        'D. Desocupados.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. "Quienes se dedican de manera exclusiva a estas actividades [no económicas] se ubican dentro de la PNEA y son sujetos de una clasificación específica en función de su disponibilidad laboral. Se consideran disponibles las personas que no trabajan ni buscan trabajo..." (pág. 22)'
+    },
+    {
+      id: 15,
+      question: 'Complete: "La población disponible para trabajar son personas que no trabajan ni buscan trabajo porque piensan que no tienen ninguna ________, pero su comportamiento no equivale a una ________ para trabajar."',
+      options: [
+        'A. oportunidad / negativa',
+        'B. capacidad / disposición',
+        'C. necesidad / opción',
+        'D. posibilidad / intención'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Se consideran disponibles las personas que no trabajan ni buscan trabajo porque piensan que no tienen ninguna oportunidad al respecto; esto, por supuesto, no equivale a una negativa para trabajar." (pág. 22)'
+    },
+    // ========== Población no disponible ==========
+    {
+      id: 16,
+      question: 'La "población no disponible para trabajar" es aquella que:',
+      options: [
+        'A. No está interesada en incorporarse al mercado laboral, o tiene responsabilidades intransferibles, o está incapacitada.',
+        'B. Busca trabajo activamente pero no encuentra.',
+        'C. Trabaja en el sector informal.',
+        'D. Está disponible para trabajar pero no busca.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Población no disponible es aquella que no está interesada en incorporarse al mercado laboral, la que tiene que enfrentar otra responsabilidad urgente o intransferible que le impide separarse del hogar y también aquélla para la que la mera posibilidad de trabajar se encuentra fuera de su alcance, por encontrarse incapacitada en cuanto a condiciones físicas o mentales para hacerlo." (pág. 22)'
+    },
+    {
+      id: 17,
+      question: 'La población no disponible se clasifica dentro de:',
+      options: [
+        'A. PEA.',
+        'B. PNEA.',
+        'C. Ocupados.',
+        'D. Desocupados.'
+      ],
+      correct: 1,
+      explanation: 'Correcto. Al igual que la disponible, la no disponible forma parte de la PNEA, ya que no participan en el mercado laboral.'
+    },
+    // ========== Preguntas de relación y complemento ==========
+    {
+      id: 18,
+      question: 'Relacione cada tipo de población con su descripción correcta: 1. Ocupado, 2. Desocupado, 3. Disponible, 4. No disponible.',
+      options: [
+        'A. 1-C, 2-D, 3-B, 4-A',
+        'B. 1-A, 2-B, 3-C, 4-D',
+        'C. 1-D, 2-C, 3-B, 4-A',
+        'D. 1-B, 2-A, 3-D, 4-C'
+      ],
+      correct: 0,
+      explanation: 'Correcto: Ocupado = trabaja al menos una hora (C); Desocupado = busca activamente (D); Disponible = no busca por falta de oportunidades pero no se niega (B); No disponible = no interesado o impedido (A).'
+    },
+    {
+      id: 19,
+      question: 'Complete la afirmación: "La población no económicamente activa (PNEA) desempeña un papel relevante porque realizan actividades que, si bien son ajenas al ámbito de la transacción de mercado, son cruciales para el funcionamiento de los ________ y de la sociedad en general."',
+      options: [
+        'A. hogares',
+        'B. mercados',
+        'C. empresas',
+        'D. gobiernos'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Cabe resaltar que se considera que la población clasificada en la categoría de no económicamente activa desempeña un papel relevante tomando en cuenta que realizan actividades que, si bien son ajenas al ámbito de la transacción de mercado, no por ello dejan de ser cruciales para el funcionamiento de los hogares y de la sociedad en general." (pág. 21)'
+    },
+    {
+      id: 20,
+      question: 'Según el documento, la mendicidad abierta o disfrazada y el despojo (robo o fraude) no se consideran actividades económicas porque:',
+      options: [
+        'A. No generan valor agregado y operan por fuera de la regla de la demanda de servicios.',
+        'B. Son actividades ilegales y no se pueden medir.',
+        'C. No requieren esfuerzo físico.',
+        'D. Son realizadas por personas que no pertenecen a la PEA.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Esto es importante para no incluir dentro de las actividades económicas –y por ende dentro de la ocupación– a personas cuya supervivencia depende de transferencias unilaterales (públicas o de los particulares) o que están involucrados en la mendicidad (abierta o disfrazada) o que se dedican al despojo (acción unilateral por excelencia) ya sea por vías violentas (robo o extorsión) o por engaño (fraude)." (pág. 20)'
+    },
+    {
+      id: 21,
+      question: 'Los ocupados se dividen en dos grandes grupos según la forma en que se relacionan con la demanda:',
+      options: [
+        'A. Trabajadores independientes (demanda de bienes) y trabajadores asalariados (demanda directa de servicios laborales).',
+        'B. Trabajadores formales e informales.',
+        'C. Trabajadores públicos y privados.',
+        'D. Trabajadores calificados y no calificados.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Los servicios laborales, en el caso de los trabajadores independientes o autónomos están mediados por la demanda de bienes o mercancías que ofrecen (en términos técnicos se le denomina demanda de trabajo derivada); en el caso de los trabajadores asalariados (trabajadores subordinados remunerados) su servicio laboral es demandado de manera directa." (pág. 20)'
+    },
+    {
+      id: 22,
+      question: 'El criterio de la hora trabajada es fundamental porque:',
+      options: [
+        'A. Permite evitar la autoclásificación de los informantes y es un referente preciso y comunicable.',
+        'B. Es el único criterio reconocido por la OIT.',
+        'C. Es fácil de recordar para los entrevistados.',
+        'D. Permite medir la productividad de manera exacta.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "El criterio de la hora no es solo un referente operativo que nace de la OIT y que retoma OCDE, por sí mismo tiene una importante razón de ser: ■ Evita la autoclassificación de los informantes en una encuesta y la incertidumbre que ello generaría al respecto; por ende, faculta el control de la entrevista desde su punto de vista de arranque. El criterio de la hora es preciso y claramente comunicable." (pág. 23)'
+    },
+    {
+      id: 23,
+      question: 'Complete: "La medida de unidad de los insumos laborales no es el individuo, sino la ________ trabajada."',
+      options: [
+        'A. hora',
+        'B. jornada',
+        'C. semana',
+        'D. tarea'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "En efecto, la medida de unidad de los insumos laborales no es el individuo, sino la hora trabajada; esto es una verdadera medición de productividad laboral." (pág. 23)'
+    },
+    {
+      id: 24,
+      question: 'En la ENOE, la población desocupada se identifica considerando la fecha de la última búsqueda de trabajo en relación con:',
+      options: [
+        'A. El domingo de la semana anterior al momento de la entrevista.',
+        'B. El día de la entrevista.',
+        'C. El último día del mes anterior.',
+        'D. El primer día del año.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Ahora bien, para decidir si una persona identificada como no ocupada entra en la categoría de desocupada, se toma como referencia la fecha de la última vez que buscó trabajo en relación con el domingo de la semana anterior al momento de la entrevista; si este periodo comprende hasta un mes se considera que la persona es desocupada, si el periodo es mayor a un mes, como no económicamente activa." (pág. 23)'
+    },
+    {
+      id: 25,
+      question: 'Relacione los conceptos con su ejemplo: 1. Ocupado, 2. Desocupado, 3. PNEA disponible, 4. PNEA no disponible.',
+      options: [
+        'A. 1-A, 2-B, 3-C, 4-D',
+        'B. 1-B, 2-A, 3-D, 4-C',
+        'C. 1-C, 2-D, 3-B, 4-A',
+        'D. 1-D, 2-C, 3-A, 4-B'
+      ],
+      correct: 0,
+      explanation: 'Correcto: Ocupado = persona que trabaja al menos una hora (A); Desocupado = persona que busca trabajo activamente (B); PNEA disponible = persona que no busca porque cree que no hay oportunidades (C); PNEA no disponible = persona que cuida hijos o está incapacitada (D).'
+    },
+    {
+      id: 26,
+      question: 'Según la ENOE, los "iniciadores" (personas que están por incorporarse a un trabajo) se clasifican como:',
+      options: [
+        'A. Desocupados.',
+        'B. Ocupados.',
+        'C. PNEA disponible.',
+        'D. PNEA no disponible.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Los iniciadores se definen como aquellos individuos que no trabajaron durante el periodo de referencia, pero que declararon estar por incorporarse en breve a un trabajo. En el diseño de la ENE-ENEU se clasificaban como virtualmente ocupados; en la ENOE se clasifican dentro de la población desocupada." (pág. 24)'
+    },
+    {
+      id: 27,
+      question: 'Los "ausentes temporales" con trabajo pero que no recibieron sueldo ni ganancias y no regresaron a trabajar en la semana de referencia, según la ENOE se clasifican como:',
+      options: [
+        'A. Desocupados si buscan trabajo, o PNEA si no buscan.',
+        'B. Ocupados.',
+        'C. Desocupados siempre.',
+        'D. PNEA siempre.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. En el recuadro de diferencias entre ENOE y ENE-ENEU se indica que para los ausentes sin ingresos ni nexo laboral, en la ENOE se les clasifica como no ocupados, y se subdividen en desocupados (con búsqueda) o PNEA (sin búsqueda). (pág. 25)'
+    },
+    {
+      id: 28,
+      question: 'Complete: "La PEA o fuerza laboral incluye a los desocupados (personas que no cuentan con un trabajo, pero que, a través de sus acciones de búsqueda, están presionando en el mercado laboral) así como a los ________."',
+      options: [
+        'A. ocupados',
+        'B. disponibles',
+        'C. no disponibles',
+        'D. jubilados'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Así, la PEA o fuerza laboral incluye a los desocupados [...] así como a los ocupados." (pág. 20)'
+    },
+    {
+      id: 29,
+      question: 'Según el documento, la diferencia entre ocupados y desocupados radica en que:',
+      options: [
+        'A. Los ocupados realizan una actividad económica; los desocupados no, pero buscan activamente.',
+        'B. Los ocupados tienen ingresos; los desocupados no.',
+        'C. Los ocupados son formales; los desocupados informales.',
+        'D. Los ocupados trabajan más de 15 horas; los desocupados menos.'
+      ],
+      correct: 0,
+      explanation: 'Correcto. Los ocupados están realizando una actividad económica, mientras que los desocupados no trabajan pero buscan activamente. (pág. 20)'
+    },
+    {
+      id: 30,
+      question: 'Complete: "Los ocupados —en contraste con los individuos que solo perciben transferencias— siempre están actuando bajo la premisa de que existe alguien que ________ lo que ofrecen."',
+      options: [
+        'A. demanda',
+        'B. compra',
+        'C. necesita',
+        'D. valora'
+      ],
+      correct: 0,
+      explanation: 'Correcto. "Los ocupados —en contraste con los individuos que solo perciben transferencias— podrán o no tener éxito en la obtención de ingresos, pero siempre están actuando bajo la premisa de que existe alguien que demanda lo que ofrecen." (pág. 19)'
+    }
+  ];
+
+  // ============================================================
+  //  LÓGICA DE LA APLICACIÓN
+  // ============================================================
+  let currentIndex = 0;
+  let answers = new Array(questions.length).fill(null);
+  let verified = new Array(questions.length).fill(false);
+  let totalCorrect = 0;
+
+  const questionText = document.getElementById('questionText');
+  const optionsContainer = document.getElementById('optionsContainer');
+  const feedbackBox = document.getElementById('feedbackBox');
+  const feedbackTitle = document.getElementById('feedbackTitle');
+  const feedbackDetail = document.getElementById('feedbackDetail');
+  const counterDisplay = document.getElementById('counterDisplay');
+  const statusDisplay = document.getElementById('statusDisplay');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const verifyBtn = document.getElementById('verifyBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const resultContainer = document.getElementById('resultContainer');
+  const finalScore = document.getElementById('finalScore');
+  const finalMessage = document.getElementById('finalMessage');
+
+  function renderQuestion(index) {
+    const q = questions[index];
+    questionText.textContent = q.question;
+    optionsContainer.innerHTML = '';
+    q.options.forEach((opt, i) => {
+      const div = document.createElement('div');
+      div.className = 'option-item' + (answers[index] === i ? ' selected' : '');
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = 'question';
+      radio.value = i;
+      radio.checked = (answers[index] === i);
+      radio.addEventListener('change', () => {
+        if (verified[index]) {
+          verified[index] = false;
+          feedbackBox.style.display = 'none';
+          totalCorrect = computeTotalCorrect();
+        }
+        answers[index] = i;
+        renderQuestion(index);
+      });
+      const label = document.createElement('label');
+      label.textContent = opt;
+      div.appendChild(radio);
+      div.appendChild(label);
+      optionsContainer.appendChild(div);
+    });
+
+    counterDisplay.textContent = `${index+1} / ${questions.length}`;
+    if (verified[index]) {
+      statusDisplay.textContent = '✅ Verificada';
+    } else if (answers[index] !== null) {
+      statusDisplay.textContent = '⚪ Respondida (sin verificar)';
+    } else {
+      statusDisplay.textContent = '🔘 Sin responder';
+    }
+
+    prevBtn.disabled = (index === 0);
+    nextBtn.disabled = (index === questions.length - 1);
+
+    if (verified[index]) {
+      const q = questions[index];
+      const isCorrect = (answers[index] === q.correct);
+      feedbackBox.className = 'feedback-box ' + (isCorrect ? 'correct' : 'incorrect');
+      feedbackTitle.textContent = isCorrect ? '✓ Correcto' : '✗ Incorrecto';
+      feedbackDetail.innerHTML = q.explanation;
+      feedbackBox.style.display = 'block';
+    } else {
+      feedbackBox.style.display = 'none';
+    }
+
+    resultContainer.classList.add('hidden');
+  }
+
+  function computeTotalCorrect() {
+    let count = 0;
+    for (let i = 0; i < questions.length; i++) {
+      if (verified[i] && answers[i] === questions[i].correct) count++;
+    }
+    return count;
+  }
+
+  function verifyCurrent() {
+    const idx = currentIndex;
+    const q = questions[idx];
+    if (answers[idx] === null) {
+      alert('Por favor, selecciona una opción antes de verificar.');
+      return;
+    }
+    const isCorrect = (answers[idx] === q.correct);
+    verified[idx] = true;
+    totalCorrect = computeTotalCorrect();
+
+    feedbackBox.className = 'feedback-box ' + (isCorrect ? 'correct' : 'incorrect');
+    feedbackTitle.textContent = isCorrect ? '✓ Correcto' : '✗ Incorrecto';
+    feedbackDetail.innerHTML = q.explanation;
+    feedbackBox.style.display = 'block';
+
+    renderQuestion(idx);
+    statusDisplay.textContent = '✅ Verificada';
+  }
+
+  function showFinalResults() {
+    const total = questions.length;
+    let correct = 0;
+    for (let i = 0; i < total; i++) {
+      if (verified[i] && answers[i] === questions[i].correct) correct++;
+    }
+    const percent = Math.round((correct / total) * 100);
+    finalScore.textContent = percent + '%';
+    let msg = '';
+    if (percent >= 90) msg = '¡Excelente! Dominas los conceptos de PEA y PNEA.';
+    else if (percent >= 70) msg = 'Buen trabajo, revisa los temas en los que fallaste.';
+    else if (percent >= 50) msg = 'Es recomendable repasar las definiciones y criterios.';
+    else msg = 'Te sugerimos estudiar nuevamente el capítulo y volver a intentarlo.';
+    finalMessage.textContent = msg;
+    resultContainer.classList.remove('hidden');
+  }
+
+  function resetQuiz() {
+    answers.fill(null);
+    verified.fill(false);
+    currentIndex = 0;
+    totalCorrect = 0;
+    feedbackBox.style.display = 'none';
+    resultContainer.classList.add('hidden');
+    renderQuestion(0);
+  }
+
+  prevBtn.addEventListener('click', () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      renderQuestion(currentIndex);
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentIndex < questions.length - 1) {
+      currentIndex++;
+      renderQuestion(currentIndex);
+    } else {
+      showFinalResults();
+    }
+  });
+
+  verifyBtn.addEventListener('click', verifyCurrent);
+  resetBtn.addEventListener('click', resetQuiz);
+
+  renderQuestion(0);
+</script>
+</body>
+</html>
