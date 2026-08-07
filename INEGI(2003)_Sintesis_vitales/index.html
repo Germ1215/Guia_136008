@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Estudio - Estadísticas Vitales (INEGI)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #f0f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 20px;
+        }
+        #app {
+            max-width: 940px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+            padding: 30px 35px;
+            transition: all 0.2s;
+        }
+        h1 {
+            font-size: 26px;
+            color: #0b2b4a;
+            margin-top: 0;
+            margin-bottom: 6px;
+            border-bottom: 4px solid #1d6f9c;
+            padding-bottom: 14px;
+        }
+        .subtitle {
+            color: #2c3e50;
+            font-weight: 400;
+            margin-top: -5px;
+            margin-bottom: 22px;
+            font-size: 15px;
+            background: #e8f0fe;
+            padding: 8px 14px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+        #question-number {
+            font-weight: 700;
+            color: #1a4972;
+            font-size: 18px;
+            margin: 0 0 5px 0;
+        }
+        #question-text {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #1e2a36;
+            margin: 8px 0 18px 0;
+            padding: 12px 16px;
+            background: #f6faff;
+            border-radius: 12px;
+            border-left: 5px solid #1d6f9c;
+        }
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 16px 0 20px 0;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #fafcff;
+            border: 1.5px solid #dce5f0;
+            border-radius: 12px;
+            padding: 12px 20px;
+            transition: background 0.15s, border-color 0.15s;
+            cursor: pointer;
+        }
+        .option-item:hover {
+            background: #e9eff7;
+            border-color: #8fb3e0;
+        }
+        .option-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            accent-color: #1d6f9c;
+            cursor: pointer;
+        }
+        .option-item label {
+            font-size: 16px;
+            cursor: pointer;
+            flex: 1;
+            color: #1e2a36;
+        }
+        .option-item.correct-verified {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        .option-item.incorrect-verified {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        .option-item.disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
+        .option-item.disabled:hover {
+            background: #fafcff;
+            border-color: #dce5f0;
+        }
+        #feedback {
+            margin: 16px 0 18px 0;
+            padding: 16px 22px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            border-left: 6px solid #6c757d;
+            font-size: 15px;
+            line-height: 1.6;
+            display: none;
+        }
+        #feedback.show {
+            display: block;
+        }
+        #feedback.correct {
+            background: #e6f4ea;
+            border-left-color: #28a745;
+        }
+        #feedback.incorrect {
+            background: #fce8e8;
+            border-left-color: #dc3545;
+        }
+        #feedback .fb-title {
+            font-weight: 700;
+            font-size: 16px;
+        }
+        #feedback .fb-explain {
+            margin-top: 6px;
+            color: #1e2a36;
+        }
+        #feedback .fb-distractors {
+            margin-top: 8px;
+            color: #3d4a5a;
+            font-size: 14px;
+            border-top: 1px dashed #ced8e5;
+            padding-top: 8px;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+            align-items: center;
+        }
+        .btn {
+            padding: 10px 28px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            background: #eaeef3;
+            color: #1e2a36;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.05s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        .btn:hover:not(:disabled) {
+            background: #d3dce8;
+        }
+        .btn:active:not(:disabled) {
+            transform: scale(0.96);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .btn-primary {
+            background: #1d6f9c;
+            color: white;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #155a7a;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-success:hover:not(:disabled) {
+            background: #1e8e3a;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background: #5a6268;
+        }
+        #result {
+            margin-top: 28px;
+            padding: 24px;
+            background: #e2f0fa;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #0b2b4a;
+            display: none;
+        }
+        #result .score {
+            font-size: 48px;
+            color: #1a4972;
+        }
+        .progress-info {
+            font-size: 14px;
+            color: #4a5b6e;
+            margin-left: auto;
+        }
+        @media (max-width: 600px) {
+            #app { padding: 18px; }
+            h1 { font-size: 22px; }
+            .btn-group { flex-direction: column; align-items: stretch; }
+            .btn { text-align: center; }
+            .progress-info { margin-left: 0; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>📊 Guía de Estudio – Estadísticas Vitales</h1>
+        <div class="subtitle">INEGI · Síntesis Metodológica (2003)</div>
+
+        <div id="question-container">
+            <div id="question-number"></div>
+            <div id="question-text"></div>
+            <div id="options-container"></div>
+            <div id="feedback"></div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" id="prev-btn" disabled>◀ Anterior</button>
+                <button class="btn btn-primary" id="verify-btn" disabled>✔ Verificar</button>
+                <button class="btn btn-success" id="next-btn" disabled>Siguiente ▶</button>
+                <span class="progress-info" id="progress-label">Pregunta 1 de 70</span>
+            </div>
+        </div>
+
+        <div id="result">
+            <div>📈 Has completado todas las preguntas</div>
+            <div class="score" id="score-display">0%</div>
+            <div style="font-weight:400; font-size:16px; margin-top:6px;" id="score-message"></div>
+            <button class="btn btn-primary" id="restart-btn" style="margin-top:16px;">🔄 Reiniciar</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== PREGUNTAS (70) ==========
+        const questions = [
+            // 1. Completar: definición de estadísticas vitales
+            {
+                type: 'completar',
+                question: 'Las estadísticas vitales captadas por el INEGI son el resultado del recuento de los hechos ocurridos en la vida de la población, como son: nacimientos, matrimonios, divorcios, defunciones y ________.',
+                options: ['A) muertes fetales', 'B) adopciones', 'C) reconocimientos', 'D) separaciones'],
+                correct: 0,
+                explanation: 'Según la página 6: "Las estadísticas vitales captadas por el INEGI... son el resultado del recuento de los hechos ocurridos en la vida de la población, como son: nacimientos, matrimonios, divorcios, defunciones y muertes fetales."',
+                distractors: 'Adopciones, reconocimientos y separaciones no son hechos vitales captados en este sistema; las muertes fetales sí forman parte de las estadísticas vitales.'
+            },
+            // 2. Multiple: objetivo de la estadística de nacimientos
+            {
+                type: 'multiple',
+                question: '¿Cuál es el objetivo de la estadística de nacimientos según el documento?',
+                options: ['A) Conocer la frecuencia de nacimientos y medir su intensidad, así como las condiciones sociales y económicas.', 'B) Registrar únicamente el número de nacimientos para fines de control poblacional.', 'C) Identificar las causas de mortalidad infantil en el país.', 'D) Evaluar los programas de educación sexual en las escuelas.'],
+                correct: 0,
+                explanation: 'Página 6: "La intención de estudiar las características que identifican al nacimiento es conocer la frecuencia con que ocurren estos hechos en el país y permitir medir su intensidad; así como las condiciones sociales y económicas en que se desarrolla este hecho".',
+                distractors: 'B es incompleto, C corresponde a defunciones, D no se menciona como objetivo de la estadística de nacimientos.'
+            },
+            // 3. Relación: objetivos de las estadísticas vitales
+            {
+                type: 'relacion',
+                question: 'Relacione la estadística vital con su objetivo principal:<br>1. Defunciones<br>2. Muertes fetales<br>3. Divorcios<br><br>A) Conocer causas que influyen en la disolución legal del matrimonio.<br>B) Conocer volumen, tendencias y características de la mortalidad.<br>C) Conocer frecuencia y causas que originan la muerte fetal.',
+                options: ['A) 1-B, 2-C, 3-A', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-A, 3-B', 'D) 1-B, 2-A, 3-C'],
+                correct: 0,
+                explanation: 'Páginas 6-7: Defunciones: conocer volumen, tendencias y características de la mortalidad; Muertes fetales: frecuencia y causas que originan la muerte fetal; Divorcios: causas y factores que influyen en la disolución legal del matrimonio.',
+                distractors: 'Las otras opciones asignan incorrectamente los objetivos a cada estadística.'
+            },
+            // 4. Completar: antecedentes históricos
+            {
+                type: 'completar',
+                question: 'Los primeros registros que sirvieron de base para las estadísticas vitales fueron los registros parroquiales de la iglesia católica, los cuales registraban bautizos, casamientos y defunciones para el cobro de ________.',
+                options: ['A) diezmos y tributos', 'B) impuestos eclesiásticos', 'C) contribuciones parroquiales', 'D) ofrendas y limosnas'],
+                correct: 0,
+                explanation: 'Página 7: "los registros parroquiales de la iglesia católica... los cuales no registraban propiamente los hechos vitales sino los bautizos, casamientos y defunciones, para el cobro de diezmos y tributos."',
+                distractors: 'Impuestos eclesiásticos, contribuciones parroquiales y ofrendas no son los términos exactos usados en el documento.'
+            },
+            // 5. Multiple: Leyes de Reforma
+            {
+                type: 'multiple',
+                question: '¿Qué establecieron las Leyes de Reforma promulgadas el 28 de julio de 1859 en relación con el registro civil?',
+                options: ['A) La creación de la Dirección General de Estadística.', 'B) La secularización del registro civil mediante la Ley Orgánica del Registro Civil.', 'C) La obligatoriedad de los padres de inscribir a sus hijos.', 'D) La incorporación de los divorcios a las estadísticas vitales.'],
+                correct: 1,
+                explanation: 'Página 7: "Durante el mandato presidencial del Lic. Benito Juárez, se dieron a conocer las Leyes de Reforma, promulgadas el 28 de julio de 1859, en ellas se incluía la Ley Orgánica del Registro Civil, con la cual quedó secularizada en el país una actividad que tradicionalmente venía desempeñando el clero."',
+                distractors: 'A ocurrió en 1882, C en 1871, D en 1926.'
+            },
+            // 6. Relación: fechas clave en la historia
+            {
+                type: 'relacion',
+                question: 'Relacione el año con el evento histórico correspondiente:<br>1. 1871<br>2. 1882<br>3. 1926<br><br>A) Creación de la Dirección General de Estadística.<br>B) Obligatoriedad de los padres de inscribir a sus hijos.<br>C) Incorporación de divorcios a las estadísticas vitales.',
+                options: ['A) 1-B, 2-A, 3-C', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-B, 2-C, 3-A'],
+                correct: 0,
+                explanation: 'Páginas 7-8: 1871: obligatoriedad de los padres de inscribir a sus hijos; 1882: creación de la Dirección General de Estadística; 1926: incorporación de divorcios a las estadísticas vitales.',
+                distractors: 'Las otras opciones invierten las fechas y eventos.'
+            },
+            // 7. Completar: importancia de las estadísticas vitales
+            {
+                type: 'completar',
+                question: 'Las estadísticas vitales son fundamentales para el análisis sobre el crecimiento de la población, para analizar los niveles de fecundidad y mortalidad, así como su relación con otras variables como edad, nivel de escolaridad, estado civil y ________.',
+                options: ['A) medio urbano o rural', 'B) ocupación', 'C) ingreso', 'D) nacionalidad'],
+                correct: 0,
+                explanation: 'Página 8: "La utilidad de las estadísticas vitales es fundamental para el análisis sobre el crecimiento de la población; para analizar los niveles de fecundidad y mortalidad, así como su relación con otras variables, como son: edad, nivel de escolaridad, estado civil, medio urbano o rural, etc."',
+                distractors: 'Ocupación, ingreso y nacionalidad no se mencionan en esa enumeración específica.'
+            },
+            // 8. Multiple: unidad de observación
+            {
+                type: 'multiple',
+                question: '¿Cuáles son las unidades de observación de las estadísticas vitales?',
+                options: ['A) Las personas que viven en el país.', 'B) Los hechos vitales registrados: nacimientos, defunciones, muertes fetales, matrimonios y divorcios.', 'C) Las familias y hogares mexicanos.', 'D) Los certificados de defunción y actas de nacimiento.'],
+                correct: 1,
+                explanation: 'Página 8: "Las unidades de observación de las estadísticas vitales son los hechos vitales registrados, referentes a: nacimientos, defunciones y muertes fetales; así como del estado civil de las personas como son: los matrimonios y los divorcios."',
+                distractors: 'A y C se refieren a personas y familias, no a hechos vitales; D son instrumentos, no unidades de observación.'
+            },
+            // 9. Relación: fuentes informantes y su función
+            {
+                type: 'relacion',
+                question: 'Relacione la fuente informante con el tipo de información que proporciona:<br>1. Oficialías del Registro Civil<br>2. Agencias del Ministerio Público<br>3. Juzgados de lo Familiar<br><br>A) Muertes accidentales y violentas.<br>B) Inscripción de hechos vitales (nacimientos, defunciones, matrimonios, divorcios administrativos).<br>C) Divorcios judiciales.',
+                options: ['A) 1-B, 2-A, 3-C', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-A, 3-B', 'D) 1-B, 2-C, 3-A'],
+                correct: 0,
+                explanation: 'Páginas 8-9: Oficialías del Registro Civil: inscripción de hechos vitales; Agencias del Ministerio Público: muertes accidentales y violentas; Juzgados: divorcios judiciales.',
+                distractors: 'Las otras opciones asignan incorrectamente las funciones.'
+            },
+            // 10. Completar: método de captación
+            {
+                type: 'completar',
+                question: 'Las estadísticas vitales se captan por medio del aprovechamiento de los registros administrativos de diversas oficinas públicas, mediante la captación de actas, certificados y ________.',
+                options: ['A) cuadernos estadísticos', 'B) boletas individuales', 'C) formatos de control', 'D) expedientes judiciales'],
+                correct: 0,
+                explanation: 'Página 8: "Las estadísticas vitales se captan por medio del aprovechamiento de los registros administrativos de diversas oficinas públicas, mediante la captación de actas, certificados y cuadernos estadísticos."',
+                distractors: 'Boletas individuales y formatos de control son términos históricos o auxiliares; expedientes judiciales son la fuente, no el instrumento.'
+            },
+            // 11. Multiple: número de fuentes informantes (2002)
+            {
+                type: 'multiple',
+                question: 'Según el documento, en el año 2002 el Sistema Nacional de Estadísticas Vitales contaba con un total de 6,743 fuentes informantes distribuidas en todo el país. ¿Cuántas correspondían a Oficialías del Registro Civil?',
+                options: ['A) 4,898', 'B) 689', 'C) 1,156', 'D) 6,743'],
+                correct: 0,
+                explanation: 'Página 8: "El Sistema Nacional de Estadísticas Vitales cuenta en el año 2002, con un total de 6,743 fuentes informantes distribuidas en todo el país y corresponden a 4,898 Oficialías del Registro Civil, 689 Juzgados... y 1,156 Agencias del Ministerio Público."',
+                distractors: '689 son Juzgados, 1,156 son Agencias del Ministerio Público, 6,743 es el total.'
+            },
+            // 12. Relación: tipos de actas y su propósito
+            {
+                type: 'relacion',
+                question: 'Relacione el tipo de documento jurídico con su finalidad:<br>1. Actas del Registro Civil<br><br>A) Probar la autenticidad del hecho registrado, la identidad de cada persona y la modificación de su situación conyugal.',
+                options: ['A) 1-A', 'B) No corresponde', 'C) No corresponde', 'D) No corresponde'],
+                correct: 0,
+                explanation: 'Página 9: "Cabe aclarar que las actas del Registro Civil son documentos jurídicos que tienen como finalidad probar la autenticidad del hecho que se registra, así como la identidad de cada persona en particular y la modificación de su situación conyugal."',
+                distractors: 'Solo hay una relación correcta en esta pregunta.'
+            },
+            // 13. Completar: proceso de generación
+            {
+                type: 'completar',
+                question: 'El proceso de generación de estadísticas vitales es continuo: concluido un año calendario continúa la captación de información correspondiente a ese año, para recuperar información faltante y procesar el total de datos. A la vez, se inicia la captación de datos del año calendario que inicia y se ________ el ciclo.',
+                options: ['A) repite', 'B) modifica', 'C) interrumpe', 'D) concluye'],
+                correct: 0,
+                explanation: 'Página 9: "El proceso que se sigue para su generación es continuo, es decir, concluido un año calendario continúa la captación de información correspondiente a ese año... A la vez, se inicia la captación de datos del año calendario que inicia y se repite el ciclo."',
+                distractors: 'Modifica, interrumpe y concluye no describen el carácter continuo del proceso.'
+            },
+            // 14. Multiple: recomendaciones internacionales - ONU
+            {
+                type: 'multiple',
+                question: '¿Qué organismo, a partir de 1945, intensificó la promoción de la comparabilidad internacional en estadísticas vitales?',
+                options: ['A) El Instituto Internacional de Estadística (IIE).', 'B) La Organización Mundial de la Salud (OMS).', 'C) La Organización de las Naciones Unidas (ONU).', 'D) La Organización de la Salud de la Sociedad de Naciones.'],
+                correct: 2,
+                explanation: 'Página 11: "Con la creación de la Organización de las Naciones Unidas (ONU), en 1945, se intensificó la promoción de la comparabilidad internacional, ya que la Comisión de Estadística de la ONU consideró que la comparabilidad sólo se podría conseguir con la adopción y aplicación de los mismos conceptos, definiciones y clasificaciones generales."',
+                distractors: 'El IIE y la OMS participaron en etapas anteriores; la Organización de la Salud de la Sociedad de Naciones existió antes de la ONU.'
+            },
+            // 15. Relación: organismos internacionales y sus aportes
+            {
+                type: 'relacion',
+                question: 'Relacione el organismo internacional con su aporte:<br>1. IIE (Instituto Internacional de Estadística)<br>2. OMS (Organización Mundial de la Salud)<br>3. ONU (Organización de las Naciones Unidas)<br><br>A) Elaboración de la "Lista Internacional de Causas de Muerte" en 1891.<br>B) Clasificación Estadística Internacional de Enfermedades (CIE).<br>C) Publicación de "Principios para un Sistema de Estadísticas Vitales" en 1953.',
+                options: ['A) 1-A, 2-B, 3-C', 'B) 1-B, 2-A, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-A, 2-C, 3-B'],
+                correct: 0,
+                explanation: 'Páginas 10-11: IIE preparó la "Lista Internacional de Causa de Muerte" en 1891; OMS tiene la CIE; ONU publicó los "Principios para un Sistema de Estadísticas Vitales" en 1953.',
+                distractors: 'Las otras opciones asignan incorrectamente los aportes.'
+            },
+            // 16. Completar: CIE y México
+            {
+                type: 'completar',
+                question: 'La CIE-10a fue aprobada para su uso en 1995 y adoptada en México en el año ________.',
+                options: ['A) 1998', 'B) 1995', 'C) 2000', 'D) 1988'],
+                correct: 0,
+                explanation: 'Página 12: "la más reciente es la CIE-10a. aprobada para su uso y manejo en 1995 y adoptada en el país en 1998."',
+                distractors: '1995 es el año de aprobación internacional; 1988 es cuando el certificado se usó directamente; 2000 no corresponde.'
+            },
+            // 17. Multiple: GAICIE y CEMECE
+            {
+                type: 'multiple',
+                question: '¿Qué función tiene el Grupo Asesor Interinstitucional para el uso de la CIE (GAICIE)?',
+                options: ['A) Definir los criterios a utilizar a nivel nacional en la codificación médica de mortalidad y morbilidad.', 'B) Elaborar los formatos de captación de las estadísticas vitales.', 'C) Publicar los resultados de las estadísticas vitales.', 'D) Realizar el procesamiento electrónico de los datos.'],
+                correct: 0,
+                explanation: 'Página 12: "el comité esta conformado por el Grupo Asesor Interinstitucional para el uso de la CIE (GAICIE), donde se definen los criterios a utilizar a nivel nacional en la codificación médica de mortalidad y morbilidad."',
+                distractors: 'B, C y D son funciones de otras áreas del INEGI, no del GAICIE.'
+            },
+            // 18. Relación: definiciones de hechos vitales (ONU)
+            {
+                type: 'relacion',
+                question: 'Relacione el hecho vital con su definición según la ONU:<br>1. Nacimiento vivo<br>2. Defunción<br>3. Divorcio<br><br>A) Desaparición permanente de todo signo de vida posterior al nacimiento vivo.<br>B) Disolución jurídica definitiva de un matrimonio.<br>C) Expulsión o extracción completa del cuerpo de la madre de un producto que respira o manifiesta signos de vida.',
+                options: ['A) 1-C, 2-A, 3-B', 'B) 1-A, 2-C, 3-B', 'C) 1-B, 2-A, 3-C', 'D) 1-C, 2-B, 3-A'],
+                correct: 0,
+                explanation: 'Páginas 12-13: Nacimiento vivo: expulsión o extracción con signos de vida; Defunción: desaparición permanente de signos de vida; Divorcio: disolución jurídica definitiva de un matrimonio.',
+                distractors: 'Las otras opciones invierten las definiciones.'
+            },
+            // 19. Completar: definición de muerte fetal
+            {
+                type: 'completar',
+                question: 'La muerte fetal precoz es aquella que ocurre a menos de ________ semanas completas de gestación.',
+                options: ['A) 20', 'B) 28', 'C) 12', 'D) 24'],
+                correct: 0,
+                explanation: 'Página 13: "Defunción fetal precoz: ocurrida a menos de 20 semanas completas de gestación".',
+                distractors: '28 semanas es para defunción fetal tardía; 12 y 24 no son los límites mencionados.'
+            },
+            // 20. Multiple: distribución por lugar de residencia
+            {
+                type: 'multiple',
+                question: 'Para nacimientos y muerte fetal, la ONU recomienda tabular la información por lugar de ________ habitual de la madre.',
+                options: ['A) residencia', 'B) ocurrencia', 'C) registro', 'D) nacimiento'],
+                correct: 0,
+                explanation: 'Página 13: "Otra recomendación de la ONU que se aplica en las cinco estadísticas es la distribución por lugar de residencia: para nacimientos y muerte fetal se tabula la información por lugar de residencia habitual de la madre."',
+                distractors: 'Ocurrencia, registro y nacimiento son otros conceptos de ubicación geográfica, pero la recomendación es por residencia habitual.'
+            },
+            // 21. Relación: variables del acta de nacimiento
+            {
+                type: 'relacion',
+                question: 'Relacione la categoría de variables con el tipo de información que capta en el acta de nacimiento:<br>1. Características del hecho<br>2. Características del registrado<br>3. Características de los padres<br><br>A) Sexo del registrado, edad al registro.<br>B) Fecha de ocurrencia, fecha de registro, tipo de nacimiento.<br>C) Edad, escolaridad, ocupación de la madre y del padre.',
+                options: ['A) 1-B, 2-A, 3-C', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-B, 2-C, 3-A'],
+                correct: 0,
+                explanation: 'Página 14: Características del hecho: fecha de ocurrencia, registro, tipo de nacimiento; Características del registrado: sexo, edad al registro; Características de los padres: edad, escolaridad, ocupación, etc.',
+                distractors: 'Las otras opciones mezclan incorrectamente las categorías.'
+            },
+            // 22. Completar: evolución de formatos
+            {
+                type: 'completar',
+                question: 'La boleta individual era un formato en el cual las fuentes informantes transcribían los datos de la población involucrada de cada uno de los hechos vitales, además de la ________ de la fuente.',
+                options: ['A) ubicación', 'B) identificación', 'C) clave', 'D) dirección'],
+                correct: 0,
+                explanation: 'Página 16: "La boleta individual era un formato en el cual las fuentes informantes transcribían los datos de la población involucrada, de cada uno de los hechos vitales, además la ubicación de la fuente."',
+                distractors: 'Identificación, clave y dirección no son los términos exactos usados.'
+            },
+            // 23. Multiple: formatos de captación actuales
+            {
+                type: 'multiple',
+                question: 'Actualmente, los formatos de captación de las estadísticas vitales son las actas, certificados y ________.',
+                options: ['A) cuadernos estadísticos', 'B) boletas colectivas', 'C) cédulas de registro', 'D) expedientes administrativos'],
+                correct: 0,
+                explanation: 'Página 16: "Actualmente los formatos de captación de las estadísticas vitales son las actas, certificados y cuadernos estadísticos."',
+                distractors: 'Boletas colectivas y cédulas son formatos históricos; expedientes son la fuente, no el formato.'
+            },
+            // 24. Relación: evolución de formatos por estadística
+            {
+                type: 'relacion',
+                question: 'Relacione la estadística con el formato de captación que se utiliza actualmente (a partir de 1988/1993):<br>1. Defunciones generales<br>2. Muertes fetales<br>3. Nacimientos (a partir de 1993)<br><br>A) Copia del acta y archivo.<br>B) Certificado de defunción.<br>C) Certificado de muerte fetal.',
+                options: ['A) 1-B, 2-C, 3-A', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-B, 2-A, 3-C'],
+                correct: 0,
+                explanation: 'Página 17: Defunciones generales: certificado de defunción (1988); Muertes fetales: certificado de muerte fetal (1988); Nacimientos: copia del acta y archivo (1993).',
+                distractors: 'Las otras opciones asignan incorrectamente los formatos.'
+            },
+            // 25. Completar: estructura operativa - personal
+            {
+                type: 'completar',
+                question: 'En el año 2002, en el proceso de generación de las estadísticas vitales participan, a nivel nacional, 414 personas distribuidas en las Oficinas Centrales del INEGI, Direcciones Regionales y Áreas Estatales. El personal de estadística es de ________ personas.',
+                options: ['A) 225', 'B) 207', 'C) 189', 'D) 414'],
+                correct: 0,
+                explanation: 'Páginas 18-19: personal de estadística: Oficina Central 18 + Regional 207 = 225; informática: Oficina Central 13 + Regional 176 = 189; total 414.',
+                distractors: '207 es personal regional de estadística; 189 es informática; 414 es el total.'
+            },
+            // 26. Multiple: funciones de la DEDS
+            {
+                type: 'multiple',
+                question: '¿Cuál de las siguientes NO es una función de la Dirección de Estadísticas Demográficas y Sociales (DEDS) en la generación de estadísticas vitales?',
+                options: ['A) Elaborar la normatividad del proceso.', 'B) Definir el contenido, estructura y forma de difundir la información.', 'C) Desarrollar los sistemas de cómputo para el control de la producción regional.', 'D) Integrar las cifras nacionales.'],
+                correct: 2,
+                explanation: 'Páginas 19-20: DEDS: normatividad, coordinar, capacitar, supervisar, integración de cifras nacionales, definición de contenido y difusión. El desarrollo de sistemas de cómputo es función de la Dirección de Desarrollos Informáticos.',
+                distractors: 'A, B y D son funciones de la DEDS según el documento.'
+            },
+            // 27. Relación: funciones en la estructura operativa
+            {
+                type: 'relacion',
+                question: 'Relacione el nivel operativo con su función:<br>1. Oficina estatal<br>2. Dirección regional<br>3. Oficina Central (DEDS)<br><br>A) Elaborar la normatividad del proceso y definir la difusión.<br>B) Responsable de la recolección y seguimiento de fuentes informantes.<br>C) Capacitar, supervisar y coordinar los trabajos de las áreas estatales.',
+                options: ['A) 1-B, 2-C, 3-A', 'B) 1-C, 2-B, 3-A', 'C) 1-A, 2-C, 3-B', 'D) 1-B, 2-A, 3-C'],
+                correct: 0,
+                explanation: 'Página 19: Oficina estatal: responsable de recolección y seguimiento; Dirección regional: capacita, supervisa y coordina; Oficina Central (DEDS): normatividad, definición de difusión.',
+                distractors: 'Las otras opciones asignan incorrectamente las funciones.'
+            },
+            // 28. Completar: procedimiento de captación - plazo de entrega
+            {
+                type: 'completar',
+                question: 'El responsable de la fuente informante debe entregar durante los primeros ________ días hábiles de cada mes, al área estatal de estadística del INEGI, las copias de los formatos de captación.',
+                options: ['A) diez', 'B) cinco', 'C) quince', 'D) siete'],
+                correct: 0,
+                explanation: 'Página 20: "El responsable de la fuente informante debe entregar durante los primeros diez días hábiles de cada mes, al área estatal de estadística del INEGI, las copias de los formatos de captación."',
+                distractors: 'Cinco, quince y siete no son los plazos establecidos en el documento.'
+            },
+            // 29. Multiple: formato PEC-6-60
+            {
+                type: 'multiple',
+                question: '¿Qué es el formato PEC-6-60 ("certificado cero")?',
+                options: ['A) Un formato que acompaña a las actas como nota de remisión.', 'B) Un formato que envía la fuente informante cuando en un mes no se registró ningún hecho estadístico.', 'C) Un formato para actualizar el directorio de fuentes informantes.', 'D) Un formato de control para el número de actas.'],
+                correct: 1,
+                explanation: 'Página 21: "Certificado Cero. (Formato PEC-6-60). Este formato es enviado por la fuente informante al área estatal del INEGI, cuando en un determinado mes no se registró ningún hecho estadístico del cual es informante."',
+                distractors: 'PEC-6-62 es la nota de remisión; PEC-6-65 es para actualización del directorio.'
+            },
+            // 30. Relación: formatos de control y su uso
+            {
+                type: 'relacion',
+                question: 'Relacione el formato de control con su función:<br>1. PEC-6-62<br>2. PEC-6-60<br>3. PEC-6-65<br><br>A) Nota de remisión que acompaña a las actas.<br>B) Certificado cero cuando no hay registros.<br>C) Reporte de movimientos del directorio de fuentes informantes.',
+                options: ['A) 1-A, 2-B, 3-C', 'B) 1-B, 2-A, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-A, 2-C, 3-B'],
+                correct: 0,
+                explanation: 'Páginas 21-22: PEC-6-62: nota de remisión; PEC-6-60: certificado cero; PEC-6-65: reporte de movimientos del directorio.',
+                distractors: 'Las otras opciones asignan incorrectamente los formatos.'
+            },
+            // 31. Completar: SISEDES
+            {
+                type: 'completar',
+                question: 'El SISEDES (Sistema de Información y Seguimiento de las Estadísticas Demográficas y Sociales) es una aplicación informática para el seguimiento de la producción que permite consultar directorios de fuentes informantes, casos recibidos, porcentajes de recolección y avance en el ________ de la información.',
+                options: ['A) tratamiento manual', 'B) procesamiento electrónico', 'C) análisis estadístico', 'D) difusión de resultados'],
+                correct: 0,
+                explanation: 'Página 21: "Permite consultar en pantalla y/o generar reportes impresos de: directorios de fuentes informantes, casos recibidos, porcentajes de recolección y avance en el tratamiento manual de la información."',
+                distractors: 'Procesamiento electrónico, análisis y difusión no son los seguimientos que reporta el SISEDES en esta descripción.'
+            },
+            // 32. Multiple: fuentes automatizadas
+            {
+                type: 'multiple',
+                question: 'Cuando se reciben archivos de fuentes automatizadas, ¿qué hace el responsable del área estatal para evaluar la información?',
+                options: ['A) Realiza una captura secundaria de los datos.', 'B) Mediante un sistema de diagnóstico evalúa si está completa la información y verifica la estructura del archivo.', 'C) Envía los archivos directamente a la oficina central.', 'D) Imprime los archivos para su revisión manual.'],
+                correct: 1,
+                explanation: 'Página 22: "Al recibir archivos de fuentes automatizadas, el responsable del área estatal mediante un sistema de diagnóstico, evalúa si está completa la información a través del reporte de cifras de control y verifica que la estructura del archivo sea de acuerdo a los requerimientos del INEGI."',
+                distractors: 'A es parte del procesamiento electrónico; C y D no son los procedimientos descritos.'
+            },
+            // 33. Relación: controles de captación
+            {
+                type: 'relacion',
+                question: 'Relacione el control de captación con su descripción:<br>1. Directorio de fuentes informantes<br>2. Número de acta<br>3. Certificado cero<br><br>A) Se verifica que sea consecutivo por estadística y fuente.<br>B) Se envía cuando no se registró ningún hecho estadístico.<br>C) Contiene clave, nombre, tipo de establecimiento, responsable, domicilio, etc.',
+                options: ['A) 1-C, 2-A, 3-B', 'B) 1-A, 2-C, 3-B', 'C) 1-B, 2-A, 3-C', 'D) 1-C, 2-B, 3-A'],
+                correct: 0,
+                explanation: 'Páginas 20-21: Directorio: clave, nombre, tipo, responsable, domicilio; Número de acta: consecutivo; Certificado cero: cuando no hay registros.',
+                distractors: 'Las otras opciones asignan incorrectamente las descripciones.'
+            },
+            // 34. Completar: tratamiento manual - paquetes
+            {
+                type: 'completar',
+                question: 'En el tratamiento manual, se forman paquetes de actas, certificados o cuadernos estadísticos de hasta ________ por paquete, según estadística, fuente y mes.',
+                options: ['A) 300', 'B) 200', 'C) 500', 'D) 100'],
+                correct: 0,
+                explanation: 'Página 23: "para formar paquetes de actas, certificados o cuadernos estadísticos (hasta 300 por paquete), según estadística, fuente y mes."',
+                distractors: '200, 500 y 100 no son los límites mencionados.'
+            },
+            // 35. Multiple: foliación
+            {
+                type: 'multiple',
+                question: '¿Cuál es el propósito de la foliación en el tratamiento manual de la información?',
+                options: ['A) Asignar códigos a las respuestas de los formatos.', 'B) Aplicar un número consecutivo a cada formato para garantizar que el total de casos pase por el proceso electrónico.', 'C) Revisar que la información esté completa y correcta.', 'D) Agrupar los formatos en paquetes por fuente y mes.'],
+                correct: 1,
+                explanation: 'Página 23: "La foliación consiste en aplicar un número consecutivo a cada formato, por paquete o por año y sirve para garantizar que el total de casos pase por el proceso electrónico."',
+                distractors: 'A es codificación; C es crítica; D es lotificación.'
+            },
+            // 36. Relación: etapas del tratamiento manual
+            {
+                type: 'relacion',
+                question: 'Relacione la etapa del tratamiento manual con su descripción:<br>1. Crítica-codificación<br>2. Foliación<br>3. Lotificación<br><br>A) Aplicar un número consecutivo a cada formato.<br>B) Asignar códigos a las respuestas según los manuales.<br>C) Formar paquetes de actas, certificados o cuadernos.',
+                options: ['A) 1-B, 2-A, 3-C', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-B, 2-C, 3-A'],
+                correct: 0,
+                explanation: 'Páginas 23: Lotificación: formar paquetes; Crítica-codificación: asignar códigos; Foliación: aplicar número consecutivo.',
+                distractors: 'Las otras opciones invierten las definiciones.'
+            },
+            // 37. Completar: procesamiento electrónico - doble captura
+            {
+                type: 'completar',
+                question: 'En el procesamiento electrónico, la captura de datos incluye un proceso de verificación que consiste en una captura secundaria o ________, realizada por una persona diferente a la que realizó la captura inicial.',
+                options: ['A) doble captura', 'B) verificación automática', 'C) codificación manual', 'D) validación cruzada'],
+                correct: 0,
+                explanation: 'Página 23: "Captura de datos, esta actividad incluye un proceso de verificación que consiste en una captura secundaria o doble captura, misma que realiza una persona diferente a la que realizó la captura inicial."',
+                distractors: 'Verificación automática, codificación manual y validación cruzada no son el término específico usado.'
+            },
+            // 38. Multiple: proceso para información en medios magnéticos
+            {
+                type: 'multiple',
+                question: 'Para la información proporcionada en medios magnéticos, una vez que se recibe en las direcciones regionales, se turna al área de informática donde se ejecuta un proceso de ________.',
+                options: ['A) captura manual', 'B) clavificación automática', 'C) validación manual', 'D) foliación electrónica'],
+                correct: 1,
+                explanation: 'Página 24: "Respecto a la información proporcionada en medios magnéticos, una vez que se recibe en las direcciones regionales, se turna al área de informática donde se ejecuta un proceso de clavificación automática."',
+                distractors: 'Captura manual, validación manual y foliación electrónica no son los procesos descritos.'
+            },
+            // 39. Relación: productos del procesamiento electrónico
+            {
+                type: 'relacion',
+                question: 'Relacione el reporte de procesamiento con su contenido:<br>1. Reporte de validación-imputación<br>2. Reporte de tendencias<br>3. Reporte de cifras de control<br><br>A) Condiciones y características de los datos capturados y el número de veces que se aplicaron criterios de limpieza.<br>B) Comportamiento de variables seleccionadas para un período de cinco años.<br>C) Número de paquetes capturados y relación de fuentes informantes.',
+                options: ['A) 1-A, 2-B, 3-C', 'B) 1-B, 2-A, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-A, 2-C, 3-B'],
+                correct: 0,
+                explanation: 'Páginas 24-25: Reporte de validación-imputación: condiciones y características de los datos; Reporte de tendencias: comportamiento de variables por cinco años; Reporte de cifras de control: paquetes capturados y fuentes.',
+                distractors: 'Las otras opciones invierten los contenidos.'
+            },
+            // 40. Completar: productos de difusión
+            {
+                type: 'completar',
+                question: 'Uno de los productos impresos de difusión de las estadísticas vitales es el ________, que contiene información básica y algunos indicadores derivados.',
+                options: ['A) Boletín de Estadísticas Vitales', 'B) Cuaderno de Estadísticas Demográficas', 'C) Anuario Demográfico', 'D) Estadísticas Vitales de los Estados'],
+                correct: 0,
+                explanation: 'Página 26: "Boletín de Estadísticas Vitales, contiene información básica y algunos indicadores derivados de las estadísticas vitales."',
+                distractors: 'Los otros productos tienen contenidos diferentes según el documento.'
+            },
+            // 41. Multiple: productos de difusión
+            {
+                type: 'multiple',
+                question: '¿Cuál de los siguientes NO es un medio de difusión de las estadísticas vitales mencionado en el documento?',
+                options: ['A) Discos compactos (Estadísticas Sociodemográficas)', 'B) Sistema Municipal de Bases de Datos (SIMBAD)', 'C) Publicaciones en redes sociales', 'D) Tabulados Especiales'],
+                correct: 2,
+                explanation: 'Página 26-27: Se mencionan discos compactos, SIMBAD, tabulados especiales, publicaciones impresas, internet. No se mencionan redes sociales.',
+                distractors: 'A, B y D son medios mencionados en el documento.'
+            },
+            // 42. Relación: productos y su contenido
+            {
+                type: 'relacion',
+                question: 'Relacione el producto con su contenido según el documento:<br>1. Plan Básico de Tabulados de Nacimientos<br>2. Plan Básico de Tabulados de Divorcios<br>3. Plan Básico de Tabulados de Defunciones<br><br>A) 13 tabulados nacionales.<br>B) 24 tabulados nacionales y 20 estatales.<br>C) 25 tabulados nacionales y 10 estatales.',
+                options: ['A) 1-B, 2-C, 3-A', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-B, 2-A, 3-C'],
+                correct: 0,
+                explanation: 'Página 26: Nacimientos: 24 tabulados nacionales y 20 estatales; Divorcios: 25 tabulados nacionales y 10 estatales; Defunciones: 13 tabulados nacionales.',
+                distractors: 'Las otras opciones asignan incorrectamente los números de tabulados.'
+            },
+            // 43. Completar: indicadores - Tasa Bruta de Natalidad
+            {
+                type: 'completar',
+                question: 'La Tasa Bruta de Natalidad (TBN) indica el número de nacidos vivos ocurridos por cada ________ habitantes, en un año determinado.',
+                options: ['A) 1 000', 'B) 10 000', 'C) 100 000', 'D) 100'],
+                correct: 0,
+                explanation: 'Página 29: "TASA BRUTA DE NATALIDAD (TBN). Indica el número de nacidos vivos ocurridos por cada 1 000 habitantes, en un año determinado."',
+                distractors: '10 000, 100 000 y 100 son denominadores de otras tasas (por ejemplo, tasas de mortalidad por causas usan 100 000).'
+            },
+            // 44. Multiple: Índice de Masculinidad
+            {
+                type: 'multiple',
+                question: 'El Índice de Masculinidad al nacimiento se calcula como el número de nacimientos masculinos por cada ________ nacimientos femeninos.',
+                options: ['A) 100', 'B) 1 000', 'C) 10 000', 'D) 1'],
+                correct: 0,
+                explanation: 'Página 29: "ÍNDICE DE MASCULINIDAD AL NACIMIENTO (IM). Es el número de nacimientos masculinos por cada 100 nacimientos femeninos."',
+                distractors: '1 000, 10 000 y 1 no son la base del índice de masculinidad.'
+            },
+            // 45. Relación: indicadores y su fórmula
+            {
+                type: 'relacion',
+                question: 'Relacione el indicador con su fórmula:<br>1. Tasa Bruta de Natalidad<br>2. Índice de Masculinidad<br>3. Tasa de Mortalidad Infantil<br><br>A) (Nacimientos masculinos / Nacimientos femeninos) × 100<br>B) (Nacidos vivos / Población total) × 1000<br>C) (Defunciones de menores de 1 año / Nacimientos registrados) × 1000',
+                options: ['A) 1-B, 2-A, 3-C', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-A, 3-B', 'D) 1-B, 2-C, 3-A'],
+                correct: 0,
+                explanation: 'Páginas 29-31: TBN = (Nacidos vivos / Población total) × 1000; Índice de Masculinidad = (Hombres / Mujeres) × 100; TMI = (Defunciones menores 1 año / Nacimientos registrados) × 1000.',
+                distractors: 'Las otras opciones asignan incorrectamente las fórmulas.'
+            },
+            // 46. Completar: Tasa Global de Fecundidad
+            {
+                type: 'completar',
+                question: 'La Tasa Global de Fecundidad (TGF) es el número de hijos nacidos vivos que en promedio tiene cada mujer de una cohorte hipotética, y se calcula multiplicando la suma de las tasas específicas de fecundidad por la amplitud del intervalo, que generalmente es ________.',
+                options: ['A) 5', 'B) 10', 'C) 1', 'D) 1000'],
+                correct: 0,
+                explanation: 'Página 30: "La TGF para Nuevo León en el 2000 fue de 2.6. ... TGF = 5 Σ fx". La amplitud del intervalo para grupos quinquenales es 5.',
+                distractors: '10, 1 y 1000 no son la amplitud estándar para grupos quinquenales de edad.'
+            },
+            // 47. Multiple: Tasa Bruta de Reproducción
+            {
+                type: 'multiple',
+                question: 'La Tasa Bruta de Reproducción (TBR) se calcula multiplicando la Tasa Global de Fecundidad por el factor K=0.4878, que corresponde al índice de ________.',
+                options: ['A) femeneidad', 'B) masculinidad', 'C) mortalidad infantil', 'D) nupcialidad'],
+                correct: 0,
+                explanation: 'Página 31: "Se calcula a partir de la tasa global de fecundidad, multiplicada por el factor K=0.4878 que corresponde al índice de femeneidad: 100 nacimientos femeninos por cada 205 nacimientos."',
+                distractors: 'Índice de masculinidad sería el inverso; mortalidad infantil y nupcialidad no están relacionados.'
+            },
+            // 48. Relación: tasas de mortalidad y su definición
+            {
+                type: 'relacion',
+                question: 'Relacione la tasa de mortalidad con su definición:<br>1. Tasa Bruta de Mortalidad<br>2. Tasa de Mortalidad por Edad<br>3. Tasa de Mortalidad Materna<br><br>A) Defunciones de mujeres por complicaciones durante el embarazo, parto o puerperio / Nacimientos × 100 000.<br>B) Defunciones de un grupo de edad / Población de ese grupo × 1000.<br>C) Defunciones totales / Población total × 1000.',
+                options: ['A) 1-C, 2-B, 3-A', 'B) 1-A, 2-B, 3-C', 'C) 1-B, 2-C, 3-A', 'D) 1-C, 2-A, 3-B'],
+                correct: 0,
+                explanation: 'Páginas 31: TBM = Defunciones / Población total × 1000; Tasa de mortalidad por edad = Defunciones del grupo / Población del grupo × 1000; Tasa de mortalidad materna = Defunciones maternas / Nacimientos × 100 000.',
+                distractors: 'Las otras opciones asignan incorrectamente las definiciones.'
+            },
+            // 49. Completar: Tasa de Mortalidad por Causas
+            {
+                type: 'completar',
+                question: 'La Tasa de Mortalidad por Causas indica el número de muertes atribuidas a una causa específica por cada ________ habitantes en un año determinado.',
+                options: ['A) 100 000', 'B) 1 000', 'C) 10 000', 'D) 1 000 000'],
+                correct: 0,
+                explanation: 'Página 31: "TASA DE MORTALIDAD POR CAUSAS. Indica el número de muertes atribuidas a una causa específica por cada 100 000 habitantes en un año determinado."',
+                distractors: '1 000, 10 000 y 1 000 000 no son el denominador de esta tasa específica.'
+            },
+            // 50. Multiple: Tasa de Divorcialidad
+            {
+                type: 'multiple',
+                question: 'La Tasa Bruta de Divorcialidad se expresa como el número de divorcios registrados por cada ________ habitantes.',
+                options: ['A) 1 000', 'B) 100 000', 'C) 10 000', 'D) 100'],
+                correct: 0,
+                explanation: 'Página 33: "TASA BRUTA DE DIVORCIALIDAD. Es el número de divorcios registrados... con respecto al total de la población para ese período, expresando por 1 000 habitantes."',
+                distractors: '100 000, 10 000 y 100 no son el denominador de esta tasa.'
+            },
+            // 51. Relación: indicadores de matrimonios y divorcios
+            {
+                type: 'relacion',
+                question: 'Relacione el indicador con su definición:<br>1. Edad promedio al matrimonio<br>2. Edad promedio al divorcio<br>3. Índice de divorcialidad<br><br>A) Número de divorcios entre el número de matrimonios × 100.<br>B) Media aritmética de las edades de los contrayentes.<br>C) Media aritmética de las edades de los divorciados.',
+                options: ['A) 1-B, 2-C, 3-A', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-B, 2-A, 3-C'],
+                correct: 0,
+                explanation: 'Páginas 32-33: Edad promedio al matrimonio: media aritmética de edades de contrayentes; Edad promedio al divorcio: media aritmética de edades de divorciados; Índice de divorcialidad: divorcios / matrimonios × 100.',
+                distractors: 'Las otras opciones asignan incorrectamente las definiciones.'
+            },
+            // 52. Completar: definición de glosario - Certificación
+            {
+                type: 'completar',
+                question: 'Según el glosario, la certificación es el acto que proporciona ________ legal al acontecimiento y a las circunstancias en que ocurrió.',
+                options: ['A) certeza', 'B) veracidad', 'C) autenticidad', 'D) validez'],
+                correct: 0,
+                explanation: 'Página 35: "CERTIFICACIÓN. Es el acto que proporciona certeza legal al acontecimiento y a las circunstancias en que ocurrió."',
+                distractors: 'Veracidad, autenticidad y validez son términos relacionados pero no son los exactos del glosario.'
+            },
+            // 53. Multiple: definición de glosario - Causa básica de defunción
+            {
+                type: 'multiple',
+                question: 'La causa básica de defunción se define como la enfermedad o lesión que inició la cadena de acontecimientos patológicos que condujeron directamente a la muerte, o las ________ del accidente o violencia que produjo la lesión fatal.',
+                options: ['A) circunstancias', 'B) consecuencias', 'C) causas', 'D) condiciones'],
+                correct: 0,
+                explanation: 'Página 35: "CAUSA BÁSICA DE DEFUNCIÓN. (a) Es la enfermedad o lesión que inició la cadena de acontecimientos patológicos que condujeron directamente a la muerte, o (b) las circunstancias del accidente o violencia que produjo la lesión fatal."',
+                distractors: 'Consecuencias, causas y condiciones no son los términos exactos de la definición.'
+            },
+            // 54. Relación: términos del glosario - duración del matrimonio
+            {
+                type: 'relacion',
+                question: 'Relacione el término con su definición:<br>1. Duración legal del matrimonio<br>2. Duración social del matrimonio<br><br>A) Número de años entre la fecha de celebración y la fecha de demanda del divorcio.<br>B) Número de años entre la fecha de celebración y la fecha de resolución o sentencia ejecutoria del divorcio.',
+                options: ['A) 1-B, 2-A', 'B) 1-A, 2-B', 'C) 1-B, 2-B', 'D) 1-A, 2-A'],
+                correct: 0,
+                explanation: 'Página 36: "DURACIÓN LEGAL DEL MATRIMONIO... entre la fecha de celebración... y la fecha de resolución o sentencia ejecutoria del divorcio. DURACIÓN SOCIAL DEL MATRIMONIO... entre la fecha de celebración... y la fecha de demanda del divorcio."',
+                distractors: 'La opción B invierte las definiciones; C y D repiten.'
+            },
+            // 55. Completar: definición de glosario - Divorcio administrativo
+            {
+                type: 'completar',
+                question: 'El divorcio administrativo es aquel que se tramita a través de alguna Oficialía del Registro Civil, requiriéndose siempre por ________ de los cónyuges.',
+                options: ['A) mutuo consentimiento', 'B) acuerdo judicial', 'C) separación voluntaria', 'D) común acuerdo'],
+                correct: 0,
+                explanation: 'Página 36: "DIVORCIO ADMINISTRATIVO. Es aquel que se tramita a través de alguna Oficialía del Registro Civil, siempre y cuando se encuentre legisla do en la entidad que corresponda, requiriéndose siempre por mutuo consentimiento de los cónyuges."',
+                distractors: 'Acuerdo judicial, separación voluntaria y común acuerdo no son los términos exactos de la definición.'
+            },
+            // 56. Multiple: definición de glosario - Edad gestacional
+            {
+                type: 'multiple',
+                question: 'La edad gestacional se expresa como el número de semanas transcurrido entre el primer día del último período menstrual de la madre y la fecha de ocurrencia de la ________ del feto o producto.',
+                options: ['A) extracción o expulsión', 'B) concepción', 'C) nacimiento', 'D] registro'],
+                correct: 0,
+                explanation: 'Página 36: "EDAD GESTACIONAL. Se expresa como el número de semanas transcurrido entre el primer día del último período menstrual de la madre, y la fecha de ocurrencia de la extracción o expulsión del feto o producto."',
+                distractors: 'Concepción, nacimiento y registro no son los puntos de referencia para la edad gestacional según la definición.'
+            },
+            // 57. Relación: términos del glosario - localidad y entidad federativa
+            {
+                type: 'relacion',
+                question: 'Relacione el término geográfico con su definición:<br>1. Localidad<br>2. Entidad federativa<br><br>A) Unidad geográfica mayor de la división político administrativa del país.<br>B) Lugar en que se ubica una vivienda o conjunto de viviendas, reconocido comúnmente por un nombre.',
+                options: ['A) 1-B, 2-A', 'B) 1-A, 2-B', 'C) 1-B, 2-B', 'D) 1-A, 2-A'],
+                correct: 0,
+                explanation: 'Páginas 36-37: Localidad: lugar donde se ubica una vivienda; Entidad federativa: unidad geográfica mayor de la división político administrativa.',
+                distractors: 'La opción B invierte las definiciones.'
+            },
+            // 58. Completar: definición de glosario - Ocupación
+            {
+                type: 'completar',
+                question: 'La ocupación se define como el tipo de trabajo, oficio o tarea específica que desarrolló la persona ocupada en su ________.',
+                options: ['A) trabajo principal', 'B) trabajo secundario', 'C) actividad económica', 'D) empleo actual'],
+                correct: 0,
+                explanation: 'Página 38: "OCUPACIÓN. Tipo de trabajo, oficio o tarea específica que desarrolló la persona ocupada en su trabajo principal."',
+                distractors: 'Trabajo secundario, actividad económica y empleo actual no son los términos exactos de la definición del glosario.'
+            },
+            // 59. Multiple: definición de glosario - Patria potestad
+            {
+                type: 'multiple',
+                question: 'La patria potestad, una vez concluido el divorcio, queda sujeta a la guarda y educación de los menores y a las modalidades que le impriman las resoluciones que se dictan en la ________ de divorcio.',
+                options: ['A) sentencia ejecutoria', 'B) demanda', 'C) audiencia', 'D] conciliación'],
+                correct: 0,
+                explanation: 'Página 38: "PATRIA POTESTAD... su ejercicio queda sujeto a la guarda y educación de los menores y a las modalidades que le impriman las resoluciones que se dictan en la sentencia ejecutoria de divorcio."',
+                distractors: 'Demanda, audiencia y conciliación no son los términos exactos.'
+            },
+            // 60. Relación: términos del glosario - registro oportuno y extemporáneo
+            {
+                type: 'relacion',
+                question: 'Relacione el tipo de registro con su definición:<br>1. Registro oportuno<br>2. Registro extemporáneo<br><br>A) Registro de nacimientos ocurridos y registrados en un año determinado.<br>B) Registro del nacimiento en un año diferente, posterior al año de ocurrencia.',
+                options: ['A) 1-A, 2-B', 'B) 1-B, 2-A', 'C) 1-A, 2-A', 'D) 1-B, 2-B'],
+                correct: 0,
+                explanation: 'Página 39: "REGISTRO OPORTUNO. Es el registro de los nacimientos ocurridos y registrados en un año determinado. Excluye a los nacimientos ocurridos en años anteriores. REGISTRO EXTEMPORÁNEO. Es el registro del nacimiento en un año diferente, posterior al año de ocurrencia."',
+                distractors: 'La opción B invierte las definiciones.'
+            },
+            // 61. Completar: definición de glosario - Tipo de divorcio
+            {
+                type: 'completar',
+                question: 'El divorcio necesario es aquel que es solicitado por alguno de los cónyuges, por una o más causas de tipo ________, enmarcadas en el Código Civil de cada entidad federativa.',
+                options: ['A) contencioso', 'B) voluntario', 'C) administrativo', 'D) judicial'],
+                correct: 0,
+                explanation: 'Página 36: "DIVORCIO NECESARIO. Es aquel que es solicitado por alguno de los cónyuges, por una o más causas de tipo contencioso, enmarcadas en el Código Civil de cada entidad federativa."',
+                distractors: 'Voluntario, administrativo y judicial son otros tipos de divorcio, no el necesario.'
+            },
+            // 62. Multiple: definición de glosario - Tipo de aborto
+            {
+                type: 'multiple',
+                question: 'El aborto se define como la expulsión o extracción completa del claustro materno de un feto o embrión de menos de ________ semanas de gestación.',
+                options: ['A) 20', 'B) 28', 'C) 12', 'D) 24'],
+                correct: 0,
+                explanation: 'Página 39: "Se define como aborto, la expulsión o extracción completa del claustro materno de un feto o embrión de menos de 20 semanas de gestación."',
+                distractors: '28 semanas es el límite para muerte fetal tardía; 12 y 24 no son los límites mencionados.'
+            },
+            // 63. Relación: términos del glosario - variables de defunción
+            {
+                type: 'relacion',
+                question: 'Relacione la variable con su definición:<br>1. Necropsia o autopsia<br>2. Sitio físico de ocurrencia de la defunción<br><br>A) Examen de un cadáver que incluye órganos y estructuras internas para precisar la causa de la muerte.<br>B) Espacio o lugar físico donde ocurrió la defunción: unidad médica, hogar u otro.',
+                options: ['A) 1-A, 2-B', 'B) 1-B, 2-A', 'C) 1-A, 2-A', 'D) 1-B, 2-B'],
+                correct: 0,
+                explanation: 'Página 38: Necropsia: examen de un cadáver para precisar causa; Sitio físico de ocurrencia: espacio donde ocurrió la defunción.',
+                distractors: 'La opción B invierte las definiciones.'
+            },
+            // 64. Completar: definición de glosario - Condición de actividad
+            {
+                type: 'completar',
+                question: 'La condición de actividad está dada por la participación de las personas de 12 años y más en las actividades económicas del país, clasificándose en población ________ y económicamente inactiva.',
+                options: ['A) económicamente activa', 'B) ocupada', 'C) empleada', 'D) productiva'],
+                correct: 0,
+                explanation: 'Página 35: "CONDICIÓN DE ACTIVIDAD... Se clasifica a la población en económicamente activa y económicamente inactiva."',
+                distractors: 'Ocupada, empleada y productiva son categorías más específicas o diferentes.'
+            },
+            // 65. Multiple: definición de glosario - Derechohabiencia
+            {
+                type: 'multiple',
+                question: 'La variable de derechohabiencia averigua si la persona se encuentra afiliada a alguna institución de seguridad social, clasificándose en: ninguna, IMSS, ISSSTE, PEMEX, Fuerza Armada, otra y ________.',
+                options: ['A) se ignora', 'B) no aplica', 'C) sin información', 'D) no especificado'],
+                correct: 0,
+                explanation: 'Página 36: "DERECHOHABIENCIA... se clasifica en: ninguna, IMSS, ISSSTE, PEMEX, Fuerza Armada, otra y se ignora."',
+                distractors: 'No aplica, sin información y no especificado no son las categorías exactas del glosario.'
+            },
+            // 66. Relación: productos de difusión - medios
+            {
+                type: 'relacion',
+                question: 'Relacione el medio de difusión con el tipo de producto:<br>1. Medios impresos<br>2. Medios magnéticos/ópticos<br>3. Internet<br><br>A) Cuaderno de Estadísticas Demográficas, Boletín de Estadísticas Vitales.<br>B) Discos compactos de Estadísticas Sociodemográficas.<br>C) Cuaderno de Estadísticas Demográficas en la página del INEGI.',
+                options: ['A) 1-A, 2-B, 3-C', 'B) 1-B, 2-A, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-A, 2-C, 3-B'],
+                correct: 0,
+                explanation: 'Páginas 26-27: Medios impresos: Cuaderno, Boletín; Medios magnéticos/ópticos: discos compactos; Internet: página del INEGI, SIMBAD.',
+                distractors: 'Las otras opciones asignan incorrectamente los productos a los medios.'
+            },
+            // 67. Completar: estructura operativa - personal de informática
+            {
+                type: 'completar',
+                question: 'En el año 2002, el personal de informática que participa en la generación de estadísticas vitales a nivel nacional es de ________ personas.',
+                options: ['A) 189', 'B) 225', 'C) 207', 'D) 414'],
+                correct: 0,
+                explanation: 'Páginas 18-19: personal de informática: Regional 176 + Oficina Central 13 = 189.',
+                distractors: '225 es personal de estadística; 207 es personal regional de estadística; 414 es el total.'
+            },
+            // 68. Multiple: Unidad de observación - fuentes
+            {
+                type: 'multiple',
+                question: 'Además de las Oficialías del Registro Civil y los Juzgados, ¿qué otra fuente informante proporciona datos para las estadísticas vitales?',
+                options: ['A) Agencias del Ministerio Público', 'B) Hospitales públicos', 'C) Escuelas y universidades', 'D) Empresas privadas'],
+                correct: 0,
+                explanation: 'Página 8: las fuentes informantes son: Oficialías del Registro Civil, Juzgados de lo Familiar, Civiles y Mixtos, y Agencias del Ministerio Público.',
+                distractors: 'Hospitales, escuelas y empresas privadas no son fuentes informantes del sistema de estadísticas vitales según el documento.'
+            },
+            // 69. Relación: tipos de muerte fetal
+            {
+                type: 'relacion',
+                question: 'Relacione el tipo de defunción fetal con el período de gestación:<br>1. Defunción fetal precoz<br>2. Defunción fetal intermedia<br>3. Defunción fetal tardía<br><br>A) 28 semanas o más completas de gestación.<br>B) Menos de 20 semanas completas de gestación.<br>C) Pasadas las 20 semanas y sin llegar a las 28.',
+                options: ['A) 1-B, 2-C, 3-A', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-B, 2-A, 3-C'],
+                correct: 0,
+                explanation: 'Página 13: "Defunción fetal precoz: ocurrida a menos de 20 semanas completas de gestación; Defunción fetal intermedia: ocurrida pasadas las 20 semanas completas de gestación y sin llegar a las 28, Defunción fetal tardía: ocurrida a las 28 semanas o más completas de gestación."',
+                distractors: 'Las otras opciones asignan incorrectamente los períodos.'
+            },
+            // 70. Completar: Índice de divorcialidad (final)
+            {
+                type: 'completar',
+                question: 'El índice de divorcialidad se calcula como el número de divorcios registrados en un año entre el número de ________ celebrados el mismo año, multiplicado por 100.',
+                options: ['A) matrimonios', 'B) nacimientos', 'C) defunciones', 'D) uniones'],
+                correct: 0,
+                explanation: 'Página 33: "ÍNDICE DE DIVORCIALIDAD. Es el número de divorcios registrados en un año, entre el número de matrimonios celebrados el mismo año... × 100".',
+                distractors: 'Nacimientos, defunciones y uniones no son el denominador del índice de divorcialidad.'
+            }
+        ];
+
+        // ========== LÓGICA DE LA APLICACIÓN ==========
+        let currentIndex = 0;
+        const totalQuestions = questions.length;
+        const state = questions.map(() => ({ selected: null, verified: false, correct: false }));
+
+        const questionNumberEl = document.getElementById('question-number');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackEl = document.getElementById('feedback');
+        const prevBtn = document.getElementById('prev-btn');
+        const verifyBtn = document.getElementById('verify-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressLabel = document.getElementById('progress-label');
+        const resultContainer = document.getElementById('result');
+        const scoreDisplay = document.getElementById('score-display');
+        const scoreMessage = document.getElementById('score-message');
+        const restartBtn = document.getElementById('restart-btn');
+
+        let totalCorrect = 0;
+
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            const s = state[currentIndex];
+            const isVerified = s.verified;
+
+            questionNumberEl.textContent = `Pregunta ${currentIndex + 1} de ${totalQuestions}`;
+            questionTextEl.innerHTML = q.question;
+
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const div = document.createElement('div');
+                div.className = 'option-item';
+
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'question';
+                radio.value = idx;
+                radio.id = `opt_${idx}`;
+                if (isVerified) {
+                    radio.disabled = true;
+                    div.classList.add('disabled');
+                    if (idx === q.correct) {
+                        div.classList.add('correct-verified');
+                    } else if (s.selected === idx && idx !== q.correct) {
+                        div.classList.add('incorrect-verified');
+                    }
+                } else {
+                    if (s.selected === idx) {
+                        radio.checked = true;
+                    }
+                    radio.addEventListener('change', () => {
+                        if (!s.verified) {
+                            s.selected = idx;
+                            verifyBtn.disabled = false;
+                        }
+                    });
+                }
+
+                const label = document.createElement('label');
+                label.htmlFor = `opt_${idx}`;
+                label.textContent = opt;
+
+                div.appendChild(radio);
+                div.appendChild(label);
+                optionsContainer.appendChild(div);
+            });
+
+            if (isVerified) {
+                const isCorrect = (s.selected === q.correct);
+                feedbackEl.className = 'show ' + (isCorrect ? 'correct' : 'incorrect');
+                feedbackEl.innerHTML = `
+                    <div class="fb-title">${isCorrect ? '✅ Correcto' : '❌ Incorrecto'}</div>
+                    <div class="fb-explain"><strong>Justificación:</strong> ${q.explanation}</div>
+                    <div class="fb-distractors"><strong>Análisis de distractores:</strong> ${q.distractors}</div>
+                `;
+                feedbackEl.style.display = 'block';
+            } else {
+                feedbackEl.className = '';
+                feedbackEl.innerHTML = '';
+                feedbackEl.style.display = 'none';
+            }
+
+            verifyBtn.disabled = isVerified || s.selected === null;
+            prevBtn.disabled = (currentIndex === 0);
+            nextBtn.disabled = !s.verified;
+            progressLabel.textContent = `Pregunta ${currentIndex + 1} de ${totalQuestions}`;
+        }
+
+        function verifyAnswer() {
+            const q = questions[currentIndex];
+            const s = state[currentIndex];
+            if (s.verified || s.selected === null) return;
+
+            const isCorrect = (s.selected === q.correct);
+            s.verified = true;
+            s.correct = isCorrect;
+            if (isCorrect) totalCorrect++;
+
+            renderQuestion();
+        }
+
+        function goToPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function goToNext() {
+            const s = state[currentIndex];
+            if (!s.verified) return;
+            if (currentIndex < totalQuestions - 1) {
+                currentIndex++;
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('question-container').style.display = 'none';
+            resultContainer.style.display = 'block';
+            const pct = Math.round((totalCorrect / totalQuestions) * 100);
+            scoreDisplay.textContent = pct + '%';
+            let msg = '';
+            if (pct >= 90) msg = '¡Excelente! Dominas los conceptos de las estadísticas vitales.';
+            else if (pct >= 70) msg = 'Buen trabajo, revisa los temas con menor puntuación, especialmente definiciones y glosario.';
+            else if (pct >= 50) msg = 'Es necesario estudiar más a fondo las secciones y el glosario.';
+            else msg = 'Te recomendamos leer nuevamente la síntesis metodológica y volver a intentarlo.';
+            scoreMessage.textContent = msg;
+        }
+
+        function restart() {
+            for (let i = 0; i < totalQuestions; i++) {
+                state[i] = { selected: null, verified: false, correct: false };
+            }
+            totalCorrect = 0;
+            currentIndex = 0;
+            document.getElementById('question-container').style.display = 'block';
+            resultContainer.style.display = 'none';
+            renderQuestion();
+        }
+
+        verifyBtn.addEventListener('click', verifyAnswer);
+        prevBtn.addEventListener('click', goToPrev);
+        nextBtn.addEventListener('click', goToNext);
+        restartBtn.addEventListener('click', restart);
+
+        renderQuestion();
+    </script>
+</body>
+</html>
