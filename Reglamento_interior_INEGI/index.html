@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Estudio - Reglamento Interior INEGI (Arts. 1 y 3)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #f0f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 20px;
+        }
+        #app {
+            max-width: 940px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+            padding: 30px 35px;
+            transition: all 0.2s;
+        }
+        h1 {
+            font-size: 26px;
+            color: #0b2b4a;
+            margin-top: 0;
+            margin-bottom: 6px;
+            border-bottom: 4px solid #1d6f9c;
+            padding-bottom: 14px;
+        }
+        .subtitle {
+            color: #2c3e50;
+            font-weight: 400;
+            margin-top: -5px;
+            margin-bottom: 22px;
+            font-size: 15px;
+            background: #e8f0fe;
+            padding: 8px 14px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+        #question-number {
+            font-weight: 700;
+            color: #1a4972;
+            font-size: 18px;
+            margin: 0 0 5px 0;
+        }
+        #question-text {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #1e2a36;
+            margin: 8px 0 18px 0;
+            padding: 12px 16px;
+            background: #f6faff;
+            border-radius: 12px;
+            border-left: 5px solid #1d6f9c;
+        }
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 16px 0 20px 0;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #fafcff;
+            border: 1.5px solid #dce5f0;
+            border-radius: 12px;
+            padding: 12px 20px;
+            transition: background 0.15s, border-color 0.15s;
+            cursor: pointer;
+        }
+        .option-item:hover {
+            background: #e9eff7;
+            border-color: #8fb3e0;
+        }
+        .option-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            accent-color: #1d6f9c;
+            cursor: pointer;
+        }
+        .option-item label {
+            font-size: 16px;
+            cursor: pointer;
+            flex: 1;
+            color: #1e2a36;
+        }
+        .option-item.correct-verified {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        .option-item.incorrect-verified {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        .option-item.disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
+        .option-item.disabled:hover {
+            background: #fafcff;
+            border-color: #dce5f0;
+        }
+        #feedback {
+            margin: 16px 0 18px 0;
+            padding: 16px 22px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            border-left: 6px solid #6c757d;
+            font-size: 15px;
+            line-height: 1.6;
+            display: none;
+        }
+        #feedback.show {
+            display: block;
+        }
+        #feedback.correct {
+            background: #e6f4ea;
+            border-left-color: #28a745;
+        }
+        #feedback.incorrect {
+            background: #fce8e8;
+            border-left-color: #dc3545;
+        }
+        #feedback .fb-title {
+            font-weight: 700;
+            font-size: 16px;
+        }
+        #feedback .fb-explain {
+            margin-top: 6px;
+            color: #1e2a36;
+        }
+        #feedback .fb-distractors {
+            margin-top: 8px;
+            color: #3d4a5a;
+            font-size: 14px;
+            border-top: 1px dashed #ced8e5;
+            padding-top: 8px;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+            align-items: center;
+        }
+        .btn {
+            padding: 10px 28px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            background: #eaeef3;
+            color: #1e2a36;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.05s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        .btn:hover:not(:disabled) {
+            background: #d3dce8;
+        }
+        .btn:active:not(:disabled) {
+            transform: scale(0.96);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .btn-primary {
+            background: #1d6f9c;
+            color: white;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #155a7a;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-success:hover:not(:disabled) {
+            background: #1e8e3a;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background: #5a6268;
+        }
+        #result {
+            margin-top: 28px;
+            padding: 24px;
+            background: #e2f0fa;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #0b2b4a;
+            display: none;
+        }
+        #result .score {
+            font-size: 48px;
+            color: #1a4972;
+        }
+        .progress-info {
+            font-size: 14px;
+            color: #4a5b6e;
+            margin-left: auto;
+        }
+        @media (max-width: 600px) {
+            #app { padding: 18px; }
+            h1 { font-size: 22px; }
+            .btn-group { flex-direction: column; align-items: stretch; }
+            .btn { text-align: center; }
+            .progress-info { margin-left: 0; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>📋 Guía de Estudio – Reglamento Interior INEGI</h1>
+        <div class="subtitle">Artículos 1 y 3 · Estructura y Organización</div>
+
+        <div id="question-container">
+            <div id="question-number"></div>
+            <div id="question-text"></div>
+            <div id="options-container"></div>
+            <div id="feedback"></div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" id="prev-btn" disabled>◀ Anterior</button>
+                <button class="btn btn-primary" id="verify-btn" disabled>✔ Verificar</button>
+                <button class="btn btn-success" id="next-btn" disabled>Siguiente ▶</button>
+                <span class="progress-info" id="progress-label">Pregunta 1 de 20</span>
+            </div>
+        </div>
+
+        <div id="result">
+            <div>📈 Has completado todas las preguntas</div>
+            <div class="score" id="score-display">0%</div>
+            <div style="font-weight:400; font-size:16px; margin-top:6px;" id="score-message"></div>
+            <button class="btn btn-primary" id="restart-btn" style="margin-top:16px;">🔄 Reiniciar</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== PREGUNTAS (20) ==========
+        const questions = [
+            // 1. Naturaleza del INEGI (Completar)
+            {
+                type: 'completar',
+                question: 'El Instituto Nacional de Estadística y Geografía es el organismo público con autonomía técnica y de gestión, personalidad jurídica y ________ propios, responsable de normar y coordinar el Sistema Nacional de Información Estadística y Geográfica.',
+                options: ['A) patrimonio', 'B) presupuesto', 'C) recursos', 'D) bienes'],
+                correct: 0,
+                explanation: 'Artículo 1: "El Instituto Nacional de Estadística y Geografía... es el organismo público con autonomía técnica y de gestión, personalidad jurídica y patrimonio propios".',
+                distractors: 'Presupuesto, recursos y bienes son conceptos relacionados, pero el término exacto es "patrimonio".'
+            },
+            // 2. Objeto del Reglamento (Completar)
+            {
+                type: 'completar',
+                question: 'El Reglamento Interior tiene por objeto reglamentar la forma y términos en que el Instituto ejercerá las atribuciones que la Constitución, la Ley del Sistema, así como otras leyes, reglamentos, decretos y ________ de la Junta de Gobierno le confieren.',
+                options: ['A) acuerdos', 'B) resoluciones', 'C) disposiciones', 'D) lineamientos'],
+                correct: 0,
+                explanation: 'Artículo 1: "... así como otras Leyes, Reglamentos, Decretos y Acuerdos de la Junta de Gobierno le confieren."',
+                distractors: 'Resoluciones, disposiciones y lineamientos no son los términos exactos del artículo 1.'
+            },
+            // 3. Unidad de Estadísticas Sociodemográficas (Relación)
+            {
+                type: 'relacion',
+                question: 'Relacione la Dirección General Adjunta con la Unidad Administrativa a la que pertenece según el artículo 3:<br>1. Dirección General Adjunta del Censo de Población y Vivienda<br>2. Dirección General Adjunta de Índices de Precios<br>3. Dirección General Adjunta de Información Geográfica Básica<br><br>A) Unidad de Estadísticas Económicas<br>B) Unidad de Estadísticas Sociodemográficas<br>C) Unidad de Geografía y Medio Ambiente',
+                options: ['A) 1-B, 2-A, 3-C', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-A, 3-B', 'D) 1-B, 2-C, 3-A'],
+                correct: 0,
+                explanation: 'Artículo 3: I. Unidad de Estadísticas Sociodemográficas incluye la Dirección General Adjunta del Censo de Población y Vivienda; II. Unidad de Estadísticas Económicas incluye la Dirección General Adjunta de Índices de Precios; III. Unidad de Geografía y Medio Ambiente incluye la Dirección General Adjunta de Información Geográfica Básica.',
+                distractors: 'Las otras opciones asignan incorrectamente las Direcciones a las Unidades.'
+            },
+            // 4. Unidad de Estadísticas de Gobierno (Completar)
+            {
+                type: 'completar',
+                question: 'La Unidad de Estadísticas de Gobierno, Seguridad Pública y Justicia cuenta, entre otras, con la Dirección General Adjunta de ________ Nacionales de Gobierno, Seguridad Pública y Justicia.',
+                options: ['A) Encuestas', 'B) Censos', 'C) Registros', 'D) Políticas'],
+                correct: 0,
+                explanation: 'Artículo 3, fracción I Bis: "a) Dirección General Adjunta de Políticas y Censos Nacionales de Gobierno; b) Dirección General Adjunta de Encuestas Nacionales de Gobierno, Seguridad Pública y Justicia; c) Dirección General Adjunta de Desarrollo, Análisis e Indicadores de Gobierno." La fracción b corresponde a Encuestas.',
+                distractors: 'Censos es parte de otra Dirección; Registros y Políticas no son el nombre exacto.'
+            },
+            // 5. Unidad de Estadísticas Económicas (Relación)
+            {
+                type: 'relacion',
+                question: 'Relacione la Dirección General Adjunta con la Unidad de Estadísticas Económicas según el artículo 3:<br>1. Dirección General Adjunta de Cuentas Nacionales<br>2. Dirección General Adjunta de Censos Económicos y Agropecuarios<br>3. Dirección General Adjunta de Registros Administrativos Económicos<br><br>A) Pertenece a la Unidad de Estadísticas Económicas<br>B) Pertenece a la Unidad de Estadísticas Sociodemográficas<br>C) Pertenece a la Unidad de Geografía y Medio Ambiente',
+                options: ['A) 1-A, 2-A, 3-A', 'B) 1-A, 2-B, 3-A', 'C) 1-B, 2-A, 3-C', 'D) 1-A, 2-C, 3-B'],
+                correct: 0,
+                explanation: 'Artículo 3, fracción II: todas las Direcciones Generales Adjuntas mencionadas (Cuentas Nacionales, Censos Económicos y Agropecuarios, Registros Administrativos Económicos) pertenecen a la Unidad de Estadísticas Económicas.',
+                distractors: 'Las otras opciones asignan incorrectamente algunas Direcciones a otras Unidades.'
+            },
+            // 6. Unidad de Geografía y Medio Ambiente (Completar)
+            {
+                type: 'completar',
+                question: 'La Unidad de Geografía y Medio Ambiente incluye la Dirección General Adjunta de ________ de Información Geoespacial.',
+                options: ['A) Integración', 'B) Generación', 'C) Análisis', 'D) Validación'],
+                correct: 0,
+                explanation: 'Artículo 3, fracción III: "d) Dirección General Adjunta de Integración de Información Geoespacial".',
+                distractors: 'Generación, Análisis y Validación no son los nombres exactos de esa Dirección.'
+            },
+            // 7. Dirección General de Integración, Análisis e Investigación (Relación)
+            {
+                type: 'relacion',
+                question: 'Relacione la Dirección General Adjunta con la Dirección General de Integración, Análisis e Investigación:<br>1. Dirección General Adjunta de Integración de Información<br>2. Dirección General Adjunta de Análisis de la Información y Estudios Económicos<br>3. Dirección General Adjunta de Investigación<br><br>A) Pertenece a la Dirección General de Integración, Análisis e Investigación<br>B) Pertenece a otra Dirección General',
+                options: ['A) 1-A, 2-A, 3-A', 'B) 1-A, 2-B, 3-A', 'C) 1-B, 2-A, 3-B', 'D) 1-A, 2-A, 3-B'],
+                correct: 0,
+                explanation: 'Artículo 3, fracción IV: "Dirección General de Integración, Análisis e Investigación" incluye las tres Direcciones Generales Adjuntas mencionadas.',
+                distractors: 'Las otras opciones asignan incorrectamente alguna de las Direcciones a otra entidad.'
+            },
+            // 8. Dirección General de Coordinación del Sistema (Completar)
+            {
+                type: 'completar',
+                question: 'La Dirección General de Coordinación del Sistema Nacional de Información Estadística y Geográfica cuenta con la Dirección General Adjunta de Planeación e ________.',
+                options: ['A) Infraestructura', 'B) Desarrollo', 'C) Operación', 'D) Evaluación'],
+                correct: 0,
+                explanation: 'Artículo 3, fracción V: "a) Dirección General Adjunta de Planeación e Infraestructura".',
+                distractors: 'Desarrollo, Operación y Evaluación no son los nombres exactos de esa Dirección.'
+            },
+            // 9. Dirección General de Comunicación (Relación)
+            {
+                type: 'relacion',
+                question: 'Relacione la Dirección General Adjunta con la Dirección General de Comunicación, Servicio Público de Información y Relaciones Institucionales:<br>1. Dirección General Adjunta de Comunicación<br>2. Dirección General Adjunta de Relaciones Institucionales<br>3. Dirección General Adjunta de Difusión y Servicio Público de Información<br><br>A) Pertenece a la Dirección General de Comunicación, Servicio Público de Información y Relaciones Institucionales<br>B) Pertenece a otra Dirección General',
+                options: ['A) 1-A, 2-A, 3-A', 'B) 1-A, 2-B, 3-A', 'C) 1-B, 2-A, 3-B', 'D) 1-A, 2-A, 3-B'],
+                correct: 0,
+                explanation: 'Artículo 3, fracción VI: la Dirección General de Comunicación, Servicio Público de Información y Relaciones Institucionales incluye las tres Direcciones Generales Adjuntas mencionadas.',
+                distractors: 'Las otras opciones asignan incorrectamente alguna de las Direcciones.'
+            },
+            // 10. Dirección General de Administración (Completar)
+            {
+                type: 'completar',
+                question: 'La Dirección General de Administración incluye la Dirección General Adjunta de Recursos Materiales y Servicios Generales, así como la Dirección General Adjunta de Control Interno y ________.',
+                options: ['A) Transparencia', 'B) Evaluación', 'C) Riesgos', 'D) Calidad'],
+                correct: 0,
+                explanation: 'Artículo 3, fracción VII: "d) Dirección General Adjunta de Control Interno y Transparencia". (Reforma 2025)',
+                distractors: 'Evaluación, Riesgos y Calidad no son los nombres exactos de esa Dirección según el artículo 3.'
+            },
+            // 11. Direcciones Generales adicionales (Relación)
+            {
+                type: 'relacion',
+                question: 'Relacione la Dirección General con su función principal según el artículo 3:<br>1. Dirección General de Asuntos Jurídicos<br>2. Dirección General de Informática<br>3. Dirección General de Operación Regional<br><br>A) Apoyo jurídico y representación legal.<br>B) Tecnologías de la información y comunicaciones.<br>C) Coordinación de las direcciones regionales.',
+                options: ['A) 1-A, 2-B, 3-C', 'B) 1-B, 2-A, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-A, 2-C, 3-B'],
+                correct: 0,
+                explanation: 'Artículo 3: VIII. Dirección General de Asuntos Jurídicos; IX. Dirección General de Informática; X. Dirección General de Operación Regional (con sus direcciones regionales). Las funciones se deducen de sus nombres y el contexto del reglamento.',
+                distractors: 'Las otras opciones asignan incorrectamente las funciones.'
+            },
+            // 12. Coordinación General de Estrategia Digital (Completar)
+            {
+                type: 'completar',
+                question: 'La Coordinación General de Estrategia Digital fue adicionada al artículo 3 mediante reforma publicada en el DOF el 4 de marzo de ________.',
+                options: ['A) 2024', 'B) 2025', 'C) 2023', 'D) 2022'],
+                correct: 0,
+                explanation: 'El artículo 3, fracción XI fue adicionado por reforma publicada en el DOF el 4 de marzo de 2024.',
+                distractors: '2025 es la fecha de la última reforma general, pero la adición de esta fracción fue en 2024.'
+            },
+            // 13. Unidad de Estadísticas Sociodemográficas - Direcciones (Relación)
+            {
+                type: 'relacion',
+                question: 'Relacione la Dirección General Adjunta con su unidad correspondiente:<br>1. Dirección General Adjunta de Registros Administrativos Sociodemográficos<br>2. Dirección General Adjunta de Censos Económicos y Agropecuarios<br>3. Dirección General Adjunta de Recursos Naturales y Medio Ambiente<br><br>A) Unidad de Estadísticas Sociodemográficas<br>B) Unidad de Estadísticas Económicas<br>C) Unidad de Geografía y Medio Ambiente',
+                options: ['A) 1-A, 2-B, 3-C', 'B) 1-B, 2-A, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-A, 2-C, 3-B'],
+                correct: 0,
+                explanation: 'Artículo 3: I. Unidad de Estadísticas Sociodemográficas incluye Registros Administrativos Sociodemográficos; II. Unidad de Estadísticas Económicas incluye Censos Económicos y Agropecuarios; III. Unidad de Geografía y Medio Ambiente incluye Recursos Naturales y Medio Ambiente.',
+                distractors: 'Las otras opciones asignan incorrectamente las Direcciones a las Unidades.'
+            },
+            // 14. Dirección General Adjunta de Encuestas Sociodemográficas (Completar)
+            {
+                type: 'completar',
+                question: 'La Dirección General Adjunta de Encuestas Sociodemográficas pertenece a la Unidad de ________.',
+                options: ['A) Estadísticas Sociodemográficas', 'B) Estadísticas Económicas', 'C) Estadísticas de Gobierno', 'D) Geografía y Medio Ambiente'],
+                correct: 0,
+                explanation: 'Artículo 3, fracción I, inciso b: "Dirección General Adjunta de Encuestas Sociodemográficas" dentro de la Unidad de Estadísticas Sociodemográficas.',
+                distractors: 'Las otras unidades no incluyen esa Dirección.'
+            },
+            // 15. Dirección General Adjunta de Políticas y Censos Nacionales de Gobierno (Relación)
+            {
+                type: 'relacion',
+                question: 'Relacione la Dirección General Adjunta con la Unidad Administrativa a la que pertenece:<br>1. Dirección General Adjunta de Políticas y Censos Nacionales de Gobierno<br>2. Dirección General Adjunta de Cuentas Nacionales<br>3. Dirección General Adjunta de Información Geográfica para la Administración del Territorio<br><br>A) Unidad de Estadísticas de Gobierno, Seguridad Pública y Justicia<br>B) Unidad de Estadísticas Económicas<br>C) Unidad de Geografía y Medio Ambiente',
+                options: ['A) 1-A, 2-B, 3-C', 'B) 1-B, 2-A, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-A, 2-C, 3-B'],
+                correct: 0,
+                explanation: 'Artículo 3: I Bis. Unidad de Estadísticas de Gobierno... incluye Políticas y Censos Nacionales de Gobierno; II. Unidad de Estadísticas Económicas incluye Cuentas Nacionales; III. Unidad de Geografía y Medio Ambiente incluye Información Geográfica para la Administración del Territorio.',
+                distractors: 'Las otras opciones asignan incorrectamente las Direcciones.'
+            },
+            // 16. Dirección General de Administración - incisos (Completar)
+            {
+                type: 'completar',
+                question: 'De acuerdo con el artículo 3, fracción VII, la Dirección General de Administración cuenta con la Dirección General Adjunta de Recursos Humanos, de Presupuesto y Recursos Financieros, de Recursos Materiales y Servicios Generales, y de Control Interno y ________.',
+                options: ['A) Transparencia', 'B) Evaluación', 'C) Riesgos', 'D) Calidad'],
+                correct: 0,
+                explanation: 'Artículo 3, fracción VII, inciso d: "Dirección General Adjunta de Control Interno y Transparencia".',
+                distractors: 'Evaluación, Riesgos y Calidad no son los nombres exactos de esa Dirección.'
+            },
+            // 17. Unidad de Geografía y Medio Ambiente - Direcciones (Relación)
+            {
+                type: 'relacion',
+                question: 'Relacione la Dirección General Adjunta con la Unidad de Geografía y Medio Ambiente:<br>1. Dirección General Adjunta de Información Geográfica Básica<br>2. Dirección General Adjunta de Recursos Naturales y Medio Ambiente<br>3. Dirección General Adjunta de Integración de Información Geoespacial<br><br>A) Pertenece a la Unidad de Geografía y Medio Ambiente<br>B) Pertenece a otra Unidad',
+                options: ['A) 1-A, 2-A, 3-A', 'B) 1-A, 2-B, 3-A', 'C) 1-B, 2-A, 3-B', 'D) 1-A, 2-A, 3-B'],
+                correct: 0,
+                explanation: 'Artículo 3, fracción III: todas estas Direcciones Generales Adjuntas pertenecen a la Unidad de Geografía y Medio Ambiente.',
+                distractors: 'Las otras opciones asignan incorrectamente alguna de las Direcciones a otra Unidad.'
+            },
+            // 18. Dirección General Adjunta de Desarrollo, Análisis e Indicadores de Gobierno (Completar)
+            {
+                type: 'completar',
+                question: 'La Dirección General Adjunta de Desarrollo, Análisis e Indicadores de Gobierno pertenece a la Unidad de Estadísticas de Gobierno, Seguridad Pública y ________.',
+                options: ['A) Justicia', 'B) Justicia y Derechos Humanos', 'C) Justicia y Seguridad', 'D) Justicia y Procuración'],
+                correct: 0,
+                explanation: 'Artículo 3, fracción I Bis: "Unidad de Estadísticas de Gobierno, Seguridad Pública y Justicia".',
+                distractors: 'Las otras opciones no coinciden con el nombre exacto de la Unidad.'
+            },
+            // 19. Dirección General Adjunta de Encuestas Económicas (Relación)
+            {
+                type: 'relacion',
+                question: 'Relacione la Dirección General Adjunta con la Unidad correspondiente:<br>1. Dirección General Adjunta de Encuestas Económicas<br>2. Dirección General Adjunta de Encuestas Nacionales de Gobierno, Seguridad Pública y Justicia<br>3. Dirección General Adjunta de Encuestas Sociodemográficas<br><br>A) Unidad de Estadísticas Sociodemográficas<br>B) Unidad de Estadísticas Económicas<br>C) Unidad de Estadísticas de Gobierno, Seguridad Pública y Justicia',
+                options: ['A) 1-B, 2-C, 3-A', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-B, 2-A, 3-C'],
+                correct: 0,
+                explanation: 'Artículo 3: I. Unidad de Estadísticas Sociodemográficas incluye Encuestas Sociodemográficas; II. Unidad de Estadísticas Económicas incluye Encuestas Económicas; I Bis. Unidad de Estadísticas de Gobierno... incluye Encuestas Nacionales de Gobierno, Seguridad Pública y Justicia.',
+                distractors: 'Las otras opciones asignan incorrectamente las Direcciones.'
+            },
+            // 20. Reforma de 2025 y cambios de denominación (Completar)
+            {
+                type: 'completar',
+                question: 'Mediante reforma publicada en el DOF el 7 de mayo de 2025, se modificó la denominación de las "Direcciones Generales" de Estadísticas Sociodemográficas, Económicas, de Gobierno, y Geografía y Medio Ambiente, para convertirlas en ________.',
+                options: ['A) Unidades', 'B) Coordinaciones', 'C) Subdirecciones', 'D) Direcciones Generales Adjuntas'],
+                correct: 0,
+                explanation: 'La reforma de 2025 (artículos transitorios) cambió la denominación de esas Direcciones Generales a "Unidades" para alinearse con el artículo 3 reformado.',
+                distractors: 'Coordinaciones, Subdirecciones y Direcciones Generales Adjuntas no corresponden al cambio realizado.'
+            }
+        ];
+
+        // ========== LÓGICA DE LA APLICACIÓN ==========
+        let currentIndex = 0;
+        const totalQuestions = questions.length;
+        const state = questions.map(() => ({ selected: null, verified: false, correct: false }));
+
+        const questionNumberEl = document.getElementById('question-number');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackEl = document.getElementById('feedback');
+        const prevBtn = document.getElementById('prev-btn');
+        const verifyBtn = document.getElementById('verify-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressLabel = document.getElementById('progress-label');
+        const resultContainer = document.getElementById('result');
+        const scoreDisplay = document.getElementById('score-display');
+        const scoreMessage = document.getElementById('score-message');
+        const restartBtn = document.getElementById('restart-btn');
+
+        let totalCorrect = 0;
+
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            const s = state[currentIndex];
+            const isVerified = s.verified;
+
+            questionNumberEl.textContent = `Pregunta ${currentIndex + 1} de ${totalQuestions}`;
+            questionTextEl.innerHTML = q.question;
+
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const div = document.createElement('div');
+                div.className = 'option-item';
+
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'question';
+                radio.value = idx;
+                radio.id = `opt_${idx}`;
+                if (isVerified) {
+                    radio.disabled = true;
+                    div.classList.add('disabled');
+                    if (idx === q.correct) {
+                        div.classList.add('correct-verified');
+                    } else if (s.selected === idx && idx !== q.correct) {
+                        div.classList.add('incorrect-verified');
+                    }
+                } else {
+                    if (s.selected === idx) {
+                        radio.checked = true;
+                    }
+                    radio.addEventListener('change', () => {
+                        if (!s.verified) {
+                            s.selected = idx;
+                            verifyBtn.disabled = false;
+                        }
+                    });
+                }
+
+                const label = document.createElement('label');
+                label.htmlFor = `opt_${idx}`;
+                label.textContent = opt;
+
+                div.appendChild(radio);
+                div.appendChild(label);
+                optionsContainer.appendChild(div);
+            });
+
+            if (isVerified) {
+                const isCorrect = (s.selected === q.correct);
+                feedbackEl.className = 'show ' + (isCorrect ? 'correct' : 'incorrect');
+                feedbackEl.innerHTML = `
+                    <div class="fb-title">${isCorrect ? '✅ Correcto' : '❌ Incorrecto'}</div>
+                    <div class="fb-explain"><strong>Justificación:</strong> ${q.explanation}</div>
+                    <div class="fb-distractors"><strong>Análisis de distractores:</strong> ${q.distractors}</div>
+                `;
+                feedbackEl.style.display = 'block';
+            } else {
+                feedbackEl.className = '';
+                feedbackEl.innerHTML = '';
+                feedbackEl.style.display = 'none';
+            }
+
+            verifyBtn.disabled = isVerified || s.selected === null;
+            prevBtn.disabled = (currentIndex === 0);
+            nextBtn.disabled = !s.verified;
+            progressLabel.textContent = `Pregunta ${currentIndex + 1} de ${totalQuestions}`;
+        }
+
+        function verifyAnswer() {
+            const q = questions[currentIndex];
+            const s = state[currentIndex];
+            if (s.verified || s.selected === null) return;
+
+            const isCorrect = (s.selected === q.correct);
+            s.verified = true;
+            s.correct = isCorrect;
+            if (isCorrect) totalCorrect++;
+
+            renderQuestion();
+        }
+
+        function goToPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function goToNext() {
+            const s = state[currentIndex];
+            if (!s.verified) return;
+            if (currentIndex < totalQuestions - 1) {
+                currentIndex++;
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('question-container').style.display = 'none';
+            resultContainer.style.display = 'block';
+            const pct = Math.round((totalCorrect / totalQuestions) * 100);
+            scoreDisplay.textContent = pct + '%';
+            let msg = '';
+            if (pct >= 90) msg = '¡Excelente! Conoces a fondo la organización del INEGI según su Reglamento Interior.';
+            else if (pct >= 70) msg = 'Buen trabajo, repasa la estructura de Unidades y Direcciones.';
+            else if (pct >= 50) msg = 'Es necesario estudiar más los artículos 1 y 3.';
+            else msg = 'Te recomendamos leer nuevamente el Reglamento Interior, especialmente los artículos 1 y 3.';
+            scoreMessage.textContent = msg;
+        }
+
+        function restart() {
+            for (let i = 0; i < totalQuestions; i++) {
+                state[i] = { selected: null, verified: false, correct: false };
+            }
+            totalCorrect = 0;
+            currentIndex = 0;
+            document.getElementById('question-container').style.display = 'block';
+            resultContainer.style.display = 'none';
+            renderQuestion();
+        }
+
+        verifyBtn.addEventListener('click', verifyAnswer);
+        prevBtn.addEventListener('click', goToPrev);
+        nextBtn.addEventListener('click', goToNext);
+        restartBtn.addEventListener('click', restart);
+
+        renderQuestion();
+    </script>
+</body>
+</html>
