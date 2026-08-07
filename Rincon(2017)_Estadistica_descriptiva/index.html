@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Estudio - Estadística Inferencial</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: #f4f7fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 20px;
+        }
+        #app {
+            max-width: 900px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            padding: 30px 35px;
+            transition: all 0.2s;
+        }
+        h1 {
+            font-size: 26px;
+            color: #0b2b4a;
+            margin-top: 0;
+            margin-bottom: 8px;
+            border-bottom: 3px solid #2a7de1;
+            padding-bottom: 12px;
+        }
+        .subtitle {
+            color: #2c3e50;
+            font-weight: 400;
+            margin-top: -5px;
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+        #question-number {
+            font-weight: 600;
+            color: #1a4972;
+            font-size: 18px;
+            margin: 0 0 6px 0;
+        }
+        #question-text {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #1e2a36;
+            margin: 10px 0 20px 0;
+            padding: 10px 14px;
+            background: #f0f5ff;
+            border-radius: 10px;
+        }
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 18px 0 22px 0;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fafcff;
+            border: 1.5px solid #dce5f0;
+            border-radius: 10px;
+            padding: 12px 18px;
+            transition: background 0.15s, border-color 0.15s;
+            cursor: pointer;
+        }
+        .option-item:hover {
+            background: #e8eff9;
+            border-color: #8fb3e0;
+        }
+        .option-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            accent-color: #2a7de1;
+            cursor: pointer;
+        }
+        .option-item label {
+            font-size: 16px;
+            cursor: pointer;
+            flex: 1;
+            color: #1e2a36;
+        }
+        .option-item.correct-verified {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        .option-item.incorrect-verified {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        .option-item.disabled {
+            opacity: 0.75;
+            cursor: default;
+        }
+        .option-item.disabled:hover {
+            background: #fafcff;
+            border-color: #dce5f0;
+        }
+        #feedback {
+            margin: 18px 0 20px 0;
+            padding: 16px 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border-left: 6px solid #6c757d;
+            font-size: 15px;
+            line-height: 1.6;
+            display: none;
+        }
+        #feedback.show {
+            display: block;
+        }
+        #feedback.correct {
+            background: #e6f4ea;
+            border-left-color: #28a745;
+        }
+        #feedback.incorrect {
+            background: #fce8e8;
+            border-left-color: #dc3545;
+        }
+        #feedback .fb-title {
+            font-weight: 700;
+            font-size: 16px;
+        }
+        #feedback .fb-explain {
+            margin-top: 6px;
+            color: #1e2a36;
+        }
+        #feedback .fb-distractors {
+            margin-top: 8px;
+            color: #3d4a5a;
+            font-size: 14px;
+            border-top: 1px dashed #ced8e5;
+            padding-top: 8px;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 10px;
+            align-items: center;
+        }
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 15px;
+            background: #eaeef3;
+            color: #1e2a36;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.05s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        .btn:hover:not(:disabled) {
+            background: #d3dce8;
+        }
+        .btn:active:not(:disabled) {
+            transform: scale(0.96);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .btn-primary {
+            background: #2a7de1;
+            color: white;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #1d66c4;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-success:hover:not(:disabled) {
+            background: #1e8e3a;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background: #5a6268;
+        }
+        #result {
+            margin-top: 25px;
+            padding: 20px;
+            background: #e2f0fa;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #0b2b4a;
+            display: none;
+        }
+        #result .score {
+            font-size: 42px;
+            color: #1a4972;
+        }
+        .progress-info {
+            font-size: 14px;
+            color: #4a5b6e;
+            margin-left: auto;
+        }
+        @media (max-width: 600px) {
+            #app { padding: 18px; }
+            h1 { font-size: 22px; }
+            .btn-group { flex-direction: column; align-items: stretch; }
+            .btn { text-align: center; }
+            .progress-info { margin-left: 0; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>📊 Guía de Estudio – Análisis Exploratorio de Datos</h1>
+        <div class="subtitle">Basado en <em>Estadística inferencial</em> · Rincón Solís (págs. 11–88)</div>
+
+        <div id="question-container">
+            <div id="question-number"></div>
+            <div id="question-text"></div>
+            <div id="options-container"></div>
+            <div id="feedback"></div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" id="prev-btn" disabled>◀ Anterior</button>
+                <button class="btn btn-primary" id="verify-btn" disabled>✔ Verificar</button>
+                <button class="btn btn-success" id="next-btn" disabled>Siguiente ▶</button>
+                <span class="progress-info" id="progress-label">Pregunta 1 de 50</span>
+            </div>
+        </div>
+
+        <div id="result">
+            <div>📈 Has completado todas las preguntas</div>
+            <div class="score" id="score-display">0%</div>
+            <div style="font-weight:400; font-size:16px; margin-top:6px;" id="score-message"></div>
+            <button class="btn btn-primary" id="restart-btn" style="margin-top:16px;">🔄 Reiniciar</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== PREGUNTAS (50) ==========
+        const questions = [{
+            id: 1,
+            type: 'completar',
+            question: 'La medida de tendencia central que divide a un conjunto de datos ordenados en dos partes iguales se denomina ________.',
+            options: ['A) Rango', 'B) Media', 'C) Mediana', 'D) Moda'],
+            correct: 2,
+            explanation: 'La mediana es el valor que ocupa la posición central en un conjunto de datos ordenados, dividiendo la distribución en dos mitades con igual número de observaciones (definición formal).',
+            distractors: 'Rango mide dispersión; Media es el promedio aritmético; Moda es el valor más frecuente. Ninguno de estos divide en dos partes iguales.'
+        }, {
+            id: 2,
+            type: 'multiple',
+            question: '¿Cuál de las siguientes afirmaciones es correcta respecto a la media aritmética?',
+            options: ['A) Es sensible a valores extremos.', 'B) Siempre es igual a la mediana.', 'C) Es la medida de dispersión más común.', 'D) Solo se puede calcular para datos cualitativos.'],
+            correct: 0,
+            explanation: 'La media aritmética es sensible a valores atípicos (extremos), ya que utiliza todas las observaciones en su cálculo. Esta propiedad la diferencia de la mediana.',
+            distractors: 'No siempre es igual a la mediana; es una medida de tendencia central, no de dispersión; se aplica a datos cuantitativos, no cualitativos.'
+        }, {
+            id: 3,
+            type: 'relacion',
+            question: 'Relacione correctamente la medida con su definición:<br>1. Varianza<br>2. Desviación estándar<br>3. Coeficiente de variación<br><br>A) Raíz cuadrada de la varianza<br>B) Desviación estándar entre la media<br>C) Promedio de cuadrados de desviaciones',
+            options: [
+                'A) 1-C, 2-A, 3-B',
+                'B) 1-A, 2-B, 3-C',
+                'C) 1-B, 2-C, 3-A',
+                'D) 1-A, 2-C, 3-B'
+            ],
+            correct: 0,
+            explanation: 'Varianza (C) = promedio de cuadrados de desviaciones; Desviación estándar (A) = raíz cuadrada de la varianza; Coeficiente de variación (B) = desviación estándar entre la media.',
+            distractors: 'Las otras opciones invierten las correspondencias, confundiendo varianza con desviación estándar o con coeficiente de variación.'
+        }, {
+            id: 4,
+            type: 'completar',
+            question: 'El rango intercuartílico (IQR) se define como la diferencia entre el ________ y el ________.',
+            options: ['A) máximo, mínimo', 'B) media, mediana', 'C) cuartil 3, cuartil 1', 'D) percentil 90, percentil 10'],
+            correct: 2,
+            explanation: 'El IQR = Q₃ – Q₁, es decir, la distancia entre el tercer y el primer cuartil, y mide la dispersión del 50% central de los datos.',
+            distractors: 'Rango usa máximo y mínimo; percentil 90 y 10 definen otro rango interpercentílico; media y mediana son medidas de posición.'
+        }, {
+            id: 5,
+            type: 'multiple',
+            question: 'En un histograma, el área de cada barra es proporcional a:',
+            options: ['A) la frecuencia absoluta de la clase.', 'B) la marca de clase.', 'C) la amplitud del intervalo.', 'D) la frecuencia relativa de la clase.'],
+            correct: 3,
+            explanation: 'En un histograma, el área de cada rectángulo es proporcional a la frecuencia (absoluta o relativa) de la clase. Si todas las clases tienen igual amplitud, la altura es proporcional a la frecuencia.',
+            distractors: 'La marca de clase es el punto medio, no el área; la amplitud afecta la base, no el área total; la frecuencia absoluta es proporcional solo si las bases son iguales, pero el área es la medida general.'
+        }, {
+            id: 6,
+            type: 'relacion',
+            question: 'Asocie el tipo de sesgo con su característica:<br>1. Sesgo positivo<br>2. Sesgo negativo<br>3. Simétrica',
+            options: [
+                'A) 1-media>mediana, 2-media<mediana, 3-media=mediana',
+                'B) 1-media<mediana, 2-media>mediana, 3-media=mediana',
+                'C) 1-media=mediana, 2-media>mediana, 3-media<mediana',
+                'D) 1-media>mediana, 2-media=mediana, 3-media<mediana'
+            ],
+            correct: 0,
+            explanation: 'En sesgo positivo (cola a la derecha), la media > mediana; en sesgo negativo, media < mediana; en distribución simétrica, media = mediana.',
+            distractors: 'Las otras opciones invierten las relaciones o igualan incorrectamente.'
+        }, {
+            id: 7,
+            type: 'completar',
+            question: 'La curtosis mide el grado de ________ de una distribución en comparación con la normal.',
+            options: ['A) apuntamiento o achatamiento', 'B) asimetría', 'C) dispersión', 'D) tendencia central'],
+            correct: 0,
+            explanation: 'La curtosis cuantifica el apuntamiento (leptocúrtica) o achatamiento (platicúrtica) de la distribución relativo a la curva normal (mesocúrtica).',
+            distractors: 'Asimetría mide falta de simetría; dispersión y tendencia central son otros conceptos.'
+        }, {
+            id: 8,
+            type: 'multiple',
+            question: '¿Cuál de los siguientes gráficos es más adecuado para representar la distribución de una variable cuantitativa continua?',
+            options: ['A) Histograma', 'B) Diagrama de barras', 'C) Diagrama de sectores', 'D) Diagrama de tallo y hojas'],
+            correct: 0,
+            explanation: 'El histograma es el gráfico estándar para variables continuas agrupadas en intervalos; muestra la frecuencia o densidad de cada clase.',
+            distractors: 'Diagrama de barras es para variables cualitativas o discretas; sectores para proporciones; tallo y hojas es útil para conjuntos pequeños pero no es el más adecuado en general.'
+        }, {
+            id: 9,
+            type: 'relacion',
+            question: 'Relacione la medida de posición con su definición:<br>1. Cuartil<br>2. Decil<br>3. Percentil',
+            options: [
+                'A) 1-divide en 4 partes, 2-divide en 10 partes, 3-divide en 100 partes',
+                'B) 1-divide en 10, 2-en 4, 3-en 100',
+                'C) 1-en 100, 2-en 4, 3-en 10',
+                'D) 1-en 4, 2-en 100, 3-en 10'
+            ],
+            correct: 0,
+            explanation: 'Los cuartiles dividen en 4 partes iguales, los deciles en 10 y los percentiles en 100, según la definición formal.',
+            distractors: 'Las demás opciones intercambian incorrectamente el número de divisiones.'
+        }, {
+            id: 10,
+            type: 'completar',
+            question: 'La desviación estándar de una muestra se denota por ________, mientras que la de una población por ________.',
+            options: ['A) μ, σ', 'B) σ, s', 'C) s, σ', 'D) s², σ²'],
+            correct: 2,
+            explanation: 'Notación estándar: s para desviación estándar muestral y σ (sigma) para la poblacional.',
+            distractors: 'μ es la media poblacional; s² y σ² son las varianzas.'
+        }, {
+            id: 11,
+            type: 'multiple',
+            question: '¿Cuál de las siguientes afirmaciones es <strong>falsa</strong> respecto a la moda?',
+            options: ['A) Es la medida de tendencia central más afectada por valores extremos.', 'B) Puede haber más de una moda.', 'C) Se puede calcular para datos cualitativos.', 'D) Es el valor que más se repite.'],
+            correct: 0,
+            explanation: 'La moda no es afectada por valores extremos (es robusta); la afirmación falsa es que sea la más afectada, pues esa propiedad corresponde a la media.',
+            distractors: 'Las otras opciones son verdaderas: puede haber varias modas, se aplica a cualitativos y es el valor de mayor frecuencia.'
+        }, {
+            id: 12,
+            type: 'completar',
+            question: 'La fórmula para la varianza poblacional es la media de los cuadrados de las desviaciones respecto a la ________.',
+            options: ['A) mediana', 'B) moda', 'C) varianza', 'D) media'],
+            correct: 3,
+            explanation: 'Varianza poblacional: σ² = (1/N) Σ (xᵢ – μ)², donde μ es la media poblacional.',
+            distractors: 'La mediana y la moda no son el centro de referencia para la varianza; la varianza no es un centro.'
+        }, {
+            id: 13,
+            type: 'multiple',
+            question: 'En un diagrama de caja (boxplot), el "bigote" inferior se extiende hasta:',
+            options: ['A) el valor mínimo de los datos.', 'B) la media.', 'C) el primer cuartil menos 1.5 veces el rango intercuartílico, o el valor mínimo, el que sea mayor.', 'D) el valor máximo.'],
+            correct: 2,
+            explanation: 'Los bigotes en un boxplot llegan hasta el valor más extremo dentro de Q₁ – 1.5·IQR (o el mínimo si este es mayor), y lo mismo para el superior.',
+            distractors: 'El mínimo solo si no hay outliers; la media no se usa; el máximo corresponde al bigote superior.'
+        }, {
+            id: 14,
+            type: 'relacion',
+            question: 'Relacione el tipo de variable con su ejemplo:<br>1. Cualitativa nominal<br>2. Cualitativa ordinal<br>3. Cuantitativa continua',
+            options: [
+                'A) 1-color de ojos, 2-nivel de educación, 3-estatura',
+                'B) 1-estatura, 2-color, 3-nivel',
+                'C) 1-nivel, 2-estatura, 3-color',
+                'D) 1-color, 2-estatura, 3-nivel'
+            ],
+            correct: 0,
+            explanation: 'Color de ojos es nominal (sin orden); nivel de educación es ordinal (con orden); estatura es cuantitativa continua.',
+            distractors: 'Las otras opciones mezclan las categorías incorrectamente.'
+        }, {
+            id: 15,
+            type: 'completar',
+            question: 'La frecuencia relativa acumulada de un valor es la proporción de observaciones que son ________ a ese valor.',
+            options: ['A) menores o iguales', 'B) iguales', 'C) mayores', 'D) diferentes'],
+            correct: 0,
+            explanation: 'La frecuencia acumulada (absoluta o relativa) incluye todas las observaciones menores o iguales al valor considerado.',
+            distractors: 'Iguales sería solo la frecuencia puntual; mayores o diferentes no corresponden a la acumulación.'
+        }, {
+            id: 16,
+            type: 'multiple',
+            question: 'La medida de dispersión que se expresa en las mismas unidades que los datos y es la raíz cuadrada de la varianza es la ________.',
+            options: ['A) varianza', 'B) desviación estándar', 'C) rango', 'D) desviación media'],
+            correct: 1,
+            explanation: 'La desviación estándar es la raíz cuadrada de la varianza y tiene las mismas unidades que los datos originales.',
+            distractors: 'La varianza tiene unidades al cuadrado; el rango sí tiene mismas unidades pero no es raíz de la varianza; la desviación media también tiene mismas unidades pero no es raíz de la varianza.'
+        }, {
+            id: 17,
+            type: 'multiple',
+            question: '¿Qué propiedad cumple la media aritmética?',
+            options: ['A) La suma de las desviaciones respecto a la mediana es mínima.', 'B) La suma de las desviaciones respecto a la media es siempre cero.', 'C) Es siempre un valor entero.', 'D) Es robusta a valores atípicos.'],
+            correct: 1,
+            explanation: 'Propiedad algebraica de la media: Σ (xᵢ – μ) = 0. La suma de desviaciones respecto a la media siempre es cero.',
+            distractors: 'La suma de desviaciones respecto a la mediana no es cero (la mediana minimiza la suma de valores absolutos); la media no tiene por qué ser entera ni es robusta.'
+        }, {
+            id: 18,
+            type: 'relacion',
+            question: 'Relacione la medida de forma con su interpretación:<br>1. Sesgo > 0<br>2. Sesgo < 0<br>3. Sesgo = 0',
+            options: [
+                'A) 1-cola derecha larga, 2-cola izquierda larga, 3-simétrica',
+                'B) 1-cola izquierda, 2-cola derecha, 3-simétrica',
+                'C) 1-simétrica, 2-cola derecha, 3-cola izquierda',
+                'D) 1-cola derecha, 2-simétrica, 3-cola izquierda'
+            ],
+            correct: 0,
+            explanation: 'Sesgo positivo: cola a la derecha (media > mediana); sesgo negativo: cola a la izquierda; sesgo cero: simétrica.',
+            distractors: 'Las otras opciones invierten o confunden las colas.'
+        }, {
+            id: 19,
+            type: 'completar',
+            question: 'El coeficiente de variación se define como la razón entre la desviación estándar y la ________, expresada en porcentaje.',
+            options: ['A) mediana', 'B) media', 'C) varianza', 'D) rango'],
+            correct: 1,
+            explanation: 'CV = (σ / μ) × 100, donde μ es la media. Mide la dispersión relativa respecto a la media.',
+            distractors: 'La mediana, varianza o rango no son el denominador en la definición del CV.'
+        }, {
+            id: 20,
+            type: 'multiple',
+            question: '¿Cuál de los siguientes gráficos es apropiado para representar datos cualitativos?',
+            options: ['A) Diagrama de barras', 'B) Histograma', 'C) Ojiva', 'D) Boxplot'],
+            correct: 0,
+            explanation: 'El diagrama de barras es el gráfico estándar para variables cualitativas (nominales u ordinales), mostrando frecuencias por categoría.',
+            distractors: 'Histograma, ojiva y boxplot son para variables cuantitativas.'
+        }, {
+            id: 21,
+            type: 'relacion',
+            question: 'Asocie el percentil con su definición:<br>1. Percentil 50<br>2. Percentil 25<br>3. Percentil 75',
+            options: [
+                'A) 1-primer cuartil, 2-mediana, 3-tercer cuartil',
+                'B) 1-mediana, 2-primer cuartil, 3-tercer cuartil',
+                'C) 1-tercer cuartil, 2-mediana, 3-primer cuartil',
+                'D) 1-mediana, 2-tercer cuartil, 3-primer cuartil'
+            ],
+            correct: 1,
+            explanation: 'El percentil 50 es la mediana (Q₂), el percentil 25 es el primer cuartil (Q₁) y el percentil 75 es el tercer cuartil (Q₃).',
+            distractors: 'Las otras opciones intercambian el orden de los cuartiles.'
+        }, {
+            id: 22,
+            type: 'completar',
+            question: 'La ojiva es un gráfico que representa las ________ acumuladas.',
+            options: ['A) densidades', 'B) marcas de clase', 'C) desviaciones', 'D) frecuencias'],
+            correct: 3,
+            explanation: 'La ojiva es la representación gráfica de las frecuencias acumuladas (absolutas o relativas) de una variable cuantitativa.',
+            distractors: 'Densidades, marcas de clase o desviaciones no son lo que se acumula en una ojiva.'
+        }, {
+            id: 23,
+            type: 'multiple',
+            question: '¿Cuál de las siguientes afirmaciones es correcta sobre el rango?',
+            options: ['A) Utiliza solo dos valores extremos.', 'B) Es una medida robusta de dispersión.', 'C) Es siempre menor que la desviación estándar.', 'D) Se calcula como Q₃ – Q₁.'],
+            correct: 0,
+            explanation: 'El rango = máximo – mínimo, por lo que solo utiliza los dos valores extremos; no es robusto.',
+            distractors: 'No es robusto; no siempre es menor que la desviación estándar; Q₃ – Q₁ es el rango intercuartílico.'
+        }, {
+            id: 24,
+            type: 'relacion',
+            question: 'Relacione la notación con su significado:<br>1. x̄<br>2. μ<br>3. s²',
+            options: [
+                'A) 1-media poblacional, 2-media muestral, 3-varianza poblacional',
+                'B) 1-media muestral, 2-media poblacional, 3-varianza muestral',
+                'C) 1-varianza muestral, 2-media muestral, 3-media poblacional',
+                'D) 1-media muestral, 2-varianza muestral, 3-media poblacional'
+            ],
+            correct: 1,
+            explanation: 'x̄ es la media muestral, μ la media poblacional, y s² la varianza muestral.',
+            distractors: 'Las otras opciones confunden muestral con poblacional o asignan símbolos incorrectos.'
+        }, {
+            id: 25,
+            type: 'completar',
+            question: 'La desviación media absoluta es la media de los valores absolutos de las desviaciones respecto a la ________.',
+            options: ['A) mediana', 'B) media', 'C) moda', 'D) varianza'],
+            correct: 1,
+            explanation: 'La desviación media (absoluta) se define como (1/n) Σ |xᵢ – x̄|, es decir, respecto a la media.',
+            distractors: 'También podría definirse respecto a la mediana, pero la definición estándar usa la media; moda y varianza no son centros de referencia.'
+        }, {
+            id: 26,
+            type: 'multiple',
+            question: '¿Qué mide la asimetría de una distribución?',
+            options: ['A) el apuntamiento', 'B) la variabilidad', 'C) la falta de simetría', 'D) la tendencia central'],
+            correct: 2,
+            explanation: 'La asimetría (sesgo) mide el grado de falta de simetría de la distribución alrededor de su centro.',
+            distractors: 'El apuntamiento lo mide la curtosis; la variabilidad la miden la varianza o desviación; la tendencia central la miden media, mediana y moda.'
+        }, {
+            id: 27,
+            type: 'relacion',
+            question: 'Relacione el gráfico con su uso principal:<br>1. Histograma<br>2. Polígono de frecuencias<br>3. Diagrama de tallo y hojas',
+            options: [
+                'A) 1-variable continua, 2-cualitativa, 3-cuantitativa',
+                'B) 1-variable continua, 2-variable continua (frecuencias), 3-datos pequeños',
+                'C) 1-cualitativa, 2-cuantitativa, 3-cualitativa',
+                'D) 1-datos agrupados, 2-datos sin agrupar, 3-datos agrupados'
+            ],
+            correct: 1,
+            explanation: 'Histograma para variables continuas; polígono de frecuencias para representar frecuencias de variables continuas; tallo y hojas útil para conjuntos pequeños de datos.',
+            distractors: 'Las otras opciones asignan usos incorrectos o confunden tipos de variables.'
+        }, {
+            id: 28,
+            type: 'completar',
+            question: 'La moda de un conjunto de datos es el valor que ________.',
+            options: ['A) divide la distribución en dos partes iguales', 'B) es el promedio', 'C) ocurre con mayor frecuencia', 'D) es el punto medio'],
+            correct: 2,
+            explanation: 'La moda es el valor que se presenta con la mayor frecuencia absoluta en el conjunto de datos.',
+            distractors: 'Dividir en dos partes iguales es la mediana; el promedio es la media; el punto medio no es una medida de tendencia central estándar.'
+        }, {
+            id: 29,
+            type: 'multiple',
+            question: '¿Cuál de las siguientes es una propiedad de la varianza?',
+            options: ['A) Puede ser negativa si los datos son negativos.', 'B) Tiene las mismas unidades que los datos.', 'C) Es invariante ante cambios de escala.', 'D) Es siempre positiva o cero.'],
+            correct: 3,
+            explanation: 'La varianza es siempre no negativa (≥ 0), ya que es un promedio de cuadrados.',
+            distractors: 'No puede ser negativa; tiene unidades al cuadrado; no es invariante ante cambios de escala (cambia con el cuadrado del factor).'
+        }, {
+            id: 30,
+            type: 'relacion',
+            question: 'Asocie la medida con su fórmula:<br>1. Media<br>2. Varianza muestral<br>3. Rango',
+            options: [
+                'A) 1-Σxi/n, 2-Σ(xi-x̄)²/(n-1), 3-máx-mín',
+                'B) 1-Σxi/n, 2-Σ(xi-μ)²/N, 3-máx-mín',
+                'C) 1-Σxi/(n-1), 2-Σ(xi-x̄)²/n, 3-Q3-Q1',
+                'D) 1-Σxi/n, 2-Σ(xi-x̄)²/n, 3-máx-mín'
+            ],
+            correct: 0,
+            explanation: 'Media muestral: (Σxi)/n; varianza muestral: (Σ(xi – x̄)²)/(n-1); rango: máx – mín.',
+            distractors: 'La opción B usa varianza poblacional; C usa denominadores incorrectos y rango intercuartílico; D usa varianza poblacional sin corregir.'
+        }, {
+            id: 31,
+            type: 'completar',
+            question: 'El primer cuartil (Q₁) es el valor que deja por debajo el ________% de los datos.',
+            options: ['A) 50', 'B) 75', 'C) 100', 'D) 25'],
+            correct: 3,
+            explanation: 'El primer cuartil corresponde al percentil 25, por lo que deja el 25% de los datos por debajo.',
+            distractors: '50% es la mediana; 75% es el tercer cuartil; 100% es el máximo.'
+        }, {
+            id: 32,
+            type: 'multiple',
+            question: '¿Cuál de los siguientes gráficos es útil para detectar valores atípicos?',
+            options: ['A) Histograma', 'B) Ojiva', 'C) Diagrama de caja', 'D) Diagrama de barras'],
+            correct: 2,
+            explanation: 'El diagrama de caja (boxplot) identifica explícitamente posibles valores atípicos (outliers) mediante los bigotes y puntos fuera de ellos.',
+            distractors: 'Histograma y ojiva pueden sugerir valores extremos pero no los señalan directamente; diagrama de barras es para cualitativos.'
+        }, {
+            id: 33,
+            type: 'relacion',
+            question: 'Relacione el concepto de frecuencia con su definición:<br>1. Frecuencia absoluta<br>2. Frecuencia relativa<br>3. Frecuencia acumulada',
+            options: [
+                'A) 1-proporción, 2-número, 3-suma',
+                'B) 1-número, 2-proporción, 3-suma',
+                'C) 1-suma, 2-proporción, 3-número',
+                'D) 1-número, 2-suma, 3-proporción'
+            ],
+            correct: 1,
+            explanation: 'Frecuencia absoluta = número de ocurrencias; frecuencia relativa = proporción (absoluta/n); frecuencia acumulada = suma de frecuencias hasta un valor.',
+            distractors: 'Las otras opciones intercambian número con proporción o suma.'
+        }, {
+            id: 34,
+            type: 'completar',
+            question: 'La curtosis de una distribución normal se denomina ________.',
+            options: ['A) leptocúrtica', 'B) platicúrtica', 'C) mesocúrtica', 'D) asimétrica'],
+            correct: 2,
+            explanation: 'La distribución normal tiene curtosis cero (exceso de curtosis) y se denomina mesocúrtica.',
+            distractors: 'Leptocúrtica es más apuntada que la normal; platicúrtica es más achatada; asimétrica no es un tipo de curtosis.'
+        }, {
+            id: 35,
+            type: 'multiple',
+            question: '¿Cuál es la relación entre la media y la mediana en una distribución con sesgo positivo?',
+            options: ['A) Media < Mediana', 'B) Media = Mediana', 'C) Media > Mediana', 'D) No hay relación'],
+            correct: 2,
+            explanation: 'En sesgo positivo (cola a la derecha), la media se desplaza hacia la cola y es mayor que la mediana.',
+            distractors: 'Media < Mediana corresponde a sesgo negativo; igualdad a simétrica; siempre hay relación.'
+        }, {
+            id: 36,
+            type: 'relacion',
+            question: 'Asocie el tipo de curtosis con su descripción:<br>1. Leptocúrtica<br>2. Platicúrtica<br>3. Mesocúrtica',
+            options: [
+                'A) 1-más achatada, 2-más apuntada, 3-normal',
+                'B) 1-más apuntada, 2-más achatada, 3-normal',
+                'C) 1-normal, 2-más apuntada, 3-más achatada',
+                'D) 1-más apuntada, 2-normal, 3-más achatada'
+            ],
+            correct: 1,
+            explanation: 'Leptocúrtica: más apuntada que la normal; platicúrtica: más achatada; mesocúrtica: similar a la normal.',
+            distractors: 'Las otras opciones invierten o confunden las definiciones.'
+        }, {
+            id: 37,
+            type: 'completar',
+            question: 'El diagrama de tallo y hojas es útil para preservar los ________ originales.',
+            options: ['A) promedios', 'B) datos', 'C) frecuencias', 'D) gráficos'],
+            correct: 1,
+            explanation: 'Este gráfico muestra todos los valores originales de los datos, a diferencia de un histograma que los agrupa.',
+            distractors: 'No preserva promedios, frecuencias o gráficos, sino los datos individuales.'
+        }, {
+            id: 38,
+            type: 'multiple',
+            question: '¿Qué medida de tendencia central es más apropiada para datos ordinales?',
+            options: ['A) Media', 'B) Moda', 'C) Mediana', 'D) Rango'],
+            correct: 2,
+            explanation: 'Para datos ordinales, la mediana es la medida más informativa porque respeta el orden y no requiere igualdad de intervalos.',
+            distractors: 'La media no es adecuada para ordinales; la moda también puede usarse pero es menos informativa; el rango es de dispersión.'
+        }, {
+            id: 39,
+            type: 'relacion',
+            question: 'Relacione el símbolo con su definición:<br>1. σ²<br>2. s<br>3. CV',
+            options: [
+                'A) 1-varianza poblacional, 2-desviación estándar muestral, 3-coeficiente de variación',
+                'B) 1-varianza muestral, 2-desviación estándar poblacional, 3-coeficiente de variación',
+                'C) 1-varianza poblacional, 2-desviación estándar muestral, 3-varianza',
+                'D) 1-coeficiente de variación, 2-varianza, 3-desviación'
+            ],
+            correct: 0,
+            explanation: 'σ² es varianza poblacional; s es desviación estándar muestral; CV es coeficiente de variación.',
+            distractors: 'Las otras opciones confunden poblacional con muestral o asignan símbolos incorrectos.'
+        }, {
+            id: 40,
+            type: 'completar',
+            question: 'La suma de las frecuencias relativas de todas las categorías es igual a ________.',
+            options: ['A) 100', 'B) n', 'C) 0', 'D) 1'],
+            correct: 3,
+            explanation: 'Por definición, las frecuencias relativas suman 1 (o 100% si se expresan en porcentaje, pero en proporción es 1).',
+            distractors: '100 es el porcentaje, pero en proporción es 1; n es el total de datos; 0 no tiene sentido.'
+        }, {
+            id: 41,
+            type: 'multiple',
+            question: '¿Cuál de las siguientes afirmaciones sobre el polígono de frecuencias es correcta?',
+            options: ['A) Se usa solo para datos cualitativos.', 'B) Las áreas bajo el polígono suman 1.', 'C) No se puede superponer con el histograma.', 'D) Se construye uniendo los puntos medios de las barras del histograma.'],
+            correct: 3,
+            explanation: 'El polígono de frecuencias se forma uniendo los puntos medios (marcas de clase) de las barras de un histograma.',
+            distractors: 'No es solo para cualitativos; las áreas no suman 1 (solo si es de densidades); sí se puede superponer.'
+        }, {
+            id: 42,
+            type: 'relacion',
+            question: 'Asocie la medida de tendencia central con su propiedad de robustez:<br>1. Media<br>2. Mediana<br>3. Moda',
+            options: [
+                'A) 1-sensible a extremos, 2-robusta, 3-robusta',
+                'B) 1-robusta, 2-sensible, 3-sensible',
+                'C) 1-sensible, 2-sensible, 3-robusta',
+                'D) 1-robusta, 2-robusta, 3-sensible'
+            ],
+            correct: 0,
+            explanation: 'La media es sensible a valores extremos; la mediana y la moda son robustas (no se ven afectadas por valores atípicos).',
+            distractors: 'Las otras opciones invierten la robustez de la media o de la mediana.'
+        }, {
+            id: 43,
+            type: 'completar',
+            question: 'La desviación estándar es la raíz cuadrada de la ________.',
+            options: ['A) media', 'B) mediana', 'C) asimetría', 'D) varianza'],
+            correct: 3,
+            explanation: 'Por definición, la desviación estándar es la raíz cuadrada positiva de la varianza.',
+            distractors: 'Media, mediana y asimetría son otros conceptos no relacionados con la raíz de la varianza.'
+        }, {
+            id: 44,
+            type: 'multiple',
+            question: '¿Qué indica un coeficiente de variación alto?',
+            options: ['A) Baja dispersión relativa.', 'B) Alta dispersión relativa.', 'C) Distribución simétrica.', 'D) Datos negativos.'],
+            correct: 1,
+            explanation: 'Un CV alto indica que la desviación estándar es grande en relación con la media, es decir, alta dispersión relativa.',
+            distractors: 'Baja dispersión correspondería a CV bajo; simetría no está relacionada; datos negativos no determinan el CV.'
+        }, {
+            id: 45,
+            type: 'relacion',
+            question: 'Relacione el intervalo con su frecuencia acumulada:<br>1. (a,b]<br>2. [a,b)<br>3. [a,b]',
+            options: [
+                'A) 1-incluye b, 2-incluye a, 3-incluye ambos',
+                'B) 1-incluye a, 2-incluye b, 3-incluye ambos',
+                'C) 1-incluye ambos, 2-incluye ninguno, 3-incluye a',
+                'D) 1-incluye b, 2-incluye a, 3-incluye ninguno'
+            ],
+            correct: 0,
+            explanation: 'La notación de intervalos: (a,b] incluye b pero no a; [a,b) incluye a pero no b; [a,b] incluye ambos extremos.',
+            distractors: 'Las otras opciones invierten la inclusión de los extremos.'
+        }, {
+            id: 46,
+            type: 'completar',
+            question: 'El percentil 90 es el valor por debajo del cual se encuentra el ________% de los datos.',
+            options: ['A) 10', 'B) 50', 'C) 100', 'D) 90'],
+            correct: 3,
+            explanation: 'El percentil 90 deja por debajo el 90% de las observaciones, por definición.',
+            distractors: '10% sería el percentil 10; 50% la mediana; 100% el máximo.'
+        }, {
+            id: 47,
+            type: 'multiple',
+            question: '¿Cuál de las siguientes afirmaciones es correcta respecto al diagrama de tallo y hojas?',
+            options: ['A) Es útil para conjuntos de datos muy grandes.', 'B) Solo muestra la frecuencia.', 'C) Permite ver la forma de la distribución y los datos originales.', 'D) No es adecuado para datos cuantitativos.'],
+            correct: 2,
+            explanation: 'El diagrama de tallo y hojas muestra tanto la forma de la distribución como los valores originales, y es adecuado para conjuntos de tamaño moderado.',
+            distractors: 'No es práctico para conjuntos muy grandes; muestra más que solo frecuencia; es adecuado para cuantitativos.'
+        }, {
+            id: 48,
+            type: 'relacion',
+            question: 'Asocie la medida de posición con su notación:<br>1. Mediana<br>2. Primer cuartil<br>3. Tercer cuartil',
+            options: [
+                'A) 1-Q₁, 2-Q₂, 3-Q₃',
+                'B) 1-Q₂, 2-Q₁, 3-Q₃',
+                'C) 1-Q₃, 2-Q₁, 3-Q₂',
+                'D) 1-Q₂, 2-Q₃, 3-Q₁'
+            ],
+            correct: 1,
+            explanation: 'La mediana es Q₂, el primer cuartil es Q₁ y el tercer cuartil es Q₃.',
+            distractors: 'Las otras opciones intercambian el orden de los cuartiles.'
+        }, {
+            id: 49,
+            type: 'completar',
+            question: 'La frecuencia absoluta acumulada es la suma de las frecuencias absolutas desde el primer intervalo hasta el ________.',
+            options: ['A) último', 'B) primero', 'C) medio', 'D) actual'],
+            correct: 3,
+            explanation: 'La frecuencia acumulada hasta un valor dado suma todas las frecuencias desde el inicio hasta el intervalo actual (o valor).',
+            distractors: 'No es solo hasta el último (eso sería el total), ni el primero ni el medio.'
+        }, {
+            id: 50,
+            type: 'multiple',
+            question: '¿Cuál de las siguientes es una ventaja de la mediana sobre la media?',
+            options: ['A) Es más fácil de calcular.', 'B) Utiliza todos los datos.', 'C) Siempre es un número entero.', 'D) Es menos sensible a valores extremos.'],
+            correct: 3,
+            explanation: 'La mediana es robusta a valores atípicos, mientras que la media se ve afectada por ellos. Esa es su principal ventaja.',
+            distractors: 'No siempre es más fácil de calcular; no utiliza todos los datos (solo la posición central); no siempre es entera.'
+        }];
+
+        // ========== LÓGICA DE LA APLICACIÓN ==========
+        let currentIndex = 0;
+        const totalQuestions = questions.length;
+        const state = questions.map(() => ({ selected: null, verified: false, correct: false }));
+
+        const questionNumberEl = document.getElementById('question-number');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackEl = document.getElementById('feedback');
+        const prevBtn = document.getElementById('prev-btn');
+        const verifyBtn = document.getElementById('verify-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressLabel = document.getElementById('progress-label');
+        const resultContainer = document.getElementById('result');
+        const scoreDisplay = document.getElementById('score-display');
+        const scoreMessage = document.getElementById('score-message');
+        const restartBtn = document.getElementById('restart-btn');
+
+        let totalCorrect = 0;
+
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            const s = state[currentIndex];
+            const isVerified = s.verified;
+
+            questionNumberEl.textContent = `Pregunta ${currentIndex + 1} de ${totalQuestions}`;
+            questionTextEl.innerHTML = q.question;
+
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const div = document.createElement('div');
+                div.className = 'option-item';
+
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'question';
+                radio.value = idx;
+                radio.id = `opt_${idx}`;
+                if (isVerified) {
+                    radio.disabled = true;
+                    div.classList.add('disabled');
+                    if (idx === q.correct) {
+                        div.classList.add('correct-verified');
+                    } else if (s.selected === idx && idx !== q.correct) {
+                        div.classList.add('incorrect-verified');
+                    }
+                } else {
+                    if (s.selected === idx) {
+                        radio.checked = true;
+                    }
+                    radio.addEventListener('change', () => {
+                        if (!s.verified) {
+                            s.selected = idx;
+                            verifyBtn.disabled = false;
+                        }
+                    });
+                }
+
+                const label = document.createElement('label');
+                label.htmlFor = `opt_${idx}`;
+                label.textContent = opt;
+
+                div.appendChild(radio);
+                div.appendChild(label);
+                optionsContainer.appendChild(div);
+            });
+
+            if (isVerified) {
+                const isCorrect = (s.selected === q.correct);
+                feedbackEl.className = 'show ' + (isCorrect ? 'correct' : 'incorrect');
+                feedbackEl.innerHTML = `
+                    <div class="fb-title">${isCorrect ? '✅ Correcto' : '❌ Incorrecto'}</div>
+                    <div class="fb-explain"><strong>Justificación:</strong> ${q.explanation}</div>
+                    <div class="fb-distractors"><strong>Análisis de distractores:</strong> ${q.distractors}</div>
+                `;
+                feedbackEl.style.display = 'block';
+            } else {
+                feedbackEl.className = '';
+                feedbackEl.innerHTML = '';
+                feedbackEl.style.display = 'none';
+            }
+
+            verifyBtn.disabled = isVerified || s.selected === null;
+            prevBtn.disabled = (currentIndex === 0);
+            nextBtn.disabled = !s.verified;
+            progressLabel.textContent = `Pregunta ${currentIndex + 1} de ${totalQuestions}`;
+        }
+
+        function verifyAnswer() {
+            const q = questions[currentIndex];
+            const s = state[currentIndex];
+            if (s.verified || s.selected === null) return;
+
+            const isCorrect = (s.selected === q.correct);
+            s.verified = true;
+            s.correct = isCorrect;
+            if (isCorrect) totalCorrect++;
+
+            renderQuestion();
+            if (currentIndex === totalQuestions - 1) {
+                // mostrar resultado al final si se verifica la última
+            }
+        }
+
+        function goToPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function goToNext() {
+            const s = state[currentIndex];
+            if (!s.verified) return;
+            if (currentIndex < totalQuestions - 1) {
+                currentIndex++;
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('question-container').style.display = 'none';
+            resultContainer.style.display = 'block';
+            const pct = Math.round((totalCorrect / totalQuestions) * 100);
+            scoreDisplay.textContent = pct + '%';
+            let msg = '';
+            if (pct >= 90) msg = '¡Excelente! Dominas los conceptos.';
+            else if (pct >= 70) msg = 'Buen trabajo, repasa los temas con menor puntuación.';
+            else if (pct >= 50) msg = 'Es necesario estudiar más a fondo las definiciones y propiedades.';
+            else msg = 'Te recomendamos revisar nuevamente el material y volver a intentarlo.';
+            scoreMessage.textContent = msg;
+        }
+
+        function restart() {
+            for (let i = 0; i < totalQuestions; i++) {
+                state[i] = { selected: null, verified: false, correct: false };
+            }
+            totalCorrect = 0;
+            currentIndex = 0;
+            document.getElementById('question-container').style.display = 'block';
+            resultContainer.style.display = 'none';
+            renderQuestion();
+        }
+
+        verifyBtn.addEventListener('click', verifyAnswer);
+        prevBtn.addEventListener('click', goToPrev);
+        nextBtn.addEventListener('click', goToNext);
+        restartBtn.addEventListener('click', restart);
+
+        renderQuestion();
+    </script>
+</body>
+</html>
