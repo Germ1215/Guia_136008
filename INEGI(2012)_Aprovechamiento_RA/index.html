@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Estudio - Registros Administrativos (INEGI)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #f0f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 20px;
+        }
+        #app {
+            max-width: 920px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+            padding: 30px 35px;
+            transition: all 0.2s;
+        }
+        h1 {
+            font-size: 26px;
+            color: #0b2b4a;
+            margin-top: 0;
+            margin-bottom: 6px;
+            border-bottom: 4px solid #1d6f9c;
+            padding-bottom: 14px;
+        }
+        .subtitle {
+            color: #2c3e50;
+            font-weight: 400;
+            margin-top: -5px;
+            margin-bottom: 22px;
+            font-size: 15px;
+            background: #e8f0fe;
+            padding: 8px 14px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+        #question-number {
+            font-weight: 700;
+            color: #1a4972;
+            font-size: 18px;
+            margin: 0 0 5px 0;
+        }
+        #question-text {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #1e2a36;
+            margin: 8px 0 18px 0;
+            padding: 12px 16px;
+            background: #f6faff;
+            border-radius: 12px;
+            border-left: 5px solid #1d6f9c;
+        }
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 16px 0 20px 0;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #fafcff;
+            border: 1.5px solid #dce5f0;
+            border-radius: 12px;
+            padding: 12px 20px;
+            transition: background 0.15s, border-color 0.15s;
+            cursor: pointer;
+        }
+        .option-item:hover {
+            background: #e9eff7;
+            border-color: #8fb3e0;
+        }
+        .option-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            accent-color: #1d6f9c;
+            cursor: pointer;
+        }
+        .option-item label {
+            font-size: 16px;
+            cursor: pointer;
+            flex: 1;
+            color: #1e2a36;
+        }
+        .option-item.correct-verified {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        .option-item.incorrect-verified {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        .option-item.disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
+        .option-item.disabled:hover {
+            background: #fafcff;
+            border-color: #dce5f0;
+        }
+        #feedback {
+            margin: 16px 0 18px 0;
+            padding: 16px 22px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            border-left: 6px solid #6c757d;
+            font-size: 15px;
+            line-height: 1.6;
+            display: none;
+        }
+        #feedback.show {
+            display: block;
+        }
+        #feedback.correct {
+            background: #e6f4ea;
+            border-left-color: #28a745;
+        }
+        #feedback.incorrect {
+            background: #fce8e8;
+            border-left-color: #dc3545;
+        }
+        #feedback .fb-title {
+            font-weight: 700;
+            font-size: 16px;
+        }
+        #feedback .fb-explain {
+            margin-top: 6px;
+            color: #1e2a36;
+        }
+        #feedback .fb-distractors {
+            margin-top: 8px;
+            color: #3d4a5a;
+            font-size: 14px;
+            border-top: 1px dashed #ced8e5;
+            padding-top: 8px;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+            align-items: center;
+        }
+        .btn {
+            padding: 10px 28px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            background: #eaeef3;
+            color: #1e2a36;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.05s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        .btn:hover:not(:disabled) {
+            background: #d3dce8;
+        }
+        .btn:active:not(:disabled) {
+            transform: scale(0.96);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .btn-primary {
+            background: #1d6f9c;
+            color: white;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #155a7a;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-success:hover:not(:disabled) {
+            background: #1e8e3a;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background: #5a6268;
+        }
+        #result {
+            margin-top: 28px;
+            padding: 24px;
+            background: #e2f0fa;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #0b2b4a;
+            display: none;
+        }
+        #result .score {
+            font-size: 48px;
+            color: #1a4972;
+        }
+        .progress-info {
+            font-size: 14px;
+            color: #4a5b6e;
+            margin-left: auto;
+        }
+        @media (max-width: 600px) {
+            #app { padding: 18px; }
+            h1 { font-size: 22px; }
+            .btn-group { flex-direction: column; align-items: stretch; }
+            .btn { text-align: center; }
+            .progress-info { margin-left: 0; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>📋 Guía de Estudio – Registros Administrativos</h1>
+        <div class="subtitle">INEGI · Proceso Estándar para el Aprovechamiento (2012)</div>
+
+        <div id="question-container">
+            <div id="question-number"></div>
+            <div id="question-text"></div>
+            <div id="options-container"></div>
+            <div id="feedback"></div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" id="prev-btn" disabled>◀ Anterior</button>
+                <button class="btn btn-primary" id="verify-btn" disabled>✔ Verificar</button>
+                <button class="btn btn-success" id="next-btn" disabled>Siguiente ▶</button>
+                <span class="progress-info" id="progress-label">Pregunta 1 de 50</span>
+            </div>
+        </div>
+
+        <div id="result">
+            <div>📈 Has completado todas las preguntas</div>
+            <div class="score" id="score-display">0%</div>
+            <div style="font-weight:400; font-size:16px; margin-top:6px;" id="score-message"></div>
+            <button class="btn btn-primary" id="restart-btn" style="margin-top:16px;">🔄 Reiniciar</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== PREGUNTAS (50) ==========
+        const questions = [
+            // 1. Completar: definición de registro administrativo
+            {
+                type: 'completar',
+                question: 'Un registro administrativo se define como la serie de datos sobre un hecho, evento, suceso o acción sujeto a regulación o control que recaba una oficina del sector público como parte de su ________.',
+                options: ['A) función estadística', 'B) función administrativa', 'C) función legal', 'D) función pública'],
+                correct: 1,
+                explanation: 'Según la definición adoptada en el documento (pág. 6): "registro administrativo ... que recaba una oficina del sector público como parte de su función". No se menciona función estadística, legal o pública de forma genérica; es parte de su función administrativa.',
+                distractors: 'Función estadística no es el propósito primario; función legal es ambigua; función pública es demasiado amplia.'
+            },
+            // 2. Relación: tipos de registros por frecuencia
+            {
+                type: 'relacion',
+                question: 'Relacione el tipo de registro administrativo según su frecuencia de captación con su descripción:<br>1. Captación continua<br>2. Inventario<br><br>A) Registro de hechos en cualquier momento, conforme ocurren.<br>B) Conteo de existencias de determinadas unidades en un momento dado.',
+                options: ['A) 1-A, 2-B', 'B) 1-B, 2-A', 'C) 1-A, 2-A', 'D) 1-B, 2-B'],
+                correct: 0,
+                explanation: 'En la página 7 se señala: "De captación continua, que implica el registro de hechos en cualquier momento, conforme ocurren. • De inventario, referente al conteo de las existencias de determinadas unidades, en un momento dado."',
+                distractors: 'La opción B invierte las definiciones; C y D repiten la misma descripción.'
+            },
+            // 3. Múltiple: potencial estadístico - ventajas
+            {
+                type: 'multiple',
+                question: '¿Cuál de las siguientes NO es una cualidad del aprovechamiento estadístico de los registros administrativos mencionada en el documento?',
+                options: ['A) Continuidad y cobertura de la captación de datos.', 'B) Costos marginales bajos respecto al sistema de registro.', 'C) Posibilidad de ampliar la cobertura conceptual de captación.', 'D) Mayor control sobre la veracidad de los datos declarados.'],
+                correct: 3,
+                explanation: 'En la página 8 se enumeran cualidades: continuidad, cobertura geográfica, caracterización factible, posibilidades de ampliar cobertura conceptual, costos marginales. No se menciona "mayor control sobre la veracidad de los datos declarados" como cualidad; de hecho, uno de los problemas es la dificultad para corroborar los datos.',
+                distractors: 'A, B y C son cualidades explícitas; D es un error conceptual porque el control de veracidad no es una ventaja inherente.'
+            },
+            // 4. Completar: definición de fuente administrativa (OCDE)
+            {
+                type: 'completar',
+                question: 'La fuente administrativa, según la OCDE, es la unidad de organización responsable de implementar una regulación administrativa, cuyo registro de unidades y transacciones se ve como fuente de ________.',
+                options: ['A) datos estadísticos', 'B) control gubernamental', 'C) información legal', 'D) registro civil'],
+                correct: 0,
+                explanation: 'En la página 6 se cita a la OCDE: "la unidad de organización responsable de implementar una regulación administrativa (o grupo de regulaciones), cuyo registro correspondiente de unidades y transacciones se ven como fuente de datos estadísticos".',
+                distractors: 'Las otras opciones no corresponden a la definición exacta de la OCDE.'
+            },
+            // 5. Relación: problemas en el aprovechamiento
+            {
+                type: 'relacion',
+                question: 'Relacione el tipo de problema con su descripción según el documento:<br>1. Insuficiente soporte presupuestal<br>2. Dificultades de control operativo<br>3. Desinterés de autoridades<br><br>A) Falta de recursos para la función estadística.<br>B) Falta de voluntad para aprovechar el registro.<br>C) Problemas de supervisión y capacitación del personal.',
+                options: ['A) 1-A, 2-C, 3-B', 'B) 1-B, 2-A, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-A, 2-B, 3-C'],
+                correct: 0,
+                explanation: 'En la página 8 se listan problemas: "Insuficiente soporte presupuestal para la función estadística", "Dificultades de control operativo y de capacitación del personal", "Desinterés de las autoridades responsables del registro para su aprovechamiento estadístico".',
+                distractors: 'Las otras opciones asignan incorrectamente las descripciones.'
+            },
+            // 6. Completar: factor básico para el aprovechamiento
+            {
+                type: 'completar',
+                question: 'Uno de los factores básicos para el potencial estadístico de un sistema de registros administrativos es la base legal para la cobertura de eventos y ________ de los registros.',
+                options: ['A) calidad', 'B) oportunidad', 'C) continuidad', 'D) confidencialidad'],
+                correct: 2,
+                explanation: 'En la página 9 se menciona: "La base legal para la cobertura de eventos y continuidad de los registros" como primer factor básico.',
+                distractors: 'Calidad, oportunidad y confidencialidad no son los términos exactos usados en el factor básico descrito.'
+            },
+            // 7. Múltiple: requisitos básicos
+            {
+                type: 'multiple',
+                question: 'Según el documento, para iniciar un proyecto estadístico con registros administrativos es necesario resolver condiciones como la operación del sistema de registro y el convencimiento de los titulares. ¿Qué otro requisito básico se menciona?',
+                options: ['A) Contar con un sistema de captación electrónica.', 'B) La concertación de acuerdos iniciales.', 'C) Disponer de personal externo especializado.', 'D) Tener un marco muestral actualizado.'],
+                correct: 1,
+                explanation: 'En la página 10 se listan los requisitos básicos: "La operación del sistema de registro", "El convencimiento y la concertación de acuerdos iniciales" (y se menciona la importancia de la concertación).',
+                distractors: 'A, C y D no son requisitos básicos señalados en esa sección.'
+            },
+            // 8. Relación: fases del proceso
+            {
+                type: 'relacion',
+                question: 'Relacione la fase del proceso con su propósito general:<br>1. Planeación<br>2. Diseño conceptual<br>3. Captación<br><br>A) Establecer el plan del proyecto y diagnóstico.<br>B) Definir conceptos, instrumentos y criterios de validación.<br>C) Obtener los datos a nivel de elementos individuales.',
+                options: ['A) 1-A, 2-B, 3-C', 'B) 1-B, 2-A, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-A, 2-C, 3-B'],
+                correct: 0,
+                explanation: 'Según la descripción general (pág. 11): Planeación establece el plan; Diseño conceptual define conceptos e instrumentos; Captación obtiene los datos de las unidades de observación.',
+                distractors: 'Las otras opciones mezclan los propósitos.'
+            },
+            // 9. Completar: macroactividad de planeación
+            {
+                type: 'completar',
+                question: 'En la fase de Planeación, la macroactividad de diagnóstico incluye la revisión de situaciones en el sistema de registro, como la delimitación del campo de estudio y la caracterización de los eventos objeto de registro. También se revisan los procedimientos y estructuras para la captación y el procesamiento, así como los ________ de unidades de registro.',
+                options: ['A) directorios', 'B) censos', 'C) marcos muestrales', 'D) formatos'],
+                correct: 0,
+                explanation: 'En la página 16 se menciona la macroactividad "De directorios de unidades de registro" como parte del diagnóstico.',
+                distractors: 'Censos, marcos muestrales y formatos no son el término específico usado en esa sección.'
+            },
+            // 10. Múltiple: diseño conceptual
+            {
+                type: 'multiple',
+                question: '¿Cuál de las siguientes actividades NO corresponde a la fase de Diseño Conceptual según el documento?',
+                options: ['A) Determinación de temas, categorías, variables y sus clasificaciones.', 'B) Diseño o adecuación de instrumentos de captación.', 'C) Definición de criterios de validación.', 'D) Determinación de la estrategia de captación.'],
+                correct: 3,
+                explanation: 'La estrategia de captación se determina en la Fase 3 (Diseño de la captación y el procesamiento), no en la Fase 2 (Diseño conceptual). En la página 18 se describen las macroactividades de la Fase 2: acotación de necesidades, delimitación del marco conceptual, diseño de esquemas de presentación, diseño/adecuación de instrumentos, definición de criterios de validación.',
+                distractors: 'A, B y C son actividades de la Fase 2; D corresponde a la Fase 3.'
+            },
+            // 11. Relación: términos del glosario
+            {
+                type: 'relacion',
+                question: 'Relacione el término con su definición según el glosario:<br>1. Microdato<br>2. Macrodato<br>3. Validación<br><br>A) Dato referente a uno de los elementos de un conjunto.<br>B) Dato estadístico obtenido a partir de un conjunto de microdatos.<br>C) Conjunto de actividades para identificar datos que cumplen requisitos de congruencia y aplicar soluciones.',
+                options: ['A) 1-A, 2-B, 3-C', 'B) 1-B, 2-A, 3-C', 'C) 1-A, 2-C, 3-B', 'D) 1-C, 2-B, 3-A'],
+                correct: 0,
+                explanation: 'Glosario: Microdato = dato referente a uno de los elementos; Macrodato = dato estadístico obtenido a partir de un conjunto de microdatos; Validación = conjunto de actividades para identificar datos que cumplen requisitos de congruencia y aplicar soluciones.',
+                distractors: 'Las otras opciones intercambian incorrectamente las definiciones.'
+            },
+            // 12. Completar: captación continua
+            {
+                type: 'completar',
+                question: 'Los registros administrativos de captación continua implican el registro de hechos en cualquier momento, conforme ocurren, mientras que los de tipo inventario se refieren al conteo de ________ de determinadas unidades en un momento dado.',
+                options: ['A) existencias', 'B) eventos', 'C) transacciones', 'D) actos'],
+                correct: 0,
+                explanation: 'Página 7: "De inventario, referente al conteo de las existencias de determinadas unidades, en un momento dado".',
+                distractors: 'Eventos, transacciones y actos no son los términos utilizados en la definición de inventario.'
+            },
+            // 13. Múltiple: problemas en el aprovechamiento
+            {
+                type: 'multiple',
+                question: 'De acuerdo con el documento, ¿cuál de los siguientes es un problema frecuente en el aprovechamiento estadístico de registros administrativos?',
+                options: ['A) Baja cobertura geográfica de los registros.', 'B) Excesivo soporte presupuestal para la función estadística.', 'C) Complejidad y diversidad de funciones sustantivas de la institución responsable.', 'D) Facilidad de control operativo y capacitación del personal.'],
+                correct: 2,
+                explanation: 'En la página 8 se menciona: "Complejidad y diversidad de funciones sustantivas cubiertas por la institución responsable del registro, entre las cuales no necesariamente se ubica la función estadística".',
+                distractors: 'A no es un problema (la cobertura geográfica suele ser amplia); B es falso (es insuficiente); D es falso (hay dificultades).'
+            },
+            // 14. Relación: niveles de operación de sistemas de registro
+            {
+                type: 'relacion',
+                question: 'Relacione el nivel de operación con su característica según el documento:<br>1. Sistemas con procedimientos documentados, controles y archivos electrónicos para fines de control.<br>2. Sistemas con procedimientos poco documentados y archivos impresos sin control automatizado.<br>3. Sistemas con procedimientos documentados, controles, archivos de datos y generan reportes estadísticos.<br><br>A) Nivel más avanzado para aprovechamiento estadístico.<br>B) Nivel intermedio.<br>C) Nivel básico.',
+                options: ['A) 1-B, 2-C, 3-A', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-B, 2-A, 3-C'],
+                correct: 0,
+                explanation: 'En la página 9 se describen tres niveles: el primero (procedimientos documentados, controles y archivos electrónicos para control) es intermedio; el segundo (poco documentados, impresos) es básico; el tercero (con reportes estadísticos) es el más avanzado.',
+                distractors: 'Las otras opciones invierten o asignan incorrectamente los niveles.'
+            },
+            // 15. Completar: fase de diseño de captación y procesamiento
+            {
+                type: 'completar',
+                question: 'En la fase de Diseño de la captación y el procesamiento, una de las macroactividades es la determinación de la estrategia de captación, que incluye procedimientos técnicos para la captación, el control y la ________ administrativa.',
+                options: ['A) logística', 'B) planeación', 'C) presupuestación', 'D) organización'],
+                correct: 0,
+                explanation: 'En la página 21 se menciona: "PROCEDIMIENTOS TÉCNICOS PARA LA CAPTACIÓN, EL CONTROL Y LA LOGÍSTICA ADMINISTRATIVA".',
+                distractors: 'Planeación, presupuestación y organización son términos relacionados pero no son los que aparecen en esa macroactividad específica.'
+            },
+            // 16. Múltiple: fase de captación
+            {
+                type: 'multiple',
+                question: '¿Cuál de las siguientes actividades forma parte de la fase de Captación (Fase 4) según el documento?',
+                options: ['A) Definición de criterios de validación.', 'B) Diseño de sistemas informáticos para el procesamiento.', 'C) Actualización de directorios de las unidades de registro.', 'D) Elaboración de manuales de procedimientos de control.'],
+                correct: 2,
+                explanation: 'En la página 26 se menciona "ACTUALIZACIÓN DE DIRECTORIOS DE LAS UNIDADES DE REGISTRO" como parte de la fase de Captación (dentro de "Control de la recolección").',
+                distractors: 'A y D son de diseño conceptual/diseño de captación; B es de diseño de procesamiento.'
+            },
+            // 17. Relación: fases cíclicas
+            {
+                type: 'relacion',
+                question: 'Según el esquema general del proceso, las fases que se repiten en forma cíclica son:<br>1. Captación<br>2. Procesamiento<br>3. Presentación de resultados<br><br>Las fases de planeación y diseño se actualizan periódicamente. ¿Cuál es la secuencia cíclica?',
+                options: ['A) 1, 2, 3', 'B) 3, 2, 1', 'C) 2, 1, 3', 'D) 1, 3, 2'],
+                correct: 0,
+                explanation: 'En la página 11 se indica: "Las fases 4 a 6 se repiten en forma cíclica de acuerdo con lo establecido en las de planeación y diseño." Es decir, Captación (4), Procesamiento (5), Presentación (6).',
+                distractors: 'Las otras opciones alteran el orden lógico del proceso.'
+            },
+            // 18. Completar: diseño conceptual - marco conceptual
+            {
+                type: 'completar',
+                question: 'En la fase de Diseño Conceptual, la delimitación del marco conceptual incluye la determinación de temas, categorías, variables y sus ________.',
+                options: ['A) clasificaciones', 'B) frecuencias', 'C) indicadores', 'D) series de tiempo'],
+                correct: 0,
+                explanation: 'En la página 19 se menciona: "DETERMINACIÓN DE TEMAS, CATEGORÍAS, VARIABLES Y SUS CLASIFICACIONES" como parte de la delimitación del marco conceptual.',
+                distractors: 'Frecuencias, indicadores y series de tiempo son productos o análisis posteriores, no parte de la definición del marco conceptual.'
+            },
+            // 19. Múltiple: diseño de instrumentos de captación
+            {
+                type: 'multiple',
+                question: 'Según el documento, en el diseño o adecuación de instrumentos de captación se deben considerar aspectos como el formato de registro, la elaboración de manuales y materiales de apoyo, y ________.',
+                options: ['A) la definición de la estrategia de muestreo', 'B) las pruebas y ajustes a los instrumentos', 'C) la determinación de la cobertura geográfica', 'D) la elaboración del programa de actividades operativas'],
+                correct: 1,
+                explanation: 'En la página 20 se menciona "PRUEBAS Y AJUSTES A LOS INSTRUMENTOS DE CAPTACIÓN" como parte de esa macroactividad.',
+                distractors: 'La estrategia de muestreo no aplica; la cobertura geográfica se define en planeación; el programa de actividades operativas es de la fase de diseño de captación.'
+            },
+            // 20. Relación: conceptos de validación
+            {
+                type: 'relacion',
+                question: 'Relacione el tipo de validación con su definición:<br>1. Microvalidación<br>2. Macrovalidación<br><br>A) Actividades para identificar inconsistencias a nivel registro.<br>B) Actividades para identificar comportamientos improbables de estructura o valor en estadísticas generadas.',
+                options: ['A) 1-A, 2-B', 'B) 1-B, 2-A', 'C) 1-A, 2-A', 'D) 1-B, 2-B'],
+                correct: 0,
+                explanation: 'Glosario: Microvalidación = identificación de inconsistencias a nivel registro; Macrovalidación = identificación de comportamientos improbables en estadísticas generadas.',
+                distractors: 'La opción B invierte; C y D repiten.'
+            },
+            // 21. Completar: fase de procesamiento - recepción y organización
+            {
+                type: 'completar',
+                question: 'En la fase de Procesamiento, la macroactividad de Recepción y organización incluye la recepción de material, la organización y preparación de documentos fuente, y la ________ de cargas de trabajo.',
+                options: ['A) asignación', 'B) distribución', 'C) programación', 'D) estimación'],
+                correct: 0,
+                explanation: 'En la página 29 se menciona "ASIGNACIÓN DE CARGAS DE TRABAJO" como parte de la organización y preparación.',
+                distractors: 'Distribución, programación y estimación no son los términos exactos usados en esa sección.'
+            },
+            // 22. Múltiple: presentación de resultados
+            {
+                type: 'multiple',
+                question: '¿Cuál de las siguientes actividades corresponde a la fase de Presentación de resultados (Fase 6)?',
+                options: ['A) Actualización de directorios de unidades de registro.', 'B) Aplicación de sistemas de validación.', 'C) Producción editorial en medios impresos y electrónicos.', 'D) Codificación de respuestas abiertas.'],
+                correct: 2,
+                explanation: 'En la página 31 se menciona "PRODUCCIÓN EDITORIAL EN MEDIOS IMPRESOS Y ELECTRÓNICOS" como parte de la fase de Presentación de resultados.',
+                distractors: 'A es de captación; B y D son de procesamiento.'
+            },
+            // 23. Relación: documentos de la fase de planeación
+            {
+                type: 'relacion',
+                question: 'Relacione el producto de la planeación con su contenido:<br>1. Plan del proyecto<br>2. Diagnóstico<br><br>A) Identificación del nivel de consolidación del sistema de registro y necesidades de adecuación.<br>B) Definición de objetivos, estrategia, programa de trabajo, organización y presupuesto.',
+                options: ['A) 1-A, 2-B', 'B) 1-B, 2-A', 'C) 1-B, 2-B', 'D) 1-A, 2-A'],
+                correct: 1,
+                explanation: 'En la página 15 se describe que el diagnóstico identifica el nivel de consolidación y necesidades; el plan del proyecto define objetivos, estrategia, programa, organización y presupuesto.',
+                distractors: 'La opción A invierte; C y D repiten.'
+            },
+            // 24. Completar: definición de estadística básica
+            {
+                type: 'completar',
+                question: 'Según el glosario, la estadística básica es la información generada a partir de un conjunto de datos obtenidos de un proyecto censal, de una encuesta por muestreo o del ________ de registros administrativos.',
+                options: ['A) aprovechamiento', 'B) procesamiento', 'C) diseño', 'D) captación'],
+                correct: 0,
+                explanation: 'Glosario: "Estadística básica. Información generada a partir de un conjunto de datos obtenidos de un proyecto censal, de una encuesta por muestreo o del aprovechamiento de registros administrativos."',
+                distractors: 'Las otras opciones no corresponden a la definición exacta.'
+            },
+            // 25. Múltiple: control administrativo en planeación
+            {
+                type: 'multiple',
+                question: 'En la fase de Planeación, el control administrativo tiene como objetivo principal:',
+                options: ['A) Definir los criterios de validación de los datos.', 'B) Supervisar los gastos y compararlos con los estimados, realizando ajustes.', 'C) Establecer el marco conceptual del proyecto.', 'D) Diseñar los instrumentos de captación.'],
+                correct: 1,
+                explanation: 'En la página 18 se menciona: "es necesario supervisar los gastos y compararlos con los estimados por fase y tipo de recurso, con lo cual se realizarán ajustes a la planeación inicial."',
+                distractors: 'A, C y D son actividades de diseño conceptual, no de control administrativo en planeación.'
+            },
+            // 26. Relación: fases y sus macroactividades (selección)
+            {
+                type: 'relacion',
+                question: 'Relacione la fase con una macroactividad característica:<br>1. Diseño conceptual<br>2. Diseño de la captación y el procesamiento<br>3. Procesamiento<br><br>A) Determinación de la estrategia de captación.<br>B) Definición de criterios de validación.<br>C) Captura y codificación.',
+                options: ['A) 1-B, 2-A, 3-C', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-A, 3-B', 'D) 1-B, 2-C, 3-A'],
+                correct: 0,
+                explanation: 'Diseño conceptual: definición de criterios de validación (pág. 20); Diseño de captación: determinación de estrategia de captación (pág. 21); Procesamiento: captura y codificación (pág. 29).',
+                distractors: 'Las otras opciones asignan incorrectamente las macroactividades.'
+            },
+            // 27. Completar: fase de captación - cierre del ciclo
+            {
+                type: 'completar',
+                question: 'En el cierre del ciclo de la fase de Captación, se prepara un informe final que incluye los problemas e incidencias registrados, las soluciones aplicadas y las cifras obtenidas, que servirá para medir la calidad de la captación y para ________.',
+                options: ['A) ajustar el presupuesto', 'B) prever la incorporación de mejoras a los siguientes ciclos', 'C) definir el marco conceptual', 'D) diseñar nuevos instrumentos'],
+                correct: 1,
+                explanation: 'En la página 27 se indica: "servirá para medir la calidad de la captación... y prever la incorporación de mejoras a los siguientes."',
+                distractors: 'A, C y D no son el propósito mencionado en el cierre del ciclo.'
+            },
+            // 28. Múltiple: características de los registros administrativos
+            {
+                type: 'multiple',
+                question: 'Según el documento, los registros administrativos públicos se caracterizan por recabar información sobre hechos o acciones de interés público en sectores como educación, salud, empleo, etc. ¿Qué elemento legal los sustenta?',
+                options: ['A) Normas técnicas estadísticas.', 'B) Regulaciones administrativas y legislación.', 'C) Convenios internacionales.', 'D) Contratos con la ciudadanía.'],
+                correct: 1,
+                explanation: 'En la página 6 se menciona que los gobiernos establecen regulaciones administrativas con sustento legal para registrar información. Además, las fuentes administrativas se basan en regulaciones.',
+                distractors: 'A no es el fundamento legal; C y D no son mencionados como base legal.'
+            },
+            // 29. Relación: actividades de la fase de procesamiento
+            {
+                type: 'relacion',
+                question: 'Relacione la actividad de procesamiento con su propósito:<br>1. Validación<br>2. Captura y codificación<br>3. Obtención de archivos de datos<br><br>A) Transferir información del instrumento impreso a archivo electrónico.<br>B) Identificar y solucionar datos que no cumplen criterios.<br>C) Compilar archivos de microdatos para la presentación de resultados.',
+                options: ['A) 1-B, 2-A, 3-C', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-A, 3-B', 'D) 1-B, 2-C, 3-A'],
+                correct: 0,
+                explanation: 'Validación: identificar y solucionar problemas (pág. 29); Captura y codificación: transferir información a archivo electrónico (pág. 29); Obtención de archivos: compilar archivos de microdatos (pág. 29).',
+                distractors: 'Las otras opciones invierten o confunden los propósitos.'
+            },
+            // 30. Completar: glosario - captura de datos
+            {
+                type: 'completar',
+                question: 'Según el glosario, la captura de datos es el procedimiento para transformar la información del cuestionario en un ________ de datos.',
+                options: ['A) archivo electrónico', 'B) formato impreso', 'C) reporte estadístico', 'D) directorio'],
+                correct: 0,
+                explanation: 'Glosario: "Captura de datos. Procedimiento para transformar la información del cuestionario en un archivo electrónico de datos."',
+                distractors: 'Las otras opciones no son el resultado de la captura de datos según la definición.'
+            },
+            // 31. Múltiple: diseño de la captación - logística administrativa
+            {
+                type: 'multiple',
+                question: 'En la fase de Diseño de la captación y el procesamiento, la logística administrativa incluye la identificación de requerimientos de bienes inmuebles, equipos, materiales y servicios, así como los procedimientos para su distribución y devolución. ¿Qué otro aspecto se menciona?',
+                options: ['A) La definición de los criterios de validación.', 'B) La estimación final del presupuesto y procedimientos de control.', 'C) El diseño del marco conceptual.', 'D) La elaboración de manuales de codificación.'],
+                correct: 1,
+                explanation: 'En la página 22 se menciona: "la estimación final del presupuesto, así como los procedimientos para su control y eficiente aplicación."',
+                distractors: 'A y C son de diseño conceptual; D es de procesamiento.'
+            },
+            // 32. Relación: tipos de registro por cobertura
+            {
+                type: 'relacion',
+                question: 'Relacione el tipo de registro según su cobertura de eventos:<br>1. Cobertura total<br>2. Cobertura parcial<br><br>A) Monitoreo de todas las unidades de interés.<br>B) Monitoreo de unidades seleccionadas.',
+                options: ['A) 1-A, 2-B', 'B) 1-B, 2-A', 'C) 1-A, 2-A', 'D) 1-B, 2-B'],
+                correct: 0,
+                explanation: 'En la página 7 (nota al pie) se mencionan tipos por cobertura de eventos: "De cobertura total, por monitoreo de todas las unidades de interés. De cobertura parcial, por monitoreo de unidades seleccionadas de interés."',
+                distractors: 'La opción B invierte; C y D repiten.'
+            },
+            // 33. Completar: fase de presentación - documentación
+            {
+                type: 'completar',
+                question: 'En la fase de Presentación de resultados, la documentación y evaluación del proceso incluye la elaboración de documentos descriptivos del proceso y sus fases, así como la ________ del proceso.',
+                options: ['A) evaluación', 'B) planeación', 'C) presupuestación', 'D) validación'],
+                correct: 0,
+                explanation: 'En la página 32 se menciona "EVALUACIÓN DEL PROCESO" como parte de la documentación y evaluación.',
+                distractors: 'Planeación, presupuestación y validación no son el término usado en esa macroactividad.'
+            },
+            // 34. Múltiple: requisitos para el aprovechamiento
+            {
+                type: 'multiple',
+                question: 'De acuerdo con el documento, ¿cuál de los siguientes NO es un factor básico para el aprovechamiento estadístico de los registros administrativos?',
+                options: ['A) La base legal para la cobertura de eventos y continuidad.', 'B) La cobertura y desglose conceptual y geográfico de los registros.', 'C) El nivel de operación de procesos y tecnologías aplicadas.', 'D) El tamaño de la muestra de los registros.'],
+                correct: 3,
+                explanation: 'En la página 9 se mencionan tres factores básicos: base legal, cobertura y desglose conceptual/geográfico, nivel de operación de procesos y tecnologías. El tamaño de la muestra no es un factor, ya que los registros suelen ser de cobertura total.',
+                distractors: 'A, B y C son los factores básicos; D es un concepto ajeno.'
+            },
+            // 35. Relación: instrumentos de captación
+            {
+                type: 'relacion',
+                question: 'Relacione el tipo de instrumento de captación con su definición según el glosario:<br>1. Cuestionario<br>2. Cuestionario electrónico<br><br>A) Formato que se presenta por medio de programas en equipos informáticos.<br>B) Tipo de instrumento que presenta preguntas e indicaciones en un orden determinado.',
+                options: ['A) 1-B, 2-A', 'B) 1-A, 2-B', 'C) 1-B, 2-B', 'D) 1-A, 2-A'],
+                correct: 0,
+                explanation: 'Glosario: Cuestionario = tipo de instrumento que presenta preguntas e indicaciones en orden; Cuestionario electrónico = formato que se presenta por medio de programas informáticos.',
+                distractors: 'La opción B invierte; C y D repiten.'
+            },
+            // 36. Completar: glosario - codificación
+            {
+                type: 'completar',
+                question: 'La codificación es el procedimiento para asignar identificadores numéricos y/o alfanuméricos a conceptos en un ________ establecido.',
+                options: ['A) orden', 'B) sistema', 'C) formato', 'D) archivo'],
+                correct: 0,
+                explanation: 'Glosario: "Codificación. Procedimiento para asignar identificadores numéricos y/o alfanuméricos a conceptos en un orden establecido."',
+                distractors: 'Sistema, formato y archivo no son los términos exactos de la definición.'
+            },
+            // 37. Múltiple: fase de planeación - diagnóstico
+            {
+                type: 'multiple',
+                question: 'En el diagnóstico de la fase de Planeación, uno de los aspectos a revisar es la caracterización de los eventos objeto de registro, considerando elementos como unidades de registro, momento de ocurrencia, momento de registro, sitio de ocurrencia, sitio de registro, formato de registro y ________.',
+                options: ['A) variables de captación', 'B) criterios de validación', 'C) sistemas de procesamiento', 'D) manuales de procedimientos'],
+                correct: 0,
+                explanation: 'En la página 16 se mencionan las variables de captación como parte de la caracterización de los eventos.',
+                distractors: 'B, C y D son elementos de otras fases.'
+            },
+            // 38. Relación: fases y su relación con la gestión de calidad
+            {
+                type: 'relacion',
+                question: 'Según el esquema general del proceso, la gestión de la calidad se aplica a lo largo de todas las fases. ¿Cuál es el papel de la gestión de la calidad?',
+                options: ['A) Es una fase separada que se ejecuta al final.', 'B) Se aplica transversalmente a todas las fases del proceso estadístico.', 'C) Solo se aplica en la fase de captación.', 'D) Solo se aplica en la fase de procesamiento.'],
+                correct: 1,
+                explanation: 'En el esquema 1 (pág. 11) se muestra la "Gestión de la calidad" como un elemento que envuelve todo el proceso estadístico, no como una fase aislada.',
+                distractors: 'A, C y D son incorrectos porque la gestión de calidad es transversal.'
+            },
+            // 39. Completar: glosario - omisión de respuesta
+            {
+                type: 'completar',
+                question: 'La omisión de respuesta se define como la ausencia de respuestas en preguntas donde ________.',
+                options: ['A) debería haberla', 'B) es opcional', 'C) no aplica', 'D) se requiere justificación'],
+                correct: 0,
+                explanation: 'Glosario: "Omisión de respuesta. Ausencia de respuestas en preguntas donde debería haberla."',
+                distractors: 'Las otras opciones no corresponden a la definición.'
+            },
+            // 40. Múltiple: fase de procesamiento - validación
+            {
+                type: 'multiple',
+                question: 'En la validación de datos, los tipos de problemas que pueden presentarse incluyen omisiones, valores fuera de rango, multirrespuesta, inconsistencias y respuestas a preguntas no aplicables. ¿Qué solución se menciona para estos problemas?',
+                options: ['A) Rechazo automático del registro.', 'B) Imputación, asignación de valor no especificado, cancelación de respuesta, entre otras.', 'C) Eliminación del registro.', 'D) Reenvío al informante para corrección.'],
+                correct: 1,
+                explanation: 'En la página 20 y 29 se mencionan soluciones como reconsulta, imputación, asignación de valor no especificado, cancelación de respuesta.',
+                distractors: 'A, C y D no son las soluciones previstas en el documento; se prefiere no eliminar registros si es posible.'
+            },
+            // 41. Relación: conceptos de presentación de resultados
+            {
+                type: 'relacion',
+                question: 'Relacione el concepto con su definición:<br>1. Servicio en línea<br>2. Producto estadístico<br><br>A) Acceso electrónico vía Internet para consultar bases de datos y productos.<br>B) Resultados estadísticos presentados en diversas formas y medios.',
+                options: ['A) 1-A, 2-B', 'B) 1-B, 2-A', 'C) 1-A, 2-A', 'D) 1-B, 2-B'],
+                correct: 0,
+                explanation: 'Glosario: Servicio en línea = acceso electrónico vía Internet; Producto estadístico no está definido explícitamente pero se refiere a los resultados presentados.',
+                distractors: 'La opción B invierte; C y D repiten.'
+            },
+            // 42. Completar: fase de diseño conceptual - consulta a usuarios
+            {
+                type: 'completar',
+                question: 'En la fase de Diseño Conceptual, la acotación de necesidades de información estadística incluye la revisión de documentos relacionados, la consulta a usuarios, productores y expertos, y el estudio de ________ acumuladas sobre la explotación de registros administrativos.',
+                options: ['A) experiencias', 'B) estadísticas', 'C) recomendaciones', 'D) leyes'],
+                correct: 0,
+                explanation: 'En la página 19 se menciona: "el estudio y uso de experiencias acumuladas sobre la explotación de registros administrativos tanto en el ámbito nacional como internacional".',
+                distractors: 'Estadísticas, recomendaciones y leyes no son el término exacto usado en esa sección.'
+            },
+            // 43. Múltiple: fase de captación - transferencia de datos
+            {
+                type: 'multiple',
+                question: 'En la fase de Captación, la transferencia de datos se realiza cuando las fuentes informantes reportan los eventos de interés estadístico. ¿Qué figura operativa se encarga de revisar la información para corroborar que los datos estén completos y sean congruentes?',
+                options: ['A) El personal de la oficina de estadística.', 'B) El personal de la unidad de registro.', 'C) Los entrevistadores de campo.', 'D) Los supervisores externos.'],
+                correct: 0,
+                explanation: 'En la página 26 se indica: "La figura operativa de la oficina de estadística considera entre sus funciones, las de revisar la información, con el fin de corroborar que los datos estén completos y sean congruentes".',
+                distractors: 'B, C y D no son los responsables según la descripción.'
+            },
+            // 44. Relación: tipos de registros por procedimiento
+            {
+                type: 'relacion',
+                question: 'Relacione el tipo de registro según su procedimiento de registro:<br>1. Centralizado<br>2. Descentralizado<br><br>A) Se recopilan en diversas oficinas, pero se registran en oficinas concentradoras.<br>B) Se recopilan y registran en la misma oficina.',
+                options: ['A) 1-A, 2-B', 'B) 1-B, 2-A', 'C) 1-A, 2-A', 'D) 1-B, 2-B'],
+                correct: 0,
+                explanation: 'En la nota al pie de la página 7 se define: "De registro centralizado, que se recopilan en diversas oficinas, pero que son registrados en oficinas concentradoras. De registro descentralizado, que se recopilan y registran en la misma oficina."',
+                distractors: 'La opción B invierte; C y D repiten.'
+            },
+            // 45. Completar: glosario - inconsistencia
+            {
+                type: 'completar',
+                question: 'La inconsistencia se define como la incompatibilidad numérica o lógica en los valores de ________ o más datos.',
+                options: ['A) dos', 'B) tres', 'C) varios', 'D) todos'],
+                correct: 0,
+                explanation: 'Glosario: "Inconsistencia. Incompatibilidad numérica o lógica en los valores de dos o más datos."',
+                distractors: 'Tres, varios y todos no son los términos exactos de la definición.'
+            },
+            // 46. Múltiple: fase de procesamiento - liberación de archivos
+            {
+                type: 'multiple',
+                question: 'En la fase de Procesamiento, la liberación de archivos validados se produce cuando se asegura que la información capturada satisface los criterios de validación. ¿Qué se obtiene en ese momento?',
+                options: ['A) El diseño de los instrumentos de captación.', 'B) El reporte que evidencia la liberación.', 'C) El programa de actividades operativas.', 'D) El marco conceptual final.'],
+                correct: 1,
+                explanation: 'En la página 29 se indica: "se procede a la liberación de archivos y la obtención del reporte que la evidencia."',
+                distractors: 'A, C y D son productos de otras fases.'
+            },
+            // 47. Relación: tipos de registros por contacto con ciudadanía
+            {
+                type: 'relacion',
+                question: 'Relacione el tipo de registro según su contacto con la ciudadanía:<br>1. De trámite al público<br>2. De actividad interna<br><br>A) Recopilan información sobre servicios a la ciudadanía, algunos obligatorios.<br>B) Registros sobre actividades sustantivas sin contacto directo con la ciudadanía.',
+                options: ['A) 1-A, 2-B', 'B) 1-B, 2-A', 'C) 1-A, 2-A', 'D) 1-B, 2-B'],
+                correct: 0,
+                explanation: 'En la nota al pie de la página 7 se define: "De trámite al público, los cuales recopilan información sobre servicios a la ciudadanía... De actividad interna, relacionados con los registros sobre las actividades sustantivas, sin mediar un contacto directo con la ciudadanía."',
+                distractors: 'La opción B invierte; C y D repiten.'
+            },
+            // 48. Completar: fase de diseño de captación - manuales
+            {
+                type: 'completar',
+                question: 'En la fase de Diseño de la captación y el procesamiento, la elaboración de manuales de procedimientos y de control tiene como objetivo coordinar y sistematizar las funciones en un marco de ________.',
+                options: ['A) transparencia', 'B) calidad', 'C) legalidad', 'D] eficiencia'],
+                correct: 0,
+                explanation: 'En la página 22 se menciona: "con el objetivo de coordinar y sistematizar las funciones en un marco de transparencia."',
+                distractors: 'Calidad, legalidad y eficiencia no son los términos exactos usados en esa frase.'
+            },
+            // 49. Múltiple: fase de presentación - análisis de datos
+            {
+                type: 'multiple',
+                question: 'En la fase de Presentación de resultados, durante la producción editorial, se realiza el análisis de los datos para verificar consistencia. ¿Cuál de las siguientes NO es un tipo de consistencia mencionado?',
+                options: ['A) Consistencia de valores equivalentes.', 'B) Consistencia de valores relacionados.', 'C) Consistencia de estructuras.', 'D) Consistencia temporal de series.'],
+                correct: 3,
+                explanation: 'En la página 31 se mencionan: consistencia de valores equivalentes, de valores relacionados y de estructuras. No se menciona "consistencia temporal de series" en ese contexto.',
+                distractors: 'A, B y C son los tipos de consistencia explícitos; D es un concepto adicional no mencionado.'
+            },
+            // 50. Relación: términos del glosario (final)
+            {
+                type: 'relacion',
+                question: 'Relacione el término con su definición:<br>1. Cobertura geográfica<br>2. Desagregación geográfica<br>3. Clasificación<br><br>A) Territorio al que se refiere la captación de datos.<br>B) Nivel de detalle de una división territorial.<br>C) Ordenamiento de todas las modalidades o intervalos admitidos por una variable.',
+                options: ['A) 1-A, 2-B, 3-C', 'B) 1-B, 2-A, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-A, 2-C, 3-B'],
+                correct: 0,
+                explanation: 'Glosario: Cobertura geográfica = territorio al que se refiere la captación; Desagregación geográfica = nivel de detalle de una división territorial; Clasificación = ordenamiento de modalidades o intervalos.',
+                distractors: 'Las otras opciones intercambian incorrectamente las definiciones.'
+            }
+        ];
+
+        // ========== LÓGICA DE LA APLICACIÓN ==========
+        let currentIndex = 0;
+        const totalQuestions = questions.length;
+        const state = questions.map(() => ({ selected: null, verified: false, correct: false }));
+
+        const questionNumberEl = document.getElementById('question-number');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackEl = document.getElementById('feedback');
+        const prevBtn = document.getElementById('prev-btn');
+        const verifyBtn = document.getElementById('verify-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressLabel = document.getElementById('progress-label');
+        const resultContainer = document.getElementById('result');
+        const scoreDisplay = document.getElementById('score-display');
+        const scoreMessage = document.getElementById('score-message');
+        const restartBtn = document.getElementById('restart-btn');
+
+        let totalCorrect = 0;
+
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            const s = state[currentIndex];
+            const isVerified = s.verified;
+
+            questionNumberEl.textContent = `Pregunta ${currentIndex + 1} de ${totalQuestions}`;
+            questionTextEl.innerHTML = q.question;
+
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const div = document.createElement('div');
+                div.className = 'option-item';
+
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'question';
+                radio.value = idx;
+                radio.id = `opt_${idx}`;
+                if (isVerified) {
+                    radio.disabled = true;
+                    div.classList.add('disabled');
+                    if (idx === q.correct) {
+                        div.classList.add('correct-verified');
+                    } else if (s.selected === idx && idx !== q.correct) {
+                        div.classList.add('incorrect-verified');
+                    }
+                } else {
+                    if (s.selected === idx) {
+                        radio.checked = true;
+                    }
+                    radio.addEventListener('change', () => {
+                        if (!s.verified) {
+                            s.selected = idx;
+                            verifyBtn.disabled = false;
+                        }
+                    });
+                }
+
+                const label = document.createElement('label');
+                label.htmlFor = `opt_${idx}`;
+                label.textContent = opt;
+
+                div.appendChild(radio);
+                div.appendChild(label);
+                optionsContainer.appendChild(div);
+            });
+
+            if (isVerified) {
+                const isCorrect = (s.selected === q.correct);
+                feedbackEl.className = 'show ' + (isCorrect ? 'correct' : 'incorrect');
+                feedbackEl.innerHTML = `
+                    <div class="fb-title">${isCorrect ? '✅ Correcto' : '❌ Incorrecto'}</div>
+                    <div class="fb-explain"><strong>Justificación:</strong> ${q.explanation}</div>
+                    <div class="fb-distractors"><strong>Análisis de distractores:</strong> ${q.distractors}</div>
+                `;
+                feedbackEl.style.display = 'block';
+            } else {
+                feedbackEl.className = '';
+                feedbackEl.innerHTML = '';
+                feedbackEl.style.display = 'none';
+            }
+
+            verifyBtn.disabled = isVerified || s.selected === null;
+            prevBtn.disabled = (currentIndex === 0);
+            nextBtn.disabled = !s.verified;
+            progressLabel.textContent = `Pregunta ${currentIndex + 1} de ${totalQuestions}`;
+        }
+
+        function verifyAnswer() {
+            const q = questions[currentIndex];
+            const s = state[currentIndex];
+            if (s.verified || s.selected === null) return;
+
+            const isCorrect = (s.selected === q.correct);
+            s.verified = true;
+            s.correct = isCorrect;
+            if (isCorrect) totalCorrect++;
+
+            renderQuestion();
+        }
+
+        function goToPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function goToNext() {
+            const s = state[currentIndex];
+            if (!s.verified) return;
+            if (currentIndex < totalQuestions - 1) {
+                currentIndex++;
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('question-container').style.display = 'none';
+            resultContainer.style.display = 'block';
+            const pct = Math.round((totalCorrect / totalQuestions) * 100);
+            scoreDisplay.textContent = pct + '%';
+            let msg = '';
+            if (pct >= 90) msg = '¡Excelente! Dominas los conceptos del proceso estándar.';
+            else if (pct >= 70) msg = 'Buen trabajo, revisa las fases y definiciones con menor puntuación.';
+            else if (pct >= 50) msg = 'Es necesario estudiar más a fondo las secciones y el glosario.';
+            else msg = 'Te recomendamos leer nuevamente el documento y volver a intentarlo.';
+            scoreMessage.textContent = msg;
+        }
+
+        function restart() {
+            for (let i = 0; i < totalQuestions; i++) {
+                state[i] = { selected: null, verified: false, correct: false };
+            }
+            totalCorrect = 0;
+            currentIndex = 0;
+            document.getElementById('question-container').style.display = 'block';
+            resultContainer.style.display = 'none';
+            renderQuestion();
+        }
+
+        verifyBtn.addEventListener('click', verifyAnswer);
+        prevBtn.addEventListener('click', goToPrev);
+        nextBtn.addEventListener('click', goToNext);
+        restartBtn.addEventListener('click', restart);
+
+        renderQuestion();
+    </script>
+</body>
+</html>
