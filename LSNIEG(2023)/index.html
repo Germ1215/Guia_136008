@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Estudio - LSNIEG (Art. 52-54)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #f0f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 20px;
+        }
+        #app {
+            max-width: 940px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+            padding: 30px 35px;
+            transition: all 0.2s;
+        }
+        h1 {
+            font-size: 26px;
+            color: #0b2b4a;
+            margin-top: 0;
+            margin-bottom: 6px;
+            border-bottom: 4px solid #1d6f9c;
+            padding-bottom: 14px;
+        }
+        .subtitle {
+            color: #2c3e50;
+            font-weight: 400;
+            margin-top: -5px;
+            margin-bottom: 22px;
+            font-size: 15px;
+            background: #e8f0fe;
+            padding: 8px 14px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+        #question-number {
+            font-weight: 700;
+            color: #1a4972;
+            font-size: 18px;
+            margin: 0 0 5px 0;
+        }
+        #question-text {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #1e2a36;
+            margin: 8px 0 18px 0;
+            padding: 12px 16px;
+            background: #f6faff;
+            border-radius: 12px;
+            border-left: 5px solid #1d6f9c;
+        }
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 16px 0 20px 0;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #fafcff;
+            border: 1.5px solid #dce5f0;
+            border-radius: 12px;
+            padding: 12px 20px;
+            transition: background 0.15s, border-color 0.15s;
+            cursor: pointer;
+        }
+        .option-item:hover {
+            background: #e9eff7;
+            border-color: #8fb3e0;
+        }
+        .option-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            accent-color: #1d6f9c;
+            cursor: pointer;
+        }
+        .option-item label {
+            font-size: 16px;
+            cursor: pointer;
+            flex: 1;
+            color: #1e2a36;
+        }
+        .option-item.correct-verified {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        .option-item.incorrect-verified {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        .option-item.disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
+        .option-item.disabled:hover {
+            background: #fafcff;
+            border-color: #dce5f0;
+        }
+        #feedback {
+            margin: 16px 0 18px 0;
+            padding: 16px 22px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            border-left: 6px solid #6c757d;
+            font-size: 15px;
+            line-height: 1.6;
+            display: none;
+        }
+        #feedback.show {
+            display: block;
+        }
+        #feedback.correct {
+            background: #e6f4ea;
+            border-left-color: #28a745;
+        }
+        #feedback.incorrect {
+            background: #fce8e8;
+            border-left-color: #dc3545;
+        }
+        #feedback .fb-title {
+            font-weight: 700;
+            font-size: 16px;
+        }
+        #feedback .fb-explain {
+            margin-top: 6px;
+            color: #1e2a36;
+        }
+        #feedback .fb-distractors {
+            margin-top: 8px;
+            color: #3d4a5a;
+            font-size: 14px;
+            border-top: 1px dashed #ced8e5;
+            padding-top: 8px;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+            align-items: center;
+        }
+        .btn {
+            padding: 10px 28px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            background: #eaeef3;
+            color: #1e2a36;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.05s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        .btn:hover:not(:disabled) {
+            background: #d3dce8;
+        }
+        .btn:active:not(:disabled) {
+            transform: scale(0.96);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .btn-primary {
+            background: #1d6f9c;
+            color: white;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #155a7a;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-success:hover:not(:disabled) {
+            background: #1e8e3a;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background: #5a6268;
+        }
+        #result {
+            margin-top: 28px;
+            padding: 24px;
+            background: #e2f0fa;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #0b2b4a;
+            display: none;
+        }
+        #result .score {
+            font-size: 48px;
+            color: #1a4972;
+        }
+        .progress-info {
+            font-size: 14px;
+            color: #4a5b6e;
+            margin-left: auto;
+        }
+        @media (max-width: 600px) {
+            #app { padding: 18px; }
+            h1 { font-size: 22px; }
+            .btn-group { flex-direction: column; align-items: stretch; }
+            .btn { text-align: center; }
+            .progress-info { margin-left: 0; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>📊 Guía de Estudio – LSNIEG (Artículos 52-54)</h1>
+        <div class="subtitle">Título Tercero · Organización y Funcionamiento del INEGI</div>
+
+        <div id="question-container">
+            <div id="question-number"></div>
+            <div id="question-text"></div>
+            <div id="options-container"></div>
+            <div id="feedback"></div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" id="prev-btn" disabled>◀ Anterior</button>
+                <button class="btn btn-primary" id="verify-btn" disabled>✔ Verificar</button>
+                <button class="btn btn-success" id="next-btn" disabled>Siguiente ▶</button>
+                <span class="progress-info" id="progress-label">Pregunta 1 de 20</span>
+            </div>
+        </div>
+
+        <div id="result">
+            <div>📈 Has completado todas las preguntas</div>
+            <div class="score" id="score-display">0%</div>
+            <div style="font-weight:400; font-size:16px; margin-top:6px;" id="score-message"></div>
+            <button class="btn btn-primary" id="restart-btn" style="margin-top:16px;">🔄 Reiniciar</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== PREGUNTAS (20) ==========
+        const questions = [
+            // 1. Completar: naturaleza del INEGI
+            {
+                type: 'completar',
+                question: 'El Instituto Nacional de Estadística y Geografía es, conforme al apartado B del artículo 26 de la Constitución, un organismo público con autonomía técnica y de gestión, personalidad jurídica y ________ propios.',
+                options: ['A) patrimonio', 'B) presupuesto', 'C) recursos', 'D) bienes'],
+                correct: 0,
+                explanation: 'Artículo 52: "El Instituto es... un organismo público con autonomía técnica y de gestión, personalidad jurídica y patrimonio propios".',
+                distractors: 'Presupuesto, recursos y bienes son conceptos relacionados pero el término exacto es "patrimonio".'
+            },
+            // 2. Multiple: responsabilidad del INEGI
+            {
+                type: 'multiple',
+                question: '¿Cuál es la principal responsabilidad del INEGI según el artículo 52?',
+                options: ['A) Realizar censos económicos cada cinco años.', 'B) Normar y coordinar el Sistema Nacional de Información Estadística y Geográfica.', 'C) Elaborar el Índice Nacional de Precios al Consumidor.', 'D) Administrar el Registro Nacional de Población.'],
+                correct: 1,
+                explanation: 'Artículo 52: "responsable de normar y coordinar el Sistema Nacional de Información Estadística y Geográfica, así como de realizar las Actividades a que se refiere el artículo 59 de esta Ley."',
+                distractors: 'A y C son facultades exclusivas (art. 59), D no corresponde al INEGI.'
+            },
+            // 3. Relación: principios que rigen la información
+            {
+                type: 'relacion',
+                question: 'Relacione el principio que debe regir la Información de Interés Nacional con su enunciado según el artículo 53:<br>1. Accesibilidad<br>2. Transparencia<br>3. Objetividad<br><br>A) La información debe ser clara y verificable.<br>B) La información debe estar disponible para los usuarios.<br>C) La información debe reflejar la realidad sin sesgos.',
+                options: ['A) 1-B, 2-A, 3-C', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-A, 3-B', 'D) 1-B, 2-C, 3-A'],
+                correct: 0,
+                explanation: 'Artículo 53: El Instituto tiene como objetivo prioritario lograr que la Información de Interés Nacional se sujete a los principios enunciados en el artículo 3: accesibilidad, transparencia, objetividad e independencia. La relación correcta asigna accesibilidad a disponibilidad, transparencia a claridad/verificabilidad, objetividad a realidad sin sesgos.',
+                distractors: 'Las otras opciones asignan incorrectamente los principios.'
+            },
+            // 4. Completar: objetivo prioritario del INEGI
+            {
+                type: 'completar',
+                question: 'El Instituto tendrá como objetivo prioritario realizar las acciones tendientes a lograr que la Información de Interés Nacional se sujete a los principios enunciados en el artículo ________ de esta Ley.',
+                options: ['A) 3', 'B) 2', 'C) 4', 'D) 52'],
+                correct: 0,
+                explanation: 'Artículo 53: "El Instituto tendrá como objetivo prioritario, realizar las acciones tendientes a lograr que la Información de Interés Nacional se sujete a los principios enunciados en el artículo 3 de esta Ley."',
+                distractors: 'Los artículos 2 (definiciones), 4 (objetivos del Sistema) y 52 (naturaleza del INEGI) no son los que enuncian los principios rectores.'
+            },
+            // 5. Multiple: acciones del Instituto según artículo 54
+            {
+                type: 'multiple',
+                question: 'De acuerdo con el artículo 54, el Instituto realizará acciones para lograr la adecuación conceptual de la Información de Interés Nacional a las necesidades que el ________ impongan.',
+                options: ['A) desarrollo económico y social del país', 'B) Plan Nacional de Desarrollo', 'C) Sistema Nacional de Información', 'D) Presupuesto de Egresos'],
+                correct: 0,
+                explanation: 'Artículo 54, fracción I: "La adecuación conceptual de la Información de Interés Nacional, a las necesidades que el desarrollo económico y social del país impongan".',
+                distractors: 'Plan Nacional de Desarrollo, Sistema Nacional de Información y Presupuesto no son los términos exactos de la fracción I.'
+            },
+            // 6. Relación: acciones del INEGI (artículo 54)
+            {
+                type: 'relacion',
+                question: 'Relacione la acción del INEGI con su objetivo según el artículo 54:<br>1. Adecuación conceptual<br>2. Comparabilidad en tiempo y espacio<br>3. Adecuación a estándares internacionales<br><br>A) Facilitar la comparación internacional.<br>B) Responder a las necesidades del desarrollo económico y social.<br>C) Que la información sea comparable en el tiempo y en el espacio.',
+                options: ['A) 1-B, 2-C, 3-A', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-A, 3-B', 'D) 1-B, 2-A, 3-C'],
+                correct: 0,
+                explanation: 'Artículo 54: I. Adecuación conceptual a necesidades del desarrollo; II. Que la información sea comparable en el tiempo y en el espacio; III. Adecuación a estándares internacionales para facilitar comparación.',
+                distractors: 'Las otras opciones invierten o confunden las relaciones.'
+            },
+            // 7. Completar: autonomía del INEGI
+            {
+                type: 'completar',
+                question: 'El INEGI es un organismo público con autonomía técnica y de gestión, personalidad jurídica y patrimonio propios. Su autonomía técnica se refiere a la libertad para ________.',
+                options: ['A) determinar los métodos y procedimientos estadísticos y geográficos', 'B) administrar su presupuesto', 'C) contratar personal', 'D) establecer sus oficinas regionales'],
+                correct: 0,
+                explanation: 'El artículo 52 establece la autonomía técnica, que en el contexto del INEGI se refiere a la independencia para definir métodos y procedimientos técnicos en sus actividades estadísticas y geográficas, aunque el texto no lo detalla, es la interpretación correcta de "autonomía técnica".',
+                distractors: 'B, C y D son aspectos de gestión o administrativos, no técnicos.'
+            },
+            // 8. Multiple: principio rector del Sistema (art. 3)
+            {
+                type: 'multiple',
+                question: '¿Cuál de los siguientes NO es un principio rector del Sistema Nacional de Información Estadística y Geográfica, mencionado en el artículo 3 y al que debe sujetarse la Información de Interés Nacional?',
+                options: ['A) Accesibilidad', 'B) Transparencia', 'C) Confidencialidad', 'D) Objetividad'],
+                correct: 2,
+                explanation: 'Artículo 3: "Serán principios rectores del Sistema los de accesibilidad, transparencia, objetividad e independencia." La confidencialidad es un principio aplicable a los datos de los informantes (art. 37), pero no es un principio rector del Sistema según el artículo 3.',
+                distractors: 'A, B y D son principios rectores; C es un principio de manejo de datos pero no está en el artículo 3.'
+            },
+            // 9. Relación: artículo 54 y sus fracciones
+            {
+                type: 'relacion',
+                question: 'Relacione la fracción del artículo 54 con su contenido:<br>1. Fracción I<br>2. Fracción II<br>3. Fracción III<br><br>A) Adecuación de procedimientos a estándares internacionales.<br>B) Adecuación conceptual a necesidades del desarrollo.<br>C) Comparabilidad en tiempo y espacio.',
+                options: ['A) 1-B, 2-C, 3-A', 'B) 1-A, 2-B, 3-C', 'C) 1-C, 2-A, 3-B', 'D) 1-B, 2-A, 3-C'],
+                correct: 0,
+                explanation: 'Artículo 54: I. Adecuación conceptual...; II. Que la Información sea comparable en el tiempo y en el espacio; III. Adecuación de los procedimientos estadísticos y geográficos a estándares internacionales.',
+                distractors: 'Las otras opciones asignan incorrectamente las fracciones.'
+            },
+            // 10. Completar: función del INEGI
+            {
+                type: 'completar',
+                question: 'El INEGI es responsable de normar y coordinar el Sistema Nacional de Información Estadística y Geográfica, así como de realizar las Actividades a que se refiere el artículo ________ de esta Ley.',
+                options: ['A) 59', 'B) 52', 'C) 3', 'D) 54'],
+                correct: 0,
+                explanation: 'Artículo 52: "responsable de normar y coordinar el Sistema... así como de realizar las Actividades a que se refiere el artículo 59 de esta Ley."',
+                distractors: 'Art. 52 define al INEGI, art. 3 principios, art. 54 acciones; el 59 es el que enumera las facultades exclusivas.'
+            },
+            // 11. Multiple: información comparable
+            {
+                type: 'multiple',
+                question: 'Según el artículo 54, fracción II, el Instituto realizará acciones para que la Información sea comparable en el tiempo y en el ________.',
+                options: ['A) espacio', 'B) territorio', 'C) ámbito geográfico', 'D) contexto internacional'],
+                correct: 0,
+                explanation: 'Artículo 54, fracción II: "Que la Información sea comparable en el tiempo y en el espacio".',
+                distractors: 'Territorio, ámbito geográfico y contexto internacional no son los términos exactos de la fracción II.'
+            },
+            // 12. Relación: principios del Sistema y su fuente
+            {
+                type: 'relacion',
+                question: 'Relacione el principio rector con su definición implícita:<br>1. Independencia<br>2. Objetividad<br>3. Transparencia<br><br>A) La información se genera sin influencias externas.<br>B) La información es clara y su proceso es verificable.<br>C) La información refleja la realidad sin sesgos.',
+                options: ['A) 1-A, 2-C, 3-B', 'B) 1-B, 2-A, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-A, 2-B, 3-C'],
+                correct: 0,
+                explanation: 'Artículo 3: principios rectores: accesibilidad, transparencia, objetividad e independencia. Independencia: sin influencias externas; Objetividad: sin sesgos; Transparencia: claro y verificable.',
+                distractors: 'Las otras opciones asignan incorrectamente las definiciones.'
+            },
+            // 13. Completar: objetivo prioritario (art. 53)
+            {
+                type: 'completar',
+                question: 'El Instituto tendrá como objetivo prioritario realizar las acciones tendientes a lograr que la Información de Interés Nacional se sujete a los principios de accesibilidad, transparencia, objetividad e ________.',
+                options: ['A) independencia', 'B) confidencialidad', 'C) legalidad', 'D] eficiencia'],
+                correct: 0,
+                explanation: 'Artículo 3: "Serán principios rectores del Sistema los de accesibilidad, transparencia, objetividad e independencia." El artículo 53 remite a estos principios.',
+                distractors: 'Confidencialidad es un principio de protección de datos, no es rector del Sistema; legalidad y eficiencia no se mencionan como principios rectores.'
+            },
+            // 14. Multiple: autonomía de gestión
+            {
+                type: 'multiple',
+                question: 'La autonomía de gestión del INEGI, mencionada en el artículo 52, implica principalmente:',
+                options: ['A) La facultad de administrar su presupuesto y recursos sin intervención externa.', 'B) La libertad para decidir los métodos estadísticos.', 'C) La independencia para establecer su estructura orgánica.', 'D) La capacidad para firmar tratados internacionales.'],
+                correct: 0,
+                explanation: 'Artículo 52: "organismo público con autonomía técnica y de gestión, personalidad jurídica y patrimonio propios". La autonomía de gestión se refiere a la capacidad de administrar sus recursos y presupuesto de manera independiente, conforme a sus propias decisiones.',
+                distractors: 'B es autonomía técnica; C es parte de la gestión pero no la principal; D no es una atribución directa.'
+            },
+            // 15. Relación: artículos y su contenido
+            {
+                type: 'relacion',
+                question: 'Relacione el artículo con el tema que aborda:<br>1. Artículo 52<br>2. Artículo 53<br>3. Artículo 54<br><br>A) Naturaleza y responsabilidad del INEGI.<br>B) Acciones para garantizar calidad y comparabilidad.<br>C) Objetivo prioritario del INEGI (principios rectores).',
+                options: ['A) 1-A, 2-C, 3-B', 'B) 1-B, 2-A, 3-C', 'C) 1-C, 2-B, 3-A', 'D) 1-A, 2-B, 3-C'],
+                correct: 0,
+                explanation: 'Art. 52: naturaleza y responsabilidad; Art. 53: objetivo prioritario (principios); Art. 54: acciones específicas (adecuación, comparabilidad, estándares internacionales).',
+                distractors: 'Las otras opciones asignan incorrectamente los temas.'
+            },
+            // 16. Completar: adecuación a estándares internacionales
+            {
+                type: 'completar',
+                question: 'El Instituto realizará acciones para lograr la adecuación de los procedimientos estadísticos y geográficos a estándares internacionales, con el fin de facilitar su ________.',
+                options: ['A) comparación', 'B) aplicación', 'C) difusión', 'D) integración'],
+                correct: 0,
+                explanation: 'Artículo 54, fracción III: "La adecuación de los procedimientos estadísticos y geográficos a estándares internacionales, para facilitar su comparación."',
+                distractors: 'Aplicación, difusión e integración no son los términos exactos de la fracción III.'
+            },
+            // 17. Multiple: relación con la Constitución
+            {
+                type: 'multiple',
+                question: 'El INEGI se fundamenta en el apartado B del artículo 26 de la Constitución Política de los Estados Unidos Mexicanos. Este apartado se refiere a:',
+                options: ['A) La organización de un sistema nacional de información estadística y geográfica.', 'B) La planeación democrática del desarrollo nacional.', 'C) El derecho de acceso a la información pública.', 'D) La autonomía de los órganos reguladores.'],
+                correct: 0,
+                explanation: 'Artículo 52: "El Instituto es, conforme a lo dispuesto en el apartado B del artículo 26 de la Constitución Política...". El apartado B del artículo 26 establece el Sistema Nacional de Información Estadística y Geográfica.',
+                distractors: 'B es el apartado A del artículo 26; C es otro derecho constitucional; D no corresponde.'
+            },
+            // 18. Relación: acciones del art. 54 y su finalidad
+            {
+                type: 'relacion',
+                question: 'Relacione la acción del artículo 54 con su finalidad:<br>1. Adecuación conceptual<br>2. Comparabilidad<br>3. Estándares internacionales<br><br>A) Responder a necesidades del desarrollo.<br>B) Facilitar comparación internacional.<br>C) Permitir análisis temporal y espacial.',
+                options: ['A) 1-A, 2-C, 3-B', 'B) 1-C, 2-A, 3-B', 'C) 1-B, 2-C, 3-A', 'D) 1-A, 2-B, 3-C'],
+                correct: 0,
+                explanation: 'Art. 54: Adecuación conceptual a necesidades del desarrollo; Comparabilidad en tiempo y espacio; Estándares internacionales para facilitar comparación internacional.',
+                distractors: 'Las otras opciones confunden las finalidades.'
+            },
+            // 19. Completar: objeto prioritario y principios
+            {
+                type: 'completar',
+                question: 'El objetivo prioritario del INEGI es lograr que la Información de Interés Nacional se sujete a los principios rectores del Sistema, entre ellos la ________, que implica que la información sea clara y verificable.',
+                options: ['A) transparencia', 'B) accesibilidad', 'C) objetividad', 'D) independencia'],
+                correct: 0,
+                explanation: 'Art. 3 y 53: La transparencia implica que la información sea clara y su proceso sea verificable, accesible al público en general.',
+                distractors: 'Accesibilidad es disponibilidad; objetividad es ausencia de sesgo; independencia es autonomía frente a presiones externas.'
+            },
+            // 20. Multiple: naturaleza jurídica del INEGI
+            {
+                type: 'multiple',
+                question: 'De acuerdo con el artículo 52, el INEGI es un organismo público con autonomía técnica y de gestión, personalidad jurídica y patrimonio propios. Esto significa que:',
+                options: ['A) Es un órgano descentralizado de la Secretaría de Hacienda.', 'B) Tiene capacidad para celebrar actos jurídicos y administrar su patrimonio.', 'C) Es una entidad de la Administración Pública Federal centralizada.', 'D) Depende directamente del Presidente de la República.'],
+                correct: 1,
+                explanation: 'Artículo 52: "personalidad jurídica y patrimonio propios" le otorgan capacidad para ser sujeto de derechos y obligaciones, celebrar contratos, administrar bienes, etc.',
+                distractors: 'A y C son falsos (es autónomo, no descentralizado ni centralizado); D es falso (su autonomía lo independiza del Ejecutivo).'
+            }
+        ];
+
+        // ========== LÓGICA DE LA APLICACIÓN ==========
+        let currentIndex = 0;
+        const totalQuestions = questions.length;
+        const state = questions.map(() => ({ selected: null, verified: false, correct: false }));
+
+        const questionNumberEl = document.getElementById('question-number');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackEl = document.getElementById('feedback');
+        const prevBtn = document.getElementById('prev-btn');
+        const verifyBtn = document.getElementById('verify-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressLabel = document.getElementById('progress-label');
+        const resultContainer = document.getElementById('result');
+        const scoreDisplay = document.getElementById('score-display');
+        const scoreMessage = document.getElementById('score-message');
+        const restartBtn = document.getElementById('restart-btn');
+
+        let totalCorrect = 0;
+
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            const s = state[currentIndex];
+            const isVerified = s.verified;
+
+            questionNumberEl.textContent = `Pregunta ${currentIndex + 1} de ${totalQuestions}`;
+            questionTextEl.innerHTML = q.question;
+
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const div = document.createElement('div');
+                div.className = 'option-item';
+
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'question';
+                radio.value = idx;
+                radio.id = `opt_${idx}`;
+                if (isVerified) {
+                    radio.disabled = true;
+                    div.classList.add('disabled');
+                    if (idx === q.correct) {
+                        div.classList.add('correct-verified');
+                    } else if (s.selected === idx && idx !== q.correct) {
+                        div.classList.add('incorrect-verified');
+                    }
+                } else {
+                    if (s.selected === idx) {
+                        radio.checked = true;
+                    }
+                    radio.addEventListener('change', () => {
+                        if (!s.verified) {
+                            s.selected = idx;
+                            verifyBtn.disabled = false;
+                        }
+                    });
+                }
+
+                const label = document.createElement('label');
+                label.htmlFor = `opt_${idx}`;
+                label.textContent = opt;
+
+                div.appendChild(radio);
+                div.appendChild(label);
+                optionsContainer.appendChild(div);
+            });
+
+            if (isVerified) {
+                const isCorrect = (s.selected === q.correct);
+                feedbackEl.className = 'show ' + (isCorrect ? 'correct' : 'incorrect');
+                feedbackEl.innerHTML = `
+                    <div class="fb-title">${isCorrect ? '✅ Correcto' : '❌ Incorrecto'}</div>
+                    <div class="fb-explain"><strong>Justificación:</strong> ${q.explanation}</div>
+                    <div class="fb-distractors"><strong>Análisis de distractores:</strong> ${q.distractors}</div>
+                `;
+                feedbackEl.style.display = 'block';
+            } else {
+                feedbackEl.className = '';
+                feedbackEl.innerHTML = '';
+                feedbackEl.style.display = 'none';
+            }
+
+            verifyBtn.disabled = isVerified || s.selected === null;
+            prevBtn.disabled = (currentIndex === 0);
+            nextBtn.disabled = !s.verified;
+            progressLabel.textContent = `Pregunta ${currentIndex + 1} de ${totalQuestions}`;
+        }
+
+        function verifyAnswer() {
+            const q = questions[currentIndex];
+            const s = state[currentIndex];
+            if (s.verified || s.selected === null) return;
+
+            const isCorrect = (s.selected === q.correct);
+            s.verified = true;
+            s.correct = isCorrect;
+            if (isCorrect) totalCorrect++;
+
+            renderQuestion();
+        }
+
+        function goToPrev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function goToNext() {
+            const s = state[currentIndex];
+            if (!s.verified) return;
+            if (currentIndex < totalQuestions - 1) {
+                currentIndex++;
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('question-container').style.display = 'none';
+            resultContainer.style.display = 'block';
+            const pct = Math.round((totalCorrect / totalQuestions) * 100);
+            scoreDisplay.textContent = pct + '%';
+            let msg = '';
+            if (pct >= 90) msg = '¡Excelente! Conoces a fondo la naturaleza y funciones del INEGI.';
+            else if (pct >= 70) msg = 'Buen trabajo, repasa los principios y acciones del artículo 54.';
+            else if (pct >= 50) msg = 'Es necesario estudiar más los artículos 52 a 54.';
+            else msg = 'Te recomendamos leer nuevamente el Título Tercero, Capítulo I.';
+            scoreMessage.textContent = msg;
+        }
+
+        function restart() {
+            for (let i = 0; i < totalQuestions; i++) {
+                state[i] = { selected: null, verified: false, correct: false };
+            }
+            totalCorrect = 0;
+            currentIndex = 0;
+            document.getElementById('question-container').style.display = 'block';
+            resultContainer.style.display = 'none';
+            renderQuestion();
+        }
+
+        verifyBtn.addEventListener('click', verifyAnswer);
+        prevBtn.addEventListener('click', goToPrev);
+        nextBtn.addEventListener('click', goToNext);
+        restartBtn.addEventListener('click', restart);
+
+        renderQuestion();
+    </script>
+</body>
+</html>
